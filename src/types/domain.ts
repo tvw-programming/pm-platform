@@ -1,5 +1,5 @@
 /**
- * Core domain models for Meridian.
+ * Core domain models for CGen.
  * All identifiers are branded-ish string aliases to keep call sites readable
  * while remaining structurally simple for mock data.
  */
@@ -365,5 +365,138 @@ export interface DocumentRecord {
   authorId: ID;
   updatedAt: ISODate;
   excerpt: string;
+  tags: string[];
+}
+
+/* --------------------------------------------------------- CGen work items */
+
+// Branded ID types for type safety
+export type WorkItemId = string & { readonly __brand: 'WorkItemId' };
+export type ProductId = string & { readonly __brand: 'ProductId' };
+export type ReleaseId = string & { readonly __brand: 'ReleaseId' };
+export type SprintId = string & { readonly __brand: 'SprintId' };
+export type UserId = string & { readonly __brand: 'UserId' };
+export type TeamId = string & { readonly __brand: 'TeamId' };
+export type LabelId = string & { readonly __brand: 'LabelId' };
+export type CategoryId = string & { readonly __brand: 'CategoryId' };
+export type StatusId = string & { readonly __brand: 'StatusId' };
+
+// Work Item Types
+export const WORK_ITEM_TYPES = ['IDEA', 'EPIC', 'FEATURE', 'BUG', 'TASK'] as const;
+export type WorkItemType = (typeof WORK_ITEM_TYPES)[number];
+
+// Idea stages for the pipeline
+export const IDEA_STAGES = ['new', 'under_review', 'accepted', 'rejected', 'merged'] as const;
+export type IdeaStage = (typeof IDEA_STAGES)[number];
+
+// QA and Architecture statuses
+export const QA_STATUSES = ['not_started', 'in_progress', 'passed', 'failed'] as const;
+export type QaStatus = (typeof QA_STATUSES)[number];
+
+export const ARCHITECTURE_STATUSES = ['not_reviewed', 'in_review', 'approved', 'changes_requested'] as const;
+export type ArchitectureStatus = (typeof ARCHITECTURE_STATUSES)[number];
+
+// Severity for bugs
+export const SEVERITIES = ['blocker', 'critical', 'major', 'minor', 'trivial'] as const;
+export type Severity = (typeof SEVERITIES)[number];
+
+// Estimates
+export interface Estimates {
+  initial?: number;
+  detailed?: number;
+  actual?: number;
+  remaining?: number;
+}
+
+// Design assets
+export interface DesignAsset {
+  id: ID;
+  name: string;
+  url: string;
+  type: 'figma' | 'sketch' | 'image' | 'pdf';
+}
+
+// Integration references
+export interface IntegrationRef {
+  provider: 'github' | 'jira' | 'zendesk' | 'figma' | 'slack';
+  externalId: string;
+  url?: string;
+  label?: string;
+  prCount?: number;
+  issueCount?: number;
+}
+
+// Role-based access
+export const PERSONA_ROLES = ['CEO', 'CTO', 'PM', 'ARCHITECT', 'SR_DEV', 'JR_DEV', 'DESIGNER', 'QA', 'DEVOPS'] as const;
+export type PersonaRole = (typeof PERSONA_ROLES)[number];
+
+export type Permission =
+  | 'roadmap.view' | 'roadmap.edit'
+  | 'idea.triage' | 'idea.vote'
+  | 'release.approve' | 'release.deploy'
+  | 'finance.view'
+  | 'sprint.manage' | 'sprint.view'
+  | 'design.approve' | 'design.view'
+  | 'backlog.manage' | 'backlog.view'
+  | 'settings.manage'
+  | 'reports.view'
+  | 'team.manage'
+  | 'workitem.create' | 'workitem.edit' | 'workitem.delete'
+  | 'architecture.review'
+  | 'qa.manage';
+
+export const ROLE_PERMISSIONS: Record<PersonaRole, readonly Permission[]> = {
+  CEO: ['roadmap.view', 'roadmap.edit', 'finance.view', 'reports.view', 'release.approve', 'sprint.view', 'backlog.view', 'design.view', 'idea.vote'],
+  CTO: ['roadmap.view', 'roadmap.edit', 'reports.view', 'release.approve', 'sprint.view', 'sprint.manage', 'backlog.view', 'backlog.manage', 'design.view', 'architecture.review', 'workitem.create', 'workitem.edit', 'idea.triage', 'idea.vote', 'team.manage', 'settings.manage'],
+  PM: ['roadmap.view', 'roadmap.edit', 'reports.view', 'release.approve', 'sprint.view', 'sprint.manage', 'backlog.view', 'backlog.manage', 'design.view', 'workitem.create', 'workitem.edit', 'workitem.delete', 'idea.triage', 'idea.vote', 'team.manage', 'finance.view'],
+  ARCHITECT: ['roadmap.view', 'reports.view', 'sprint.view', 'backlog.view', 'backlog.manage', 'design.view', 'architecture.review', 'workitem.create', 'workitem.edit', 'idea.vote'],
+  SR_DEV: ['roadmap.view', 'sprint.view', 'sprint.manage', 'backlog.view', 'backlog.manage', 'workitem.create', 'workitem.edit', 'idea.vote', 'reports.view'],
+  JR_DEV: ['sprint.view', 'backlog.view', 'workitem.create', 'workitem.edit', 'idea.vote'],
+  DESIGNER: ['roadmap.view', 'sprint.view', 'backlog.view', 'design.view', 'design.approve', 'workitem.create', 'workitem.edit', 'idea.vote'],
+  QA: ['sprint.view', 'backlog.view', 'qa.manage', 'workitem.create', 'workitem.edit', 'release.approve', 'reports.view'],
+  DEVOPS: ['sprint.view', 'backlog.view', 'release.deploy', 'workitem.create', 'workitem.edit', 'reports.view', 'settings.manage'],
+};
+
+// WorkItem discriminated union
+interface WorkItemBase {
+  readonly id: WorkItemId;
+  readonly key: string;
+  title: string;
+  status: TaskStatus;
+  priority: Priority;
+  productId: string;
+  assigneeId?: string;
+  reporterId: string;
+  teamId?: string;
+  labels: string[];
+  estimates: Estimates;
+  counts: { comments: number; todos: number; attachments: number; votes: number };
+  integrations: IntegrationRef[];
+  createdAt: ISODate;
+  updatedAt: ISODate;
+  dueDate?: ISODate;
+  dependencies: { blocks: WorkItemId[]; blockedBy: WorkItemId[] };
+}
+
+export type WorkItem =
+  | (WorkItemBase & { type: 'IDEA'; stage: IdeaStage; categoryId?: CategoryId; mergedInto?: WorkItemId })
+  | (WorkItemBase & { type: 'EPIC'; releaseId?: string; childIds: WorkItemId[] })
+  | (WorkItemBase & { type: 'FEATURE'; epicId?: WorkItemId; releaseId?: string; sprintId?: string; qaStatus: QaStatus; architectureStatus: ArchitectureStatus; designAssets: DesignAsset[] })
+  | (WorkItemBase & { type: 'BUG'; severity: Severity; sprintId?: string; foundInReleaseId?: string })
+  | (WorkItemBase & { type: 'TASK'; parentId?: WorkItemId; sprintId?: string });
+
+// Feedback entity for intake
+export interface FeedbackItem {
+  id: ID;
+  title: string;
+  description: string;
+  source: 'zendesk' | 'intercom' | 'slack' | 'email' | 'survey' | 'internal';
+  sourceRef?: string;
+  submittedAt: ISODate;
+  submittedBy?: string;
+  votes: number;
+  linkedWorkItemId?: ID;
+  status: 'new' | 'reviewed' | 'linked' | 'dismissed';
+  projectId: ID;
   tags: string[];
 }

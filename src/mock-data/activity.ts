@@ -21,7 +21,7 @@ function hourStamp(daysBack: number, hour: number, minute: number): string {
   return `${daysAgo(daysBack)}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00.000Z`;
 }
 
-const taskActivity: Activity[] = mockTasks.slice(0, 48).map((task, index) => {
+const taskActivity: Activity[] = mockTasks.slice(0, 100).map((task, index) => {
   const kind = taskKinds[index % taskKinds.length]!;
   return {
     id: `ac-t-${index}`,
@@ -32,7 +32,7 @@ const taskActivity: Activity[] = mockTasks.slice(0, 48).map((task, index) => {
     entityId: task.id,
     entityLabel: task.key,
     summary: summaryByKind[kind](task.key),
-    createdAt: hourStamp(Math.floor(index / 5), 9 + (index % 9), (index * 7) % 60),
+    createdAt: hourStamp(Math.floor(index / 6), 8 + (index % 10), (index * 7) % 60),
   };
 });
 

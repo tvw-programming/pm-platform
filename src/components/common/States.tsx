@@ -1,3 +1,4 @@
+import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -6,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Skeleton from '@mui/material/Skeleton';
 import CircularProgress from '@mui/material/CircularProgress';
+import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
 import { Inbox, Lock, TriangleAlert } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -100,6 +102,34 @@ export function LoadingState({ label = 'Loading…' }: { label?: string }): Reac
     </Stack>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/*  DisabledWithTooltip                                                */
+/* ------------------------------------------------------------------ */
+
+interface DisabledWithTooltipProps {
+  disabled: boolean;
+  reason: string;
+  children: React.ReactElement;
+}
+
+export function DisabledWithTooltip({ disabled, reason, children }: DisabledWithTooltipProps): React.ReactElement {
+  if (!disabled) return children;
+  return (
+    <Tooltip title={reason}>
+      <span style={{ cursor: 'not-allowed', display: 'inline-block' }}>
+        {React.cloneElement(children, {
+          disabled: true,
+          style: { ...children.props.style, pointerEvents: 'none' as const },
+        })}
+      </span>
+    </Tooltip>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  CardSkeletonGrid                                                   */
+/* ------------------------------------------------------------------ */
 
 export function CardSkeletonGrid({ count = 4, height = 120 }: { count?: number; height?: number }): React.JSX.Element {
   return (

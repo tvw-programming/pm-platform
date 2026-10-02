@@ -32,7 +32,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { Check, Lock, Plug, Plus } from 'lucide-react';
+import { Check, Lock, Plug, Plus, Shield } from 'lucide-react';
 import { SETTINGS_SECTIONS, paths, type SettingsSectionId } from '@/app/navigation';
 import { TASK_STATUSES, WORKSPACE_ROLES } from '@/types/domain';
 import { taskStatusTokens } from '@/app/tokens';
@@ -98,6 +98,7 @@ export function SettingsPage(): React.JSX.Element {
           {active === 'projects' ? <ProjectSettingsSection /> : null}
           {active === 'fields' ? <CustomFieldsSection /> : null}
           {active === 'statuses' ? <StatusSection /> : null}
+          {active === 'chat-roles' ? <ChatRolesSection /> : null}
           {active === 'notifications' ? <NotificationsSection /> : null}
           {active === 'integrations' ? <IntegrationsSection /> : null}
           {active === 'appearance' ? <AppearanceSection /> : null}
@@ -589,6 +590,124 @@ function AppearanceSection(): React.JSX.Element {
           <FormControlLabel control={<Switch defaultChecked />} label="Show avatars in list views" />
           <FormControlLabel control={<Switch />} label="Compact row height in tables" />
         </Stack>
+      </CardContent>
+    </Card>
+  );
+}
+
+const SDLC_ROLES: { id: string; label: string; track: string; seniority: string; optional: boolean }[] = [
+  { id: 'cto', label: 'CTO', track: 'leadership', seniority: 'C-level', optional: false },
+  { id: 'chief_architect', label: 'Chief Architect', track: 'leadership', seniority: 'C-level', optional: true },
+  { id: 'project_manager', label: 'Project Manager', track: 'product', seniority: 'Senior', optional: false },
+  { id: 'solution_architect', label: 'Solution Architect', track: 'platform', seniority: 'Senior', optional: true },
+  { id: 'fe_manager', label: 'Frontend Manager', track: 'frontend', seniority: 'Manager', optional: true },
+  { id: 'be_manager', label: 'Backend Manager', track: 'backend', seniority: 'Manager', optional: true },
+  { id: 'full_stack_em', label: 'Full-Stack EM', track: 'platform', seniority: 'Manager', optional: false },
+  { id: 'mobile_em', label: 'Mobile EM', track: 'mobile', seniority: 'Manager', optional: true },
+  { id: 'fe_tech_lead', label: 'Frontend Tech Lead', track: 'frontend', seniority: 'Lead', optional: false },
+  { id: 'be_tech_lead', label: 'Backend Tech Lead', track: 'backend', seniority: 'Lead', optional: false },
+  { id: 'mobile_tech_lead', label: 'Mobile Tech Lead', track: 'mobile', seniority: 'Lead', optional: true },
+  { id: 'senior_fe', label: 'Senior Frontend Dev', track: 'frontend', seniority: 'Senior', optional: false },
+  { id: 'junior_fe', label: 'Junior Frontend Dev', track: 'frontend', seniority: 'Junior', optional: false },
+  { id: 'senior_be', label: 'Senior Backend Dev', track: 'backend', seniority: 'Senior', optional: false },
+  { id: 'junior_be', label: 'Junior Backend Dev', track: 'backend', seniority: 'Junior', optional: false },
+  { id: 'rn_dev', label: 'React Native Dev', track: 'mobile', seniority: 'Mid', optional: true },
+  { id: 'devops', label: 'DevOps Engineer', track: 'platform', seniority: 'Mid', optional: false },
+  { id: 'ux_designer', label: 'UX Designer', track: 'design', seniority: 'Mid', optional: false },
+  { id: 'ui_designer', label: 'UI Designer', track: 'design', seniority: 'Mid', optional: true },
+  { id: 'qa_lead', label: 'QA Lead', track: 'qa', seniority: 'Lead', optional: false },
+  { id: 'appsec', label: 'AppSec Engineer', track: 'security', seniority: 'Mid', optional: true },
+];
+
+const MIN_ROLES = 8;
+const MAX_ROLES = 21;
+
+const trackColor: Record<string, string> = {
+  frontend: '#4A7BD4', backend: '#1E8F5E', mobile: '#B8690C', platform: '#7C3AED',
+  design: '#DB2777', qa: '#EA580C', security: '#DC2626', product: '#5A4BE0', leadership: '#6366F1',
+};
+
+function ChatRolesSection(): React.JSX.Element {
+  const { notify } = useToast();
+  const [enabled, setEnabled] = useState<Set<string>>(new Set(SDLC_ROLES.map(r => r.id)));
+
+  const toggleRole = (id: string) => {
+    setEnabled(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        if (next.size <= MIN_ROLES) {
+          notify(`Minimum ${MIN_ROLES} roles required`, { severity: 'warning' });
+          return prev;
+        }
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const byTrack = SDLC_ROLES.reduce<Record<string, typeof SDLC_ROLES>>((acc, role) => {
+    (acc[role.track] ||= []).push(role);
+    return acc;
+  }, {});
+
+  return (
+    <Card>
+      <CardHeader
+        title="Chat roles"
+        subheader={`Configure which SDLC roles are active for routed work events (${enabled.size}/${MAX_ROLES} enabled, min ${MIN_ROLES})`}
+        avatar={<Shield size={18} />}
+      />
+      <CardContent sx={{ pt: 0 }}>
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Roles determine who receives mandatory tickets when a work event is triggered. Disabled roles are skipped during playbook routing.
+        </Alert>
+
+        {Object.entries(byTrack).sort(([a], [b]) => a.localeCompare(b)).map(([track, roles]) => (
+          <Box key={track} sx={{ mb: 2 }}>
+            <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mb: 1 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: trackColor[track] || '#8D96A8' }} />
+              <Typography variant="caption" sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'text.secondary' }}>
+                {track}
+              </Typography>
+            </Stack>
+            {roles.map(role => (
+              <Stack
+                key={role.id}
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{ px: 1.5, py: 1, border: '1px solid', borderColor: 'divider', borderRadius: 1.5, mb: 0.5 }}
+              >
+                <Stack direction="row" spacing={1.25} alignItems="center">
+                  <Box>
+                    <Typography variant="body2" fontWeight={600}>{role.label}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {role.seniority} · {role.optional ? 'Optional' : 'Core'}
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Chip label={role.track} size="small" variant="outlined" sx={{ height: 20, fontSize: '0.625rem' }} />
+                  <Switch
+                    checked={enabled.has(role.id)}
+                    onChange={() => toggleRole(role.id)}
+                    inputProps={{ 'aria-label': `Enable ${role.label}` }}
+                  />
+                </Stack>
+              </Stack>
+            ))}
+          </Box>
+        ))}
+
+        <Button
+          variant="contained"
+          sx={{ mt: 1 }}
+          onClick={() => notify(`${enabled.size} chat roles saved`, { severity: 'success' })}
+        >
+          Save role configuration
+        </Button>
       </CardContent>
     </Card>
   );

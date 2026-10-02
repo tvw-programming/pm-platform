@@ -5,7 +5,10 @@ import {
   GanttChartSquare,
   Home,
   Layers,
+  Lightbulb,
   ListTodo,
+  MessageCircle,
+  MessageSquare,
   Rocket,
   Settings,
   SquareChartGantt,
@@ -14,23 +17,38 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
+/** Build a path under /w/:workspaceId/p/:productId/:module */
+export function productPath(workspaceId: string, productId: string, module: string): string {
+  return `/w/${workspaceId}/p/${productId}/${module}`;
+}
+
+const DEFAULT_WS = 'ws-1';
+const DEFAULT_PRODUCT = 'p-1';
+
+function wp(module: string): string {
+  return productPath(DEFAULT_WS, DEFAULT_PRODUCT, module);
+}
+
 /** Route paths are centralised so links and breadcrumbs cannot drift. */
 export const paths = {
-  home: '/',
+  home: wp(''),
   myWork: '/my-work',
-  projects: '/projects',
+  chat: wp('chat'),
+  projects: wp('board'),
   project: (projectId: string, tab = 'overview'): string => `/projects/${projectId}/${tab}`,
-  roadmap: '/roadmap',
-  calendar: '/calendar',
-  backlog: '/backlog',
-  sprints: '/sprints',
-  releases: '/releases',
-  release: (releaseId: string): string => `/releases/${releaseId}`,
-  reports: '/reports',
-  teams: '/teams',
-  documents: '/documents',
-  settings: '/settings',
-  settingsSection: (section: string): string => `/settings/${section}`,
+  ideas: wp('ideas'),
+  feedback: wp('feedback'),
+  roadmap: wp('roadmap'),
+  calendar: wp('calendar'),
+  backlog: wp('backlog'),
+  sprints: wp('sprints'),
+  releases: wp('releases'),
+  release: (releaseId: string): string => wp(`releases/${releaseId}`),
+  reports: wp('reports'),
+  teams: wp('teams'),
+  documents: wp('documents'),
+  settings: wp('settings'),
+  settingsSection: (section: string): string => wp(`settings/${section}`),
 } as const;
 
 export interface NavItem {
@@ -52,21 +70,37 @@ export interface NavSection {
 export const navSections: NavSection[] = [
   {
     id: 'overview',
+    label: 'Overview',
     items: [
       { id: 'home', label: 'Home', to: paths.home, icon: Home },
       { id: 'my-work', label: 'My Work', to: paths.myWork, icon: UserRound, badgeKey: 'myOpenWork' },
+      { id: 'chat', label: 'Chat', to: paths.chat, icon: MessageCircle, matchPrefix: wp('chat') },
     ],
   },
   {
-    id: 'deliver',
-    label: 'Deliver',
+    id: 'discovery',
+    label: 'Discovery',
     items: [
-      { id: 'projects', label: 'Projects', to: paths.projects, icon: FolderKanban, matchPrefix: '/projects' },
-      { id: 'roadmap', label: 'Roadmap', to: paths.roadmap, icon: GanttChartSquare },
-      { id: 'calendar', label: 'Calendar', to: paths.calendar, icon: CalendarDays },
+      { id: 'ideas', label: 'Ideas', to: paths.ideas, icon: Lightbulb, matchPrefix: wp('ideas') },
+      { id: 'feedback', label: 'Feedback', to: paths.feedback, icon: MessageSquare, matchPrefix: wp('feedback') },
+    ],
+  },
+  {
+    id: 'delivery',
+    label: 'Delivery',
+    items: [
+      { id: 'projects', label: 'Board', to: paths.projects, icon: FolderKanban, matchPrefix: wp('board') },
       { id: 'backlog', label: 'Backlog', to: paths.backlog, icon: ListTodo },
       { id: 'sprints', label: 'Sprints', to: paths.sprints, icon: Layers },
-      { id: 'releases', label: 'Releases', to: paths.releases, icon: Rocket, matchPrefix: '/releases' },
+    ],
+  },
+  {
+    id: 'plan',
+    label: 'Plan',
+    items: [
+      { id: 'roadmap', label: 'Roadmap', to: paths.roadmap, icon: GanttChartSquare },
+      { id: 'calendar', label: 'Calendar', to: paths.calendar, icon: CalendarDays },
+      { id: 'releases', label: 'Releases', to: paths.releases, icon: Rocket, matchPrefix: wp('releases') },
     ],
   },
   {
@@ -81,7 +115,7 @@ export const navSections: NavSection[] = [
   {
     id: 'admin',
     label: 'Workspace',
-    items: [{ id: 'settings', label: 'Settings', to: paths.settings, icon: Settings, matchPrefix: '/settings' }],
+    items: [{ id: 'settings', label: 'Settings', to: paths.settings, icon: Settings, matchPrefix: wp('settings') }],
   },
 ];
 
@@ -109,6 +143,7 @@ export const SETTINGS_SECTIONS = [
   { id: 'fields', label: 'Custom fields' },
   { id: 'statuses', label: 'Status configuration' },
   { id: 'notifications', label: 'Notifications' },
+  { id: 'chat-roles', label: 'Chat roles' },
   { id: 'integrations', label: 'Integrations' },
   { id: 'appearance', label: 'Appearance' },
   { id: 'audit', label: 'Audit activity' },

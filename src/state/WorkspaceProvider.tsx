@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useReducer, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useMemo, useReducer, type ReactNode } from 'react';
 import type { ID, Project, Task, User } from '@/types/domain';
 import {
   initialWorkspaceState,
@@ -7,9 +7,10 @@ import {
   type WorkspaceState,
 } from './workspaceReducer';
 
-interface WorkspaceContextValue {
+/* ------------------------------------------------------------------ types */
+
+export interface WorkspaceStateValue {
   state: WorkspaceState;
-  dispatch: React.Dispatch<WorkspaceAction>;
   /** Tasks excluding archived ones — what every screen should render. */
   visibleTasks: Task[];
   activeProjects: Project[];
@@ -19,12 +20,21 @@ interface WorkspaceContextValue {
   taskById: (id?: ID) => Task | undefined;
 }
 
-const WorkspaceContext = createContext<WorkspaceContextValue | undefined>(undefined);
+interface WorkspaceContextValue extends WorkspaceStateValue {
+  dispatch: React.Dispatch<WorkspaceAction>;
+}
+
+/* --------------------------------------------------------------- contexts */
+
+const WorkspaceStateContext = createContext<WorkspaceStateValue | undefined>(undefined);
+const WorkspaceDispatchContext = createContext<React.Dispatch<WorkspaceAction> | undefined>(undefined);
+
+/* --------------------------------------------------------------- provider */
 
 export function WorkspaceProvider({ children }: { children: ReactNode }): React.JSX.Element {
   const [state, dispatch] = useReducer(workspaceReducer, initialWorkspaceState);
 
-  const value = useMemo<WorkspaceContextValue>(() => {
+  const stateValue = useMemo<WorkspaceStateValue>(() => {
     const archived = new Set(state.archivedTaskIds);
     const visibleTasks = state.tasks.filter((task) => !archived.has(task.id));
     const usersIndex = new Map(state.users.map((u) => [u.id, u]));
@@ -33,7 +43,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }): React.
 
     return {
       state,
-      dispatch,
       visibleTasks,
       activeProjects: state.projects.filter((p) => p.status === 'active' || p.status === 'planning'),
       currentUser: usersIndex.get(state.currentUserId) ?? state.users[0]!,
@@ -43,11 +52,34 @@ export function WorkspaceProvider({ children }: { children: ReactNode }): React.
     };
   }, [state]);
 
-  return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;
+  return (
+    <WorkspaceStateContext.Provider value={stateValue}>
+      <WorkspaceDispatchContext.Provider value={dispatch}>
+        {children}
+      </WorkspaceDispatchContext.Provider>
+    </WorkspaceStateContext.Provider>
+  );
 }
 
-export function useWorkspace(): WorkspaceContextValue {
-  const context = useContext(WorkspaceContext);
-  if (!context) throw new Error('useWorkspace must be used inside a WorkspaceProvider');
+/* ------------------------------------------------------------------ hooks */
+
+/** Read-only workspace state. Components using only this hook won't re-render on dispatch. */
+export function useWorkspaceState(): WorkspaceStateValue {
+  const context = useContext(WorkspaceStateContext);
+  if (!context) throw new Error('useWorkspaceState must be used inside a WorkspaceProvider');
   return context;
+}
+
+/** Dispatch-only hook. Components using only this hook won't re-render when entities change. */
+export function useWorkspaceDispatch(): React.Dispatch<WorkspaceAction> {
+  const context = useContext(WorkspaceDispatchContext);
+  if (!context) throw new Error('useWorkspaceDispatch must be used inside a WorkspaceProvider');
+  return context;
+}
+
+/** Backward-compatible hook that combines both state and dispatch. */
+export function useWorkspace(): WorkspaceContextValue {
+  const stateValue = useWorkspaceState();
+  const dispatch = useWorkspaceDispatch();
+  return useMemo(() => ({ ...stateValue, dispatch }), [stateValue, dispatch]);
 }

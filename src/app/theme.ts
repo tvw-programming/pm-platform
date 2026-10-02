@@ -1,10 +1,10 @@
 import { createTheme, type Theme, type ThemeOptions } from '@mui/material/styles';
-import { brand, accent, graphite, semantic, radius, shadowRamp, layout } from './tokens';
+import { brand, slate, semantic, radius, shadowRamp, layout } from './tokens';
 
 export type ColorMode = 'light' | 'dark';
 
 const fontStack = [
-  '"Inter var"',
+  '"Inter Variable"',
   'Inter',
   '-apple-system',
   'BlinkMacSystemFont',
@@ -65,46 +65,43 @@ function palette(mode: ColorMode): ThemeOptions['palette'] {
     mode,
     primary: {
       main: isLight ? brand[500] : brand[300],
-      light: isLight ? brand[300] : brand[200],
+      light: isLight ? brand[300] : brand[100],
       dark: isLight ? brand[700] : brand[500],
-      contrastText: isLight ? '#FFFFFF' : graphite[950],
+      contrastText: isLight ? '#FFFFFF' : slate[950],
     },
     secondary: {
-      main: isLight ? accent[500] : accent[300],
-      light: isLight ? accent[300] : accent[200],
-      dark: isLight ? accent[700] : accent[500],
-      contrastText: isLight ? '#FFFFFF' : graphite[950],
+      main: isLight ? brand[600] : brand[300],
+      light: isLight ? brand[300] : brand[100],
+      dark: isLight ? brand[700] : brand[600],
+      contrastText: isLight ? '#FFFFFF' : slate[950],
     },
     success: { main: isLight ? semantic.success : '#43B872', contrastText: '#FFFFFF' },
-    warning: { main: isLight ? semantic.warning : '#DFA038', contrastText: isLight ? '#FFFFFF' : graphite[950] },
+    warning: { main: isLight ? semantic.warning : '#DFA038', contrastText: isLight ? '#FFFFFF' : slate[950] },
     error: { main: isLight ? semantic.error : '#E8695C', contrastText: '#FFFFFF' },
     info: { main: isLight ? semantic.info : '#5BA7D8', contrastText: '#FFFFFF' },
-    divider: isLight ? graphite[200] : '#2C3540',
+    divider: isLight ? slate[200] : '#2A3545',
     background: {
-      default: isLight ? graphite[50] : graphite[950],
-      paper: isLight ? '#FFFFFF' : '#161C23',
+      default: isLight ? slate[50] : slate[950],
+      paper: isLight ? '#FFFFFF' : '#171B26',
     },
     text: {
-      primary: isLight ? graphite[900] : '#E8EDF2',
-      secondary: isLight ? graphite[600] : '#9BA7B4',
-      disabled: isLight ? graphite[400] : '#5C6875',
+      primary: isLight ? slate[900] : '#E8EDF2',
+      secondary: isLight ? slate[600] : '#9BA7B4',
+      disabled: isLight ? slate[400] : '#5C6875',
     },
     action: {
-      hover: isLight ? 'rgba(14, 143, 134, 0.06)' : 'rgba(95, 194, 183, 0.10)',
-      selected: isLight ? 'rgba(14, 143, 134, 0.10)' : 'rgba(95, 194, 183, 0.16)',
+      hover: isLight ? 'rgba(90, 75, 224, 0.06)' : 'rgba(169, 162, 246, 0.10)',
+      selected: isLight ? 'rgba(90, 75, 224, 0.10)' : 'rgba(169, 162, 246, 0.16)',
       disabledOpacity: 0.45,
     },
     grey: {
-      50: graphite[50],
-      100: graphite[100],
-      200: graphite[200],
-      300: graphite[300],
-      400: graphite[400],
-      500: graphite[500],
-      600: graphite[600],
-      700: graphite[700],
-      800: graphite[800],
-      900: graphite[900],
+      50: slate[50],
+      100: slate[100],
+      200: slate[200],
+      400: slate[400],
+      600: slate[600],
+      800: slate[800],
+      900: slate[900],
     },
   };
 }
@@ -136,12 +133,12 @@ export function buildTheme(mode: ColorMode): Theme {
           '*::-webkit-scrollbar': { width: 10, height: 10 },
           '*::-webkit-scrollbar-track': { background: 'transparent' },
           '*::-webkit-scrollbar-thumb': {
-            background: mode === 'light' ? graphite[300] : '#39434F',
+            background: mode === 'light' ? slate[400] : '#39434F',
             borderRadius: radius.pill,
             border: `2px solid ${base.palette.background.default}`,
           },
           '*::-webkit-scrollbar-thumb:hover': {
-            background: mode === 'light' ? graphite[400] : '#4A5663',
+            background: mode === 'light' ? slate[600] : '#4A5663',
           },
           // Visible, consistent focus ring across every interactive surface.
           '*:focus-visible': {
@@ -154,7 +151,10 @@ export function buildTheme(mode: ColorMode): Theme {
       MuiPaper: {
         styleOverrides: {
           root: { backgroundImage: 'none' },
-          outlined: { borderColor: base.palette.divider },
+          outlined: {
+            borderColor: base.palette.divider,
+            boxShadow: '0 1px 2px rgba(23, 27, 38, 0.06)',
+          },
         },
       },
       MuiCard: {
@@ -163,6 +163,7 @@ export function buildTheme(mode: ColorMode): Theme {
           root: {
             borderRadius: radius.lg,
             borderColor: base.palette.divider,
+            boxShadow: '0 1px 2px rgba(23, 27, 38, 0.06)',
             transition: 'box-shadow 150ms ease, border-color 150ms ease',
           },
         },
@@ -199,13 +200,13 @@ export function buildTheme(mode: ColorMode): Theme {
         defaultProps: { arrow: true, enterDelay: 350 },
         styleOverrides: {
           tooltip: {
-            backgroundColor: mode === 'light' ? graphite[800] : graphite[100],
-            color: mode === 'light' ? '#FFFFFF' : graphite[900],
+            backgroundColor: mode === 'light' ? slate[800] : slate[100],
+            color: mode === 'light' ? '#FFFFFF' : slate[900],
             fontSize: '0.75rem',
             borderRadius: radius.sm,
             paddingInline: 10,
           },
-          arrow: { color: mode === 'light' ? graphite[800] : graphite[100] },
+          arrow: { color: mode === 'light' ? slate[800] : slate[100] },
         },
       },
       MuiTabs: {

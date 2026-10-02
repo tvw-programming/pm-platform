@@ -122,7 +122,7 @@ function SidebarContent({ collapsed, onToggleCollapse, isMobile, onNavigate }: S
           {!collapsed ? (
             <Box sx={{ minWidth: 0 }}>
               <Typography variant="subtitle2" noWrap sx={{ fontWeight: 750, letterSpacing: '-0.01em' }}>
-                Meridian
+                CGen
               </Typography>
               <Typography variant="caption" color="text.secondary" noWrap>
                 Product delivery

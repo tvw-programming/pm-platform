@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
-import type { ID, TaskStatus } from '@/types/domain';
+import type { ID, TaskStatus, PersonaRole } from '@/types/domain';
 import { CreateTaskDialog } from '@/components/tasks/CreateTaskDialog';
 import { CreateProjectDialog } from '@/components/projects/CreateProjectDialog';
 import { SprintDialog } from '@/components/sprints/SprintDialog';
@@ -20,6 +20,8 @@ interface UiContextValue {
   openCreateProject: () => void;
   openCreateSprint: (projectId?: ID) => void;
   openCreateRoadmapItem: (projectId?: ID) => void;
+  activeRole: PersonaRole;
+  setActiveRole: (role: PersonaRole) => void;
 }
 
 const UiContext = createContext<UiContextValue | undefined>(undefined);
@@ -34,6 +36,7 @@ export function UiProvider({ children }: { children: ReactNode }): React.JSX.Ele
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [sprintDialogProject, setSprintDialogProject] = useState<ID | null | undefined>(undefined);
   const [roadmapDialogProject, setRoadmapDialogProject] = useState<ID | null | undefined>(undefined);
+  const [activeRole, setActiveRole] = useState<PersonaRole>('PM');
 
   const value = useMemo<UiContextValue>(
     () => ({
@@ -44,8 +47,10 @@ export function UiProvider({ children }: { children: ReactNode }): React.JSX.Ele
       openCreateProject: () => setProjectDialogOpen(true),
       openCreateSprint: (projectId) => setSprintDialogProject(projectId ?? null),
       openCreateRoadmapItem: (projectId) => setRoadmapDialogProject(projectId ?? null),
+      activeRole,
+      setActiveRole,
     }),
-    [openTaskId],
+    [openTaskId, activeRole],
   );
 
   const closeTaskDialog = useCallback(() => setTaskDialog(null), []);

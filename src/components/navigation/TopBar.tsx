@@ -22,6 +22,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Alert from '@mui/material/Alert';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import Select from '@mui/material/Select';
 import {
   Bell,
   BookOpen,
@@ -34,12 +35,14 @@ import {
   Moon,
   Plus,
   Search,
+  Shield,
   Sun,
   GanttChartSquare,
   SquareCheck,
   LogOut,
   UserCog,
 } from 'lucide-react';
+import { PERSONA_ROLES, type PersonaRole } from '@/types/domain';
 import { paths } from '@/app/navigation';
 import { useColorMode } from '@/state/ColorModeProvider';
 import { useWorkspace } from '@/state/WorkspaceProvider';
@@ -74,7 +77,7 @@ export function TopBar({ onOpenMobileNav }: TopBarProps): React.JSX.Element {
   const navigate = useNavigate();
   const { mode, toggle } = useColorMode();
   const { state, dispatch, currentUser, projectById } = useWorkspace();
-  const { openCreateTask, openCreateProject, openCreateSprint, openCreateRoadmapItem } = useUi();
+  const { openCreateTask, openCreateProject, openCreateSprint, openCreateRoadmapItem, activeRole, setActiveRole } = useUi();
 
   const [createAnchor, setCreateAnchor] = useState<HTMLElement | null>(null);
   const [helpAnchor, setHelpAnchor] = useState<HTMLElement | null>(null);
@@ -190,6 +193,30 @@ export function TopBar({ onOpenMobileNav }: TopBarProps): React.JSX.Element {
               <IconButton onClick={(e) => setHelpAnchor(e.currentTarget)} aria-label="Help menu" aria-haspopup="menu">
                 <CircleHelp size={18} />
               </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Switch persona to see role-based views">
+              <Select<PersonaRole>
+                size="small"
+                value={activeRole}
+                onChange={(e) => setActiveRole(e.target.value as PersonaRole)}
+                renderValue={(value) => (
+                  <Stack direction="row" spacing={0.5} alignItems="center">
+                    <Shield size={14} />
+                    <Typography variant="caption" fontWeight={600}>{value}</Typography>
+                  </Stack>
+                )}
+                sx={{
+                  minWidth: 100,
+                  height: 32,
+                  '& .MuiSelect-select': { py: 0.5, pl: 1, pr: 2.5, display: 'flex', alignItems: 'center' },
+                }}
+                aria-label="Role switcher"
+              >
+                {PERSONA_ROLES.map((role) => (
+                  <MenuItem key={role} value={role}>{role}</MenuItem>
+                ))}
+              </Select>
             </Tooltip>
 
             <Tooltip title={mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}>

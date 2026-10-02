@@ -1,9 +1,13 @@
-import { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { DataGrid, type GridColDef, type GridRenderCellParams } from '@mui/x-data-grid';
+import { AgGridReact } from 'ag-grid-react';
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import type { ColDef, ICellRendererParams, RowClickedEvent, GetRowIdParams } from 'ag-grid-community';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-material.css';
 import type { ID, Task } from '@/types/domain';
 import { useWorkspace } from '@/state/WorkspaceProvider';
 import { PriorityChip, StatusChip, TypeChip } from '@/components/common/TokenChip';
@@ -11,6 +15,8 @@ import { UserAvatar } from '@/components/common/UserAvatar';
 import { EmptyState } from '@/components/common/States';
 import { formatShortDate } from '@/utils/format';
 import { taskIsOverdue } from '@/utils/selectors';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface TaskRow {
   id: ID;
@@ -34,6 +40,81 @@ interface TaskListTableProps {
   height?: number;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Cell renderer components (memoized for AG Grid perf)              */
+/* ------------------------------------------------------------------ */
+
+const KeyCellRenderer = React.memo(function KeyCellRenderer(
+  params: ICellRendererParams<TaskRow>,
+) {
+  return (
+    <Typography variant="caption" sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
+      {params.value}
+    </Typography>
+  );
+});
+
+const TypeCellRenderer = React.memo(function TypeCellRenderer(
+  params: ICellRendererParams<TaskRow>,
+) {
+  return params.value ? <TypeChip type={params.value} /> : null;
+});
+
+const StatusCellRenderer = React.memo(function StatusCellRenderer(
+  params: ICellRendererParams<TaskRow>,
+) {
+  return params.value ? <StatusChip status={params.value} /> : null;
+});
+
+const PriorityCellRenderer = React.memo(function PriorityCellRenderer(
+  params: ICellRendererParams<TaskRow>,
+) {
+  return params.value ? <PriorityChip priority={params.value} /> : null;
+});
+
+const DueDateCellRenderer = React.memo(function DueDateCellRenderer(
+  params: ICellRendererParams<TaskRow>,
+) {
+  const overdue = params.data?.overdue ?? false;
+  return (
+    <Typography
+      variant="body2"
+      color={overdue ? 'error.main' : 'text.primary'}
+      fontWeight={overdue ? 700 : 400}
+    >
+      {params.value ? formatShortDate(params.value) : '—'}
+    </Typography>
+  );
+});
+
+/**
+ * The Assignee renderer needs `userById` from the workspace context, so it is
+ * created as a closure inside the component body below rather than at module
+ * scope. We still wrap it with React.memo via a factory.
+ */
+function makeAssigneeCellRenderer(
+  userById: ReturnType<typeof useWorkspace>['userById'],
+) {
+  const AssigneeCellRenderer = React.memo(function AssigneeCellRenderer(
+    params: ICellRendererParams<TaskRow>,
+  ) {
+    const user = userById(params.value ?? undefined);
+    return (
+      <Stack direction="row" spacing={1} alignItems="center" sx={{ height: '100%' }}>
+        <UserAvatar user={user} size={22} />
+        <Typography variant="body2" noWrap>
+          {user?.name ?? 'Unassigned'}
+        </Typography>
+      </Stack>
+    );
+  });
+  return AssigneeCellRenderer;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main component                                                    */
+/* ------------------------------------------------------------------ */
+
 export function TaskListTable({
   tasks,
   onOpenTask,
@@ -41,6 +122,8 @@ export function TaskListTable({
   height = 620,
 }: TaskListTableProps): React.JSX.Element {
   const { state, userById, projectById } = useWorkspace();
+
+  const AssigneeCellRenderer = useMemo(() => makeAssigneeCellRenderer(userById), [userById]);
 
   const rows = useMemo<TaskRow[]>(
     () =>
@@ -61,86 +144,111 @@ export function TaskListTable({
     [tasks, projectById, state.sprints],
   );
 
-  const columns = useMemo<GridColDef<TaskRow>[]>(() => {
-    const base: GridColDef<TaskRow>[] = [
+  const columns = useMemo<ColDef<TaskRow>[]>(() => {
+    const base: ColDef<TaskRow>[] = [
       {
         field: 'key',
         headerName: 'ID',
         width: 96,
-        renderCell: (params: GridRenderCellParams<TaskRow, string>) => (
-          <Typography variant="caption" sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
-            {params.value}
-          </Typography>
-        ),
+        cellRenderer: KeyCellRenderer,
+        filter: true,
+        sortable: true,
       },
-      { field: 'title', headerName: 'Title', flex: 1, minWidth: 240 },
+      {
+        field: 'title',
+        headerName: 'Title',
+        flex: 1,
+        minWidth: 240,
+        filter: true,
+        sortable: true,
+      },
       {
         field: 'type',
         headerName: 'Type',
         width: 128,
-        renderCell: (params: GridRenderCellParams<TaskRow, Task['type']>) =>
-          params.value ? <TypeChip type={params.value} /> : null,
+        cellRenderer: TypeCellRenderer,
+        filter: true,
+        sortable: true,
       },
       {
         field: 'status',
         headerName: 'Status',
         width: 128,
-        renderCell: (params: GridRenderCellParams<TaskRow, Task['status']>) =>
-          params.value ? <StatusChip status={params.value} /> : null,
+        cellRenderer: StatusCellRenderer,
+        filter: true,
+        sortable: true,
       },
       {
         field: 'priority',
         headerName: 'Priority',
         width: 112,
-        renderCell: (params: GridRenderCellParams<TaskRow, Task['priority']>) =>
-          params.value ? <PriorityChip priority={params.value} /> : null,
+        cellRenderer: PriorityCellRenderer,
+        filter: true,
+        sortable: true,
       },
       {
         field: 'assigneeId',
         headerName: 'Assignee',
         width: 160,
-        renderCell: (params: GridRenderCellParams<TaskRow, ID | undefined>) => {
-          const user = userById(params.value ?? undefined);
-          return (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ height: '100%' }}>
-              <UserAvatar user={user} size={22} />
-              <Typography variant="body2" noWrap>
-                {user?.name ?? 'Unassigned'}
-              </Typography>
-            </Stack>
-          );
-        },
+        cellRenderer: AssigneeCellRenderer,
+        filter: true,
+        sortable: true,
       },
-      { field: 'sprintName', headerName: 'Sprint', width: 150 },
+      {
+        field: 'sprintName',
+        headerName: 'Sprint',
+        width: 150,
+        filter: true,
+        sortable: true,
+      },
       {
         field: 'points',
         headerName: 'Points',
         width: 90,
-        type: 'number',
-        align: 'center',
-        headerAlign: 'center',
+        type: 'numericColumn',
+        filter: 'agNumberColumnFilter',
+        sortable: true,
       },
       {
         field: 'dueDate',
         headerName: 'Due',
         width: 110,
-        renderCell: (params: GridRenderCellParams<TaskRow, string | undefined>) => (
-          <Typography
-            variant="body2"
-            color={params.row.overdue ? 'error.main' : 'text.primary'}
-            fontWeight={params.row.overdue ? 700 : 400}
-          >
-            {params.value ? formatShortDate(params.value) : '—'}
-          </Typography>
-        ),
+        cellRenderer: DueDateCellRenderer,
+        filter: true,
+        sortable: true,
       },
     ];
 
     if (showProject) {
-      base.splice(1, 0, { field: 'projectKey', headerName: 'Project', width: 100 });
+      base.splice(1, 0, {
+        field: 'projectKey',
+        headerName: 'Project',
+        width: 100,
+        filter: true,
+        sortable: true,
+      });
     }
     return base;
-  }, [showProject, userById]);
+  }, [showProject, AssigneeCellRenderer]);
+
+  const getRowId = useCallback((params: GetRowIdParams<TaskRow>) => String(params.data.id), []);
+
+  const onRowClicked = useCallback(
+    (event: RowClickedEvent<TaskRow>) => {
+      if (event.data) {
+        onOpenTask(String(event.data.id));
+      }
+    },
+    [onOpenTask],
+  );
+
+  const defaultColDef = useMemo<ColDef>(
+    () => ({
+      resizable: true,
+      suppressMovable: false,
+    }),
+    [],
+  );
 
   if (tasks.length === 0) {
     return (
@@ -154,27 +262,38 @@ export function TaskListTable({
   }
 
   return (
-    <Box sx={{ height, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        disableRowSelectionOnClick
-        onRowClick={(params) => onOpenTask(String(params.id))}
-        initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
-        pageSizeOptions={[10, 25, 50, 100]}
-        density="standard"
-        sx={{
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 2.5,
-          '& .MuiDataGrid-row': { cursor: 'pointer' },
-          '& .MuiDataGrid-columnHeaderTitle': {
-            fontWeight: 700,
-            fontSize: '0.75rem',
-            letterSpacing: '0.04em',
-            textTransform: 'uppercase',
-          },
-        }}
+    <Box
+      className="ag-theme-material"
+      sx={{
+        height,
+        width: '100%',
+        '& .ag-row': { cursor: 'pointer' },
+        '& .ag-header-cell-text': {
+          fontWeight: 700,
+          fontSize: '0.75rem',
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
+        },
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2.5,
+        overflow: 'hidden',
+      }}
+    >
+      <AgGridReact<TaskRow>
+        rowData={rows}
+        columnDefs={columns}
+        defaultColDef={defaultColDef}
+        getRowId={getRowId}
+        onRowClicked={onRowClicked}
+        animateRows={false}
+        rowHeight={42}
+        headerHeight={48}
+        pagination={true}
+        paginationPageSize={25}
+        paginationPageSizeSelector={[10, 25, 50, 100]}
+        suppressCellFocus={true}
+        rowSelection="single"
       />
     </Box>
   );

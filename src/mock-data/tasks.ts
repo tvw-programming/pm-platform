@@ -155,6 +155,98 @@ const seedsByProject: Record<string, TitleSeed[]> = {
     { title: 'Notification triage grouping', type: 'story', status: 'done', priority: 'medium' },
     { title: 'Crash on cold start without network', type: 'bug', status: 'done', priority: 'critical' },
     { title: 'Post-launch adoption review', type: 'task', status: 'done', priority: 'low' },
+    { title: 'Offline queue for pending approvals', type: 'story', status: 'done', priority: 'high' },
+    { title: 'Pull-to-refresh on all list screens', type: 'improvement', status: 'done', priority: 'medium' },
+    { title: 'Deep link from push notification to task', type: 'bug', status: 'done', priority: 'high' },
+  ],
+};
+
+/* ---- Additional seeds for projects to reach ~180 total work items ---- */
+
+const extraSeedsByProject: Record<string, TitleSeed[]> = {
+  'p-atlas': [
+    { title: 'Batch move tasks between sprints', type: 'story', status: 'todo', priority: 'medium' },
+    { title: 'Table view with sortable columns', type: 'story', status: 'in_progress', priority: 'high' },
+    { title: 'Quick filters bar below the toolbar', type: 'story', status: 'backlog', priority: 'medium' },
+    { title: 'Keyboard shortcut overlay (Cmd+/)', type: 'improvement', status: 'todo', priority: 'low' },
+    { title: 'Avatar stack overflow on narrow cards', type: 'bug', status: 'in_review', priority: 'medium' },
+    { title: 'Stale search index after bulk import', type: 'bug', status: 'todo', priority: 'high' },
+    { title: 'Drag handle visible only on hover — inaccessible', type: 'bug', status: 'in_progress', priority: 'critical' },
+    { title: 'Sprint velocity trend line on the dashboard', type: 'story', status: 'backlog', priority: 'medium' },
+    { title: 'Markdown preview in task description editor', type: 'improvement', status: 'done', priority: 'medium' },
+    { title: 'Custom field columns in the list view', type: 'story', status: 'todo', priority: 'high' },
+    { title: 'Collapse completed tasks in list view', type: 'improvement', status: 'backlog', priority: 'low' },
+    { title: 'Due date colour coding (overdue = red)', type: 'improvement', status: 'done', priority: 'low' },
+    { title: 'Pin frequently used views to the sidebar', type: 'story', status: 'in_progress', priority: 'medium' },
+    { title: 'Spike: real-time collaboration via CRDT', type: 'spike', status: 'backlog', priority: 'high' },
+    { title: 'Export board as PNG for presentations', type: 'story', status: 'backlog', priority: 'low' },
+    { title: 'Task detail drawer closes on Escape key', type: 'bug', status: 'done', priority: 'medium' },
+    { title: 'Filter by date range (created/updated)', type: 'story', status: 'todo', priority: 'medium' },
+    { title: 'Bulk label assignment', type: 'story', status: 'backlog', priority: 'low' },
+  ],
+  'p-orbit': [
+    { title: 'Dashboard template gallery', type: 'story', status: 'backlog', priority: 'medium' },
+    { title: 'Metric definition YAML import', type: 'story', status: 'todo', priority: 'high' },
+    { title: 'Anomaly detection alerts on key metrics', type: 'story', status: 'backlog', priority: 'high' },
+    { title: 'Drill-down from chart data point to task list', type: 'story', status: 'in_progress', priority: 'medium' },
+    { title: 'Stacked area chart for status distribution', type: 'improvement', status: 'todo', priority: 'medium' },
+    { title: 'CSV import for historical metrics backfill', type: 'task', status: 'backlog', priority: 'low' },
+    { title: 'Widget resize handles on the dashboard', type: 'bug', status: 'todo', priority: 'medium' },
+    { title: 'Query timeout at 30s should show a message', type: 'bug', status: 'in_review', priority: 'high' },
+    { title: 'Shared dashboard with view-only link', type: 'story', status: 'todo', priority: 'medium' },
+    { title: 'Spike: predictive delivery date model', type: 'spike', status: 'todo', priority: 'medium' },
+    { title: 'Digest includes charts as inline images', type: 'improvement', status: 'backlog', priority: 'low' },
+    { title: 'Filter events by user property', type: 'story', status: 'in_progress', priority: 'high' },
+    { title: 'Retention grid tooltip shows absolute numbers', type: 'improvement', status: 'done', priority: 'low' },
+  ],
+  'p-forge': [
+    { title: 'Rate limiting on the permissions API', type: 'story', status: 'todo', priority: 'high' },
+    { title: 'Migrate legacy ACL data to policy format', type: 'task', status: 'in_progress', priority: 'critical' },
+    { title: 'Incident response runbook for region failover', type: 'task', status: 'done', priority: 'high' },
+    { title: 'Add canary deployment for permissions service', type: 'story', status: 'backlog', priority: 'medium' },
+    { title: 'Secrets manager integration with Vault', type: 'story', status: 'todo', priority: 'high' },
+    { title: 'Tenant data export for GDPR compliance', type: 'task', status: 'backlog', priority: 'medium' },
+    { title: 'Connection pool exhaustion under load', type: 'bug', status: 'in_progress', priority: 'critical' },
+    { title: 'Automated SOC 2 evidence snapshots', type: 'story', status: 'backlog', priority: 'medium' },
+    { title: 'Spike: zero-trust network segmentation', type: 'spike', status: 'backlog', priority: 'medium' },
+    { title: 'Cross-region replication lag exceeds 500ms', type: 'bug', status: 'blocked', priority: 'critical' },
+    { title: 'Service mesh observability dashboards', type: 'task', status: 'todo', priority: 'medium' },
+    { title: 'Policy evaluation cache warming on deploy', type: 'improvement', status: 'in_review', priority: 'high' },
+  ],
+  'p-beacon': [
+    { title: 'Progress bar on the onboarding checklist', type: 'story', status: 'todo', priority: 'medium' },
+    { title: 'Skip option for individual checklist steps', type: 'story', status: 'backlog', priority: 'low' },
+    { title: 'Welcome video embed in the first step', type: 'story', status: 'in_progress', priority: 'medium' },
+    { title: 'Analytics event for each checklist completion', type: 'task', status: 'done', priority: 'high' },
+    { title: 'Confetti animation on 100% completion', type: 'improvement', status: 'backlog', priority: 'low' },
+    { title: 'Tour step anchors break on responsive layout', type: 'bug', status: 'in_progress', priority: 'high' },
+    { title: 'Admin panel for editing checklist items', type: 'story', status: 'todo', priority: 'high' },
+    { title: 'Spike: gamification elements for activation', type: 'spike', status: 'backlog', priority: 'low' },
+    { title: 'Onboarding state sync across browser tabs', type: 'bug', status: 'todo', priority: 'medium' },
+    { title: 'Sample project wizard for empty workspaces', type: 'story', status: 'in_review', priority: 'medium' },
+  ],
+  'p-canvas': [
+    { title: 'Button component v3 with token API', type: 'story', status: 'in_progress', priority: 'high' },
+    { title: 'Input component v3 with validation states', type: 'story', status: 'todo', priority: 'high' },
+    { title: 'Modal component v3 with focus trap', type: 'story', status: 'backlog', priority: 'medium' },
+    { title: 'Typography scale from design tokens', type: 'task', status: 'in_progress', priority: 'high' },
+    { title: 'Spacing tokens applied to layout primitives', type: 'task', status: 'todo', priority: 'medium' },
+    { title: 'Storybook stories for all v3 components', type: 'task', status: 'backlog', priority: 'medium' },
+    { title: 'Colour contrast checker CI integration', type: 'improvement', status: 'done', priority: 'high' },
+    { title: 'Icon library tree-shaking support', type: 'improvement', status: 'todo', priority: 'medium' },
+    { title: 'Tooltip arrow misaligned in RTL mode', type: 'bug', status: 'in_review', priority: 'medium' },
+    { title: 'Dropdown menu overflow on small screens', type: 'bug', status: 'todo', priority: 'high' },
+  ],
+  'p-relay': [
+    { title: 'OAuth 2.0 token refresh for connectors', type: 'story', status: 'backlog', priority: 'high' },
+    { title: 'Webhook event log with replay button', type: 'story', status: 'todo', priority: 'medium' },
+    { title: 'API versioning header (Accept-Version)', type: 'task', status: 'backlog', priority: 'medium' },
+    { title: 'GitHub connector: sync PR status to tasks', type: 'story', status: 'backlog', priority: 'high' },
+    { title: 'Rate limit headers in API responses', type: 'improvement', status: 'todo', priority: 'medium' },
+    { title: 'Connector health check dashboard', type: 'story', status: 'backlog', priority: 'low' },
+    { title: 'Webhook payload too large for Slack (>3kb)', type: 'bug', status: 'backlog', priority: 'medium' },
+    { title: 'API key rotation without downtime', type: 'task', status: 'todo', priority: 'high' },
+    { title: 'Spike: GraphQL API surface evaluation', type: 'spike', status: 'backlog', priority: 'low' },
   ],
 };
 
@@ -364,6 +456,125 @@ for (const project of projects) {
         sizeBytes,
         uploadedById: pick(memberIds),
         uploadedAt: `${daysAgo(2 + Math.floor(rand() * 18))}T10:12:00.000Z`,
+      });
+    }
+  });
+}
+
+/* Extra seeds — second pass to reach ~180 tasks */
+for (const project of projects) {
+  const seeds = extraSeedsByProject[project.id] ?? [];
+  const projectSprints = sprints.filter((s) => s.projectId === project.id);
+  const projectReleases = releases.filter((r) => r.projectId === project.id);
+  const memberIds = project.memberIds;
+
+  seeds.forEach((seed, index) => {
+    counter += 1;
+    keyIndexByProject[project.id] = (keyIndexByProject[project.id] ?? 1) + 1;
+    const id = `tk-${counter}`;
+    const isDone = seed.status === 'done';
+    const isBlocked = seed.status === 'blocked';
+    const createdOffset = 10 + Math.floor(rand() * 60);
+    const assigneeId = chance(0.9) ? pick(memberIds) : undefined;
+
+    const dueOffset = isDone
+      ? -(2 + Math.floor(rand() * 25))
+      : chance(0.22)
+        ? -(1 + Math.floor(rand() * 9))
+        : 1 + Math.floor(rand() * 45);
+
+    const activeSprint = projectSprints.find((s) => s.status === 'active');
+    const sprintId = isDone
+      ? projectSprints.filter((s) => s.status === 'completed').at(-1)?.id
+      : seed.status === 'backlog'
+        ? undefined
+        : chance(0.78)
+          ? (activeSprint?.id ?? projectSprints.at(-1)?.id)
+          : projectSprints.find((s) => s.status === 'planned')?.id;
+
+    const task: Task = {
+      id,
+      key: `${project.key}-${keyIndexByProject[project.id]}`,
+      title: seed.title,
+      description: `**Context**\n\n${seed.title} was identified during the ${project.productArea} workstream review.\n\n**Acceptance criteria**\n\n- Meets the agreed functional bar\n- Keyboard and screen-reader parity verified\n- Telemetry event emitted on completion\n- No regression in the existing suite`,
+      type: seed.type,
+      status: seed.status,
+      priority: seed.priority,
+      projectId: project.id,
+      sprintId,
+      releaseId: chance(0.6) ? projectReleases.find((r) => r.status !== 'released')?.id ?? projectReleases[0]?.id : undefined,
+      epicId: seed.type === 'epic' ? undefined : epicIdByProject[project.id],
+      assigneeId,
+      reporterId: pick(memberIds),
+      labelIds: pickMany(labels, 2).map((l) => l.id),
+      storyPoints: seed.type === 'spike' || chance(0.86) ? pick([1, 2, 3, 5, 8, 13]) : undefined,
+      dueDate: daysFromToday(dueOffset),
+      startDate: daysAgo(createdOffset - 3),
+      createdAt: `${daysAgo(createdOffset)}T09:${String(10 + (index % 45)).padStart(2, '0')}:00.000Z`,
+      updatedAt: `${daysAgo(Math.max(0, Math.floor(rand() * 7)))}T15:10:00.000Z`,
+      completedAt: isDone ? `${daysFromToday(dueOffset)}T17:00:00.000Z` : undefined,
+      blockedReason: isBlocked
+        ? pick([
+            'Waiting on the upstream dependency to land.',
+            'Needs a product decision on the edge-case behaviour.',
+            'Blocked by an open platform incident.',
+            'Awaiting security review sign-off.',
+          ])
+        : undefined,
+      checklist: checklistFor(counter),
+      dependencies: [],
+      customFields:
+        seed.type === 'bug'
+          ? { 'cf-impact': pick(['Blocker', 'Major', 'Moderate', 'Minor']), 'cf-effort': pick([1, 2, 3, 5]) }
+          : { 'cf-needs-design': chance(0.4), 'cf-effort': pick([1, 2, 3, 5, 8]) },
+      rank: (index + 100) * 100,
+    };
+
+    tasks.push(task);
+
+    if (chance(0.35)) {
+      const count = 1 + Math.floor(rand() * 2);
+      for (let i = 0; i < count; i += 1) {
+        subtasks.push({
+          id: `st-${id}-${i}`,
+          taskId: id,
+          title: pick([
+            'Write the unit tests',
+            'Update the API contract',
+            'Add telemetry event',
+            'Document the behaviour',
+            'Verify on tablet breakpoint',
+            'Review with design',
+          ]),
+          status: isDone ? 'done' : pick(['todo', 'in_progress', 'done'] as const),
+          assigneeId: chance(0.8) ? pick(memberIds) : undefined,
+        });
+      }
+    }
+
+    const commentCount = Math.floor(rand() * 3);
+    for (let i = 0; i < commentCount; i += 1) {
+      const author = pick(memberIds);
+      comments.push({
+        id: `cm-${id}-${i}`,
+        taskId: id,
+        authorId: author,
+        body: pick(commentBodies),
+        createdAt: `${daysAgo(1 + Math.floor(rand() * 14))}T${String(9 + i).padStart(2, '0')}:15:00.000Z`,
+        mentionedUserIds: chance(0.3) ? [pick(memberIds.filter((m) => m !== author)) ?? author] : [],
+      });
+    }
+
+    if (chance(0.25)) {
+      const [fileName, mimeType, sizeBytes] = pick(attachmentNames) as [string, string, number];
+      attachments.push({
+        id: `at-${id}`,
+        taskId: id,
+        fileName,
+        mimeType,
+        sizeBytes,
+        uploadedById: pick(memberIds),
+        uploadedAt: `${daysAgo(2 + Math.floor(rand() * 12))}T11:30:00.000Z`,
       });
     }
   });
