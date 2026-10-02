@@ -1,0 +1,110 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <rect x="16" y="480" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="504" font-size="13" font-weight="600" fill="#818cf8">⚙  Settings</text>
+  <!-- Settings sub-nav -->
+  <text x="36" y="120" font-size="11" fill="#64748b">Workspace Profile</text>
+  <text x="36" y="150" font-size="11" font-weight="600" fill="#ffffff">Members</text>
+  <rect x="16" y="138" width="188" height="28" rx="6" fill="#374151"/>
+  <text x="36" y="172" font-size="11" fill="#64748b">Roles &amp; Permissions</text>
+  <text x="36" y="198" font-size="11" fill="#64748b">Project Settings</text>
+  <text x="36" y="224" font-size="11" fill="#64748b">Custom Fields</text>
+  <text x="36" y="250" font-size="11" fill="#64748b">Status Config</text>
+  <text x="36" y="276" font-size="11" fill="#64748b">Chat Roles</text>
+  <text x="36" y="302" font-size="11" fill="#64748b">Notifications</text>
+  <text x="36" y="328" font-size="11" fill="#64748b">Integrations</text>
+  <!-- Main area -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Settings  →  Members</text>
+  <!-- Header row -->
+  <rect x="240" y="72" width="940" height="60" rx="0" fill="#ffffff"/>
+  <text x="240" y="96" font-size="18" font-weight="700" fill="#111827">Members</text>
+  <text x="240" y="116" font-size="13" fill="#9ca3af">Manage who has access to this workspace and their roles.</text>
+  <!-- Invite bar -->
+  <rect x="240" y="140" width="940" height="52" rx="8" fill="#eef2ff" stroke="#c7d2fe"/>
+  <rect x="256" y="154" width="560" height="26" rx="6" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="272" y="171" font-size="13" fill="#9ca3af">✉  Enter email address to invite...</text>
+  <rect x="832" y="154" width="120" height="26" rx="6" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="892" y="171" text-anchor="middle" font-size="12" fill="#6b7280">Member  ▾</text>
+  <rect x="1064" y="154" width="100" height="26" rx="6" fill="#4f46e5"/>
+  <text x="1114" y="171" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">Send Invite</text>
+  <!-- Members table header -->
+  <rect x="240" y="208" width="940" height="36" rx="0" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="260" y="231" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">MEMBER</text>
+  <text x="580" y="231" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">EMAIL</text>
+  <text x="780" y="231" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">ROLE</text>
+  <text x="920" y="231" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">JOINED</text>
+  <text x="1100" y="231" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">ACTIONS</text>
+  <!-- Member rows -->
+  <!-- Row 1 — Owner (me) -->
+  <rect x="240" y="244" width="940" height="52" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="268" cy="270" r="16" fill="#ddd6fe"/>
+  <text x="268" y="275" text-anchor="middle" font-size="12" font-weight="700" fill="#7c3aed">AJ</text>
+  <text x="292" y="264" font-size="13" font-weight="600" fill="#111827">Alex Johnson</text>
+  <text x="292" y="280" font-size="11" fill="#9ca3af">You</text>
+  <text x="580" y="272" font-size="12" fill="#374151">alex@acme.com</text>
+  <rect x="780" y="258" width="60" height="22" rx="11" fill="#fef3c7"/>
+  <text x="810" y="273" text-anchor="middle" font-size="11" font-weight="700" fill="#d97706">Owner</text>
+  <text x="920" y="272" font-size="12" fill="#9ca3af">Jan 12</text>
+  <text x="1140" y="272" text-anchor="end" font-size="12" fill="#9ca3af">—</text>
+  <!-- Row 2 — Admin -->
+  <rect x="240" y="296" width="940" height="52" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="268" cy="322" r="16" fill="#dcfce7"/>
+  <text x="268" y="327" text-anchor="middle" font-size="12" font-weight="700" fill="#16a34a">SR</text>
+  <text x="292" y="316" font-size="13" font-weight="600" fill="#111827">Sara Reyes</text>
+  <text x="580" y="324" font-size="12" fill="#374151">sara@acme.com</text>
+  <rect x="780" y="310" width="120" height="28" rx="6" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="840" y="329" text-anchor="middle" font-size="12" fill="#374151">Admin  ▾</text>
+  <text x="920" y="324" font-size="12" fill="#9ca3af">Feb 3</text>
+  <text x="1140" y="324" text-anchor="end" font-size="12" fill="#ef4444">Remove</text>
+  <!-- Row 3 — Member -->
+  <rect x="240" y="348" width="940" height="52" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="268" cy="374" r="16" fill="#dbeafe"/>
+  <text x="268" y="379" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb">JK</text>
+  <text x="292" y="368" font-size="13" font-weight="600" fill="#111827">James Kim</text>
+  <text x="580" y="376" font-size="12" fill="#374151">james@acme.com</text>
+  <rect x="780" y="362" width="120" height="28" rx="6" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="840" y="381" text-anchor="middle" font-size="12" fill="#374151">Member  ▾</text>
+  <text x="920" y="376" font-size="12" fill="#9ca3af">Feb 3</text>
+  <text x="1140" y="376" text-anchor="end" font-size="12" fill="#ef4444">Remove</text>
+  <!-- Row 4 — Member -->
+  <rect x="240" y="400" width="940" height="52" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="268" cy="426" r="16" fill="#fce7f3"/>
+  <text x="268" y="431" text-anchor="middle" font-size="12" font-weight="700" fill="#db2777">RP</text>
+  <text x="292" y="420" font-size="13" font-weight="600" fill="#111827">Ravi Patel</text>
+  <text x="580" y="428" font-size="12" fill="#374151">ravi@acme.com</text>
+  <rect x="780" y="414" width="120" height="28" rx="6" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="840" y="433" text-anchor="middle" font-size="12" fill="#374151">Member  ▾</text>
+  <text x="920" y="428" font-size="12" fill="#9ca3af">Mar 8</text>
+  <text x="1140" y="428" text-anchor="end" font-size="12" fill="#ef4444">Remove</text>
+  <!-- Row 5 — Viewer -->
+  <rect x="240" y="452" width="940" height="52" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="268" cy="478" r="16" fill="#f3f4f6"/>
+  <text x="268" y="483" text-anchor="middle" font-size="12" font-weight="700" fill="#6b7280">LW</text>
+  <text x="292" y="472" font-size="13" font-weight="600" fill="#111827">Ling Wei</text>
+  <text x="580" y="480" font-size="12" fill="#374151">ling@acme.com</text>
+  <rect x="780" y="466" width="120" height="28" rx="6" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="840" y="485" text-anchor="middle" font-size="12" fill="#374151">Viewer  ▾</text>
+  <text x="920" y="480" font-size="12" fill="#9ca3af">Apr 12</text>
+  <text x="1140" y="480" text-anchor="end" font-size="12" fill="#ef4444">Remove</text>
+  <!-- Pending invite -->
+  <rect x="240" y="504" width="940" height="52" fill="#fffbeb" stroke="#fde68a"/>
+  <circle cx="268" cy="530" r="16" fill="#fef3c7"/>
+  <text x="268" y="535" text-anchor="middle" font-size="14">✉</text>
+  <text x="292" y="524" font-size="13" font-weight="600" fill="#92400e">chen@acme.com</text>
+  <text x="292" y="540" font-size="11" fill="#d97706">Invite pending</text>
+  <text x="580" y="532" font-size="12" fill="#9ca3af">chen@acme.com</text>
+  <rect x="780" y="518" width="76" height="26" rx="6" fill="#fef3c7"/>
+  <text x="818" y="535" text-anchor="middle" font-size="11" font-weight="600" fill="#d97706">Member</text>
+  <text x="920" y="532" font-size="12" fill="#9ca3af">Sent 1d ago</text>
+  <text x="1140" y="532" text-anchor="end" font-size="12" fill="#4f46e5">Resend</text>
+  <!-- Role description -->
+  <rect x="240" y="572" width="940" height="130" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="260" y="596" font-size="13" font-weight="700" fill="#111827">Workspace Roles</text>
+  <text x="260" y="620" font-size="12" fill="#374151"><tspan font-weight="700">Owner:</tspan> Everything, including deleting the workspace</text>
+  <text x="260" y="640" font-size="12" fill="#374151"><tspan font-weight="700">Admin:</tspan> Invite/remove members, change roles, manage settings</text>
+  <text x="260" y="660" font-size="12" fill="#374151"><tspan font-weight="700">Member:</tspan> Create and edit tasks, plan sprints, participate in chat</text>
+  <text x="260" y="680" font-size="12" fill="#374151"><tspan font-weight="700">Viewer:</tspan> Read-only access to all content</text>
+</svg>

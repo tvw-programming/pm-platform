@@ -1,0 +1,69 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">💬  Chat</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Chat — Template Chips</text>
+  <!-- Template chips panel at bottom -->
+  <rect x="220" y="400" width="980" height="350" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="220" y="400" width="980" height="56" fill="#f9fafb" stroke="#e5e7eb"/>
+  <!-- Header row -->
+  <text x="244" y="424" font-size="13" font-weight="700" fill="#111827">Templates</text>
+  <text x="244" y="442" font-size="11" fill="#9ca3af">Click a chip to insert into composer  ·  Role: <tspan font-weight="600" fill="#4f46e5">Product Manager</tspan></text>
+  <text x="1164" y="432" text-anchor="end" font-size="14" fill="#9ca3af">×</text>
+  <!-- Role selector -->
+  <rect x="820" y="410" width="160" height="32" rx="6" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="900" y="431" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">PM  ▾</text>
+  <!-- Tab bar -->
+  <rect x="220" y="456" width="980" height="40" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="244" y="464" width="72" height="26" rx="6" fill="#eef2ff"/>
+  <text x="280" y="482" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">Duties</text>
+  <text x="358" y="482" font-size="12" fill="#6b7280">Status</text>
+  <text x="420" y="482" font-size="12" fill="#6b7280">Ask</text>
+  <text x="468" y="482" font-size="12" fill="#6b7280">Respond</text>
+  <!-- Duties chips -->
+  <text x="244" y="518" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">DUTIES &amp; ROLE RESPONSIBILITIES</text>
+  <rect x="244" y="526" width="234" height="56" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="258" y="546" font-size="12" font-weight="600" fill="#111827">Confirm feature scope</text>
+  <text x="258" y="562" font-size="11" fill="#6b7280">As PM I confirm the scope of this feature</text>
+  <text x="258" y="576" font-size="11" fill="#6b7280">aligns with Q2 roadmap objectives.</text>
+  <rect x="486" y="526" width="234" height="56" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="500" y="546" font-size="12" font-weight="600" fill="#111827">Prioritize for backlog</text>
+  <text x="500" y="562" font-size="11" fill="#6b7280">I'm adding this to the backlog with High</text>
+  <text x="500" y="576" font-size="11" fill="#6b7280">priority for next sprint grooming.</text>
+  <rect x="728" y="526" width="234" height="56" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="742" y="546" font-size="12" font-weight="600" fill="#111827">Define acceptance criteria</text>
+  <text x="742" y="562" font-size="11" fill="#6b7280">I'll write acceptance criteria before</text>
+  <text x="742" y="576" font-size="11" fill="#6b7280">engineering begins. ETA: end of day.</text>
+  <rect x="970" y="526" width="194" height="56" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="984" y="546" font-size="12" font-weight="600" fill="#111827">Stakeholder alignment</text>
+  <text x="984" y="562" font-size="11" fill="#6b7280">Need to align with stakeholders</text>
+  <text x="984" y="576" font-size="11" fill="#6b7280">before we proceed. Scheduling now.</text>
+  <!-- Second row chips -->
+  <rect x="244" y="592" width="234" height="56" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="258" y="612" font-size="12" font-weight="600" fill="#111827">Update roadmap</text>
+  <text x="258" y="628" font-size="11" fill="#6b7280">Reflecting this decision on the roadmap.</text>
+  <text x="258" y="644" font-size="11" fill="#6b7280">Relevant epics updated.</text>
+  <rect x="486" y="592" width="234" height="56" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="500" y="612" font-size="12" font-weight="600" fill="#111827">Risk escalation</text>
+  <text x="500" y="628" font-size="11" fill="#6b7280">Escalating this risk to the CTO per</text>
+  <text x="500" y="644" font-size="11" fill="#6b7280">our governance process.</text>
+  <rect x="728" y="592" width="234" height="56" rx="8" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="742" y="612" font-size="12" font-weight="600" fill="#4f46e5">Write release notes</text>
+  <text x="742" y="628" font-size="11" fill="#6366f1">Release notes will be drafted after QA</text>
+  <text x="742" y="644" font-size="11" fill="#6366f1">sign-off. Will share for review.</text>
+  <!-- Hover state on one chip: preview in composer -->
+  <rect x="220" y="66" width="980" height="320" fill="#f9fafb"/>
+  <text x="600" y="200" text-anchor="middle" font-size="14" fill="#9ca3af">← Message history</text>
+  <!-- Composer -->
+  <rect x="220" y="350" width="980" height="50" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="240" y="360" width="820" height="30" rx="6" fill="#f3f4f6"/>
+  <text x="256" y="380" font-size="13" fill="#374151">I'll write acceptance criteria before engineering begins. ETA: end of day.</text>
+  <rect x="240" y="360" width="820" height="30" rx="6" fill="none" stroke="#4f46e5" stroke-width="1.5"/>
+  <rect x="1070" y="358" width="110" height="34" rx="6" fill="#4f46e5"/>
+  <text x="1125" y="380" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">Send</text>
+  <text x="244" y="398" font-size="10" fill="#9ca3af">Template inserted ↑ — edit before sending</text>
+</svg>

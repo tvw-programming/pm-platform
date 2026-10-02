@@ -1,0 +1,86 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">💬  Chat</text>
+  <!-- Chat messages area (dimmed) -->
+  <rect x="220" y="0" width="780" height="750" fill="#f9fafb"/>
+  <rect x="220" y="0" width="780" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Chat — Q2 Sprint 4</text>
+  <rect x="874" y="14" width="80" height="28" rx="6" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="914" y="33" text-anchor="middle" font-size="12" fill="#6b7280">Roster</text>
+  <rect x="964" y="14" width="80" height="28" rx="6" fill="#eef2ff" stroke="#4f46e5"/>
+  <text x="1004" y="33" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">Tracker</text>
+  <!-- Tracker panel -->
+  <rect x="1000" y="0" width="200" height="750" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="1000" y="0" width="200" height="56" fill="#1e1b4b"/>
+  <text x="1100" y="26" text-anchor="middle" font-size="13" font-weight="700" fill="#e0e7ff">Playbook Tracker</text>
+  <text x="1100" y="44" text-anchor="middle" font-size="11" fill="#818cf8">3 active instances</text>
+  <!-- Instance 1 — In Progress -->
+  <rect x="1010" y="66" width="180" height="130" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <rect x="1010" y="66" width="4" height="130" rx="2" fill="#f59e0b"/>
+  <text x="1024" y="84" font-size="11" font-weight="700" fill="#111827">P04 · Architecture</text>
+  <text x="1024" y="98" font-size="10" fill="#6b7280">Decision</text>
+  <text x="1024" y="116" font-size="10" fill="#9ca3af">Fired 2h ago by Alex</text>
+  <!-- Progress bar -->
+  <text x="1024" y="136" font-size="10" font-weight="600" fill="#374151">Progress  1/4</text>
+  <rect x="1024" y="142" width="152" height="8" rx="4" fill="#e5e7eb"/>
+  <rect x="1024" y="142" width="38" height="8" rx="4" fill="#f59e0b"/>
+  <!-- Ticket pills -->
+  <rect x="1024" y="158" width="44" height="18" rx="9" fill="#fee2e2"/>
+  <text x="1046" y="171" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">CTO ✗</text>
+  <rect x="1074" y="158" width="54" height="18" rx="9" fill="#d1fae5"/>
+  <text x="1101" y="171" text-anchor="middle" font-size="9" fill="#15803d">Arch ✓</text>
+  <rect x="1024" y="180" width="42" height="18" rx="9" fill="#fee2e2"/>
+  <text x="1045" y="193" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">PM ✗</text>
+  <rect x="1072" y="180" width="56" height="18" rx="9" fill="#fee2e2"/>
+  <text x="1100" y="193" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">FE Ld ✗</text>
+  <!-- Instance 2 — Almost done -->
+  <rect x="1010" y="206" width="180" height="130" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <rect x="1010" y="206" width="4" height="130" rx="2" fill="#3b82f6"/>
+  <text x="1024" y="224" font-size="11" font-weight="700" fill="#111827">P01 · Feature Request</text>
+  <text x="1024" y="242" font-size="10" fill="#9ca3af">Fired 4h ago by Alex</text>
+  <text x="1024" y="262" font-size="10" font-weight="600" fill="#374151">Progress  3/4</text>
+  <rect x="1024" y="268" width="152" height="8" rx="4" fill="#e5e7eb"/>
+  <rect x="1024" y="268" width="114" height="8" rx="4" fill="#3b82f6"/>
+  <rect x="1024" y="284" width="52" height="18" rx="9" fill="#d1fae5"/>
+  <text x="1050" y="297" text-anchor="middle" font-size="9" fill="#15803d">CTO ✓</text>
+  <rect x="1082" y="284" width="52" height="18" rx="9" fill="#d1fae5"/>
+  <text x="1108" y="297" text-anchor="middle" font-size="9" fill="#15803d">Arch ✓</text>
+  <rect x="1024" y="306" width="42" height="18" rx="9" fill="#d1fae5"/>
+  <text x="1045" y="319" text-anchor="middle" font-size="9" fill="#15803d">PM ✓</text>
+  <rect x="1072" y="306" width="56" height="18" rx="9" fill="#fee2e2"/>
+  <text x="1100" y="319" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">FE Ld ✗</text>
+  <!-- Instance 3 — New -->
+  <rect x="1010" y="346" width="180" height="130" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <rect x="1010" y="346" width="4" height="130" rx="2" fill="#6366f1"/>
+  <text x="1024" y="364" font-size="11" font-weight="700" fill="#111827">P02 · Bug Report</text>
+  <text x="1024" y="382" font-size="10" fill="#9ca3af">Fired 30m ago by James</text>
+  <text x="1024" y="402" font-size="10" font-weight="600" fill="#374151">Progress  0/3</text>
+  <rect x="1024" y="408" width="152" height="8" rx="4" fill="#e5e7eb"/>
+  <rect x="1024" y="408" width="0" height="8" rx="4" fill="#6366f1"/>
+  <rect x="1024" y="424" width="42" height="18" rx="9" fill="#fee2e2"/>
+  <text x="1045" y="437" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">PM ✗</text>
+  <rect x="1072" y="424" width="56" height="18" rx="9" fill="#fee2e2"/>
+  <text x="1100" y="437" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">QA Ld ✗</text>
+  <rect x="1024" y="446" width="56" height="18" rx="9" fill="#fee2e2"/>
+  <text x="1052" y="459" text-anchor="middle" font-size="9" font-weight="600" fill="#dc2626">BE Ld ✗</text>
+  <!-- Completed section -->
+  <line x1="1010" y1="492" x2="1190" y2="492" stroke="#e5e7eb"/>
+  <text x="1100" y="510" text-anchor="middle" font-size="10" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">COMPLETED TODAY  2</text>
+  <rect x="1010" y="518" width="180" height="56" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <rect x="1010" y="518" width="4" height="56" rx="2" fill="#059669"/>
+  <text x="1024" y="536" font-size="11" font-weight="600" fill="#6b7280">P06 · Sprint Planning</text>
+  <text x="1024" y="552" font-size="10" fill="#9ca3af">All 5 tickets resolved</text>
+  <text x="1024" y="566" font-size="10" fill="#15803d">✓ Complete</text>
+  <rect x="1010" y="582" width="180" height="56" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <rect x="1010" y="582" width="4" height="56" rx="2" fill="#059669"/>
+  <text x="1024" y="600" font-size="11" font-weight="600" fill="#6b7280">P09 · Release Approval</text>
+  <text x="1024" y="616" font-size="10" fill="#9ca3af">All 3 tickets resolved</text>
+  <text x="1024" y="630" font-size="10" fill="#15803d">✓ Complete</text>
+  <!-- Chat messages (simplified) -->
+  <rect x="240" y="66" width="740" height="80" rx="8" fill="#ffffff" stroke="#e5e7eb" style="margin:12px"/>
+  <text x="260" y="100" font-size="12" fill="#9ca3af">← Messages appear here</text>
+  <text x="260" y="118" font-size="12" fill="#9ca3af">   Click Tracker button to toggle this panel</text>
+</svg>

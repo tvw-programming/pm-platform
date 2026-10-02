@@ -1,0 +1,95 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">🗺  Roadmap</text>
+  <text x="36" y="162" font-size="13" fill="#64748b">🚀  Releases</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Releases</text>
+  <rect x="1064" y="14" width="110" height="28" rx="8" fill="#4f46e5"/>
+  <text x="1119" y="33" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">+ Release</text>
+  <!-- Release card 1 — In QA -->
+  <rect x="240" y="72" width="940" height="190" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+  <!-- Release header -->
+  <rect x="240" y="72" width="940" height="60" rx="10" fill="#f9fafb"/>
+  <rect x="240" y="108" width="940" height="24" fill="#f9fafb"/>
+  <rect x="260" y="88" width="44" height="44" rx="8" fill="#4f46e5" opacity="0.1"/>
+  <text x="282" y="116" text-anchor="middle" font-size="18">🚀</text>
+  <text x="318" y="102" font-size="15" font-weight="700" fill="#111827">v2.4.0 — Auth &amp; Notifications</text>
+  <text x="318" y="120" font-size="12" fill="#9ca3af">Target: Jun 30, 2025  ·  3 linked epics  ·  47 tasks</text>
+  <rect x="1060" y="84" width="96" height="28" rx="6" fill="#dbeafe"/>
+  <text x="1108" y="103" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">QA Review</text>
+  <!-- Deployment stages -->
+  <text x="264" y="158" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">DEPLOYMENT STAGES</text>
+  <!-- Stage 1: Staging — DONE -->
+  <rect x="264" y="166" width="200" height="72" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="374" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">✓ Staging</text>
+  <text x="374" y="202" text-anchor="middle" font-size="10" fill="#6b7280">Jun 22 at 14:30</text>
+  <text x="374" y="218" text-anchor="middle" font-size="10" fill="#9ca3af">Deployed by DevOps</text>
+  <rect x="296" y="226" width="156" height="22" rx="6" fill="#d1fae5"/>
+  <text x="374" y="241" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">Complete</text>
+  <!-- Arrow -->
+  <path d="M 464 202 L 484 202" stroke="#e5e7eb" stroke-width="2" marker-end="url(#a1)" fill="none"/>
+  <defs><marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L0,8 L8,4 z" fill="#e5e7eb"/></marker></defs>
+  <!-- Stage 2: QA Review — ACTIVE -->
+  <rect x="484" y="166" width="200" height="72" rx="8" fill="#fffbeb" stroke="#fde68a" stroke-width="2"/>
+  <text x="584" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="#d97706">⟳ QA Review</text>
+  <text x="584" y="202" text-anchor="middle" font-size="10" fill="#6b7280">Started Jun 24</text>
+  <text x="584" y="218" text-anchor="middle" font-size="10" fill="#9ca3af">2 of 5 test suites pass</text>
+  <rect x="516" y="226" width="136" height="22" rx="6" fill="#4f46e5"/>
+  <text x="584" y="241" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">Advance →</text>
+  <!-- Arrow -->
+  <path d="M 684 202 L 704 202" stroke="#e5e7eb" stroke-width="2" marker-end="url(#a1)" fill="none"/>
+  <!-- Stage 3: UAT — PENDING -->
+  <rect x="704" y="166" width="200" height="72" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="804" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="#9ca3af">○ UAT</text>
+  <text x="804" y="202" text-anchor="middle" font-size="10" fill="#9ca3af">Not started</text>
+  <text x="804" y="218" text-anchor="middle" font-size="10" fill="#9ca3af">Requires QA pass</text>
+  <rect x="736" y="226" width="136" height="22" rx="6" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="804" y="241" text-anchor="middle" font-size="11" fill="#9ca3af">Locked</text>
+  <!-- Arrow -->
+  <path d="M 904 202 L 924 202" stroke="#e5e7eb" stroke-width="2" marker-end="url(#a1)" fill="none"/>
+  <!-- Stage 4: Production — PENDING -->
+  <rect x="924" y="166" width="256" height="72" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="1052" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="#9ca3af">○ Production</text>
+  <text x="1052" y="202" text-anchor="middle" font-size="10" fill="#9ca3af">Not started</text>
+  <text x="1052" y="218" text-anchor="middle" font-size="10" fill="#9ca3af">Requires UAT sign-off</text>
+  <rect x="964" y="226" width="176" height="22" rx="6" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="1052" y="241" text-anchor="middle" font-size="11" fill="#9ca3af">Locked</text>
+  <!-- Release card 2 — Released -->
+  <rect x="240" y="278" width="940" height="160" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="240" y="278" width="940" height="60" rx="10" fill="#f0fdf4"/>
+  <rect x="240" y="314" width="940" height="24" fill="#f0fdf4"/>
+  <rect x="260" y="294" width="44" height="44" rx="8" fill="#059669" opacity="0.15"/>
+  <text x="282" y="322" text-anchor="middle" font-size="18">✅</text>
+  <text x="318" y="308" font-size="15" font-weight="700" fill="#111827">v2.3.0 — Dashboard Redesign</text>
+  <text x="318" y="326" font-size="12" fill="#9ca3af">Released: Jun 14, 2025  ·  31 tasks  ·  100% complete</text>
+  <rect x="1060" y="290" width="96" height="28" rx="6" fill="#d1fae5"/>
+  <text x="1108" y="309" text-anchor="middle" font-size="12" font-weight="600" fill="#15803d">Released</text>
+  <!-- All stages complete -->
+  <text x="264" y="364" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">DEPLOYMENT STAGES</text>
+  <rect x="264" y="372" width="200" height="44" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="364" y="399" text-anchor="middle" font-size="12" font-weight="600" fill="#15803d">✓ Staging</text>
+  <rect x="484" y="372" width="200" height="44" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="584" y="399" text-anchor="middle" font-size="12" font-weight="600" fill="#15803d">✓ QA Review</text>
+  <rect x="704" y="372" width="200" height="44" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="804" y="399" text-anchor="middle" font-size="12" font-weight="600" fill="#15803d">✓ UAT</text>
+  <rect x="924" y="372" width="256" height="44" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="1052" y="399" text-anchor="middle" font-size="12" font-weight="600" fill="#15803d">✓ Production</text>
+  <!-- Release card 3 — Planned -->
+  <rect x="240" y="454" width="940" height="100" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="240" y="454" width="940" height="60" rx="10" fill="#f9fafb"/>
+  <rect x="240" y="490" width="940" height="24" fill="#f9fafb"/>
+  <rect x="260" y="468" width="44" height="44" rx="8" fill="#6b7280" opacity="0.1"/>
+  <text x="282" y="496" text-anchor="middle" font-size="18">📅</text>
+  <text x="318" y="482" font-size="15" font-weight="700" fill="#111827">v2.5.0 — Mobile &amp; Performance</text>
+  <text x="318" y="500" font-size="12" fill="#9ca3af">Target: Aug 15, 2025  ·  0 tasks yet  ·  Planning</text>
+  <rect x="1060" y="468" width="96" height="28" rx="6" fill="#f3f4f6"/>
+  <text x="1108" y="487" text-anchor="middle" font-size="12" fill="#9ca3af">Planned</text>
+  <!-- Add stage annotation -->
+  <rect x="240" y="568" width="940" height="60" rx="8" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="260" y="590" font-size="12" font-weight="700" fill="#92400e">ℹ  Advancing a deployment stage</text>
+  <text x="260" y="608" font-size="12" fill="#92400e">Click <tspan font-weight="600">Advance →</tspan> inside a stage card to mark it complete and unlock the next stage. Stages must be advanced in order.</text>
+</svg>

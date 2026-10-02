@@ -1,0 +1,85 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <text x="28" y="90" font-size="12" fill="#94a3b8" letter-spacing="0.05em">DELIVERY</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">💬  Chat</text>
+  <text x="36" y="162" font-size="13" fill="#64748b">📋  Tasks</text>
+  <text x="36" y="198" font-size="13" fill="#64748b">🏃  Sprints</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="22" font-size="12" fill="#9ca3af">Delivery /</text>
+  <text x="310" y="22" font-size="12" font-weight="600" fill="#111827">Chat — Q2 Sprint 4</text>
+  <rect x="994" y="14" width="80" height="28" rx="6" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="1034" y="33" text-anchor="middle" font-size="12" fill="#6b7280">Roster</text>
+  <rect x="1084" y="14" width="80" height="28" rx="6" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="1124" y="33" text-anchor="middle" font-size="12" fill="#6b7280">Tracker</text>
+  <!-- Filter tabs -->
+  <rect x="220" y="56" width="980" height="44" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="240" y="68" width="48" height="28" rx="6" fill="#eef2ff"/>
+  <text x="264" y="87" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">All</text>
+  <text x="318" y="87" font-size="12" fill="#6b7280">Mentions</text>
+  <text x="406" y="87" font-size="12" fill="#6b7280">Mandatory</text>
+  <text x="500" y="87" font-size="12" fill="#6b7280">Playbooks</text>
+  <!-- Message list (background) -->
+  <rect x="220" y="100" width="980" height="480" fill="#f9fafb"/>
+  <!-- Some previous messages -->
+  <rect x="248" y="116" width="600" height="60" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="270" cy="146" r="16" fill="#ddd6fe"/>
+  <text x="270" y="151" text-anchor="middle" font-size="11" font-weight="700" fill="#7c3aed">PM</text>
+  <text x="294" y="136" font-size="12" font-weight="600" fill="#111827">Alex (PM)</text>
+  <text x="294" y="154" font-size="12" fill="#374151">Sprint 4 starts today — reminder to update your task statuses</text>
+  <text x="294" y="168" font-size="10" fill="#9ca3af">09:14 AM</text>
+  <rect x="248" y="186" width="500" height="60" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="270" cy="216" r="16" fill="#dcfce7"/>
+  <text x="270" y="221" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a">BE</text>
+  <text x="294" y="206" font-size="12" font-weight="600" fill="#111827">James (BE Lead)</text>
+  <text x="294" y="224" font-size="12" fill="#374151">Auth token issue found — needs architecture decision</text>
+  <text x="294" y="238" font-size="10" fill="#9ca3af">09:32 AM</text>
+  <!-- COMPOSER — WORK EVENT MODE (highlighted) -->
+  <rect x="220" y="578" width="980" height="172" fill="#ffffff" stroke="#e5e7eb"/>
+  <!-- Mode toggle -->
+  <rect x="240" y="590" width="130" height="32" rx="6" fill="#f3f4f6"/>
+  <rect x="240" y="590" width="64" height="32" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="272" y="611" text-anchor="middle" font-size="12" fill="#6b7280">Normal</text>
+  <rect x="306" y="590" width="64" height="32" rx="6" fill="#4f46e5"/>
+  <text x="338" y="611" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">⚡ Event</text>
+  <!-- Event type dropdown -->
+  <text x="390" y="609" font-size="12" font-weight="600" fill="#374151">Event type</text>
+  <rect x="390" y="590" width="320" height="32" rx="6" fill="#fefce8" stroke="#4f46e5" stroke-width="1.5"/>
+  <text x="406" y="611" font-size="13" font-weight="600" fill="#4f46e5">P04 · Architecture Decision</text>
+  <text x="698" y="611" font-size="12" fill="#4f46e5">▾</text>
+  <!-- Message text area -->
+  <rect x="240" y="630" width="820" height="64" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="256" y="656" font-size="13" fill="#111827">Need a decision on whether we should migrate auth to JWT or keep </text>
+  <text x="256" y="674" font-size="13" fill="#111827">session-based tokens. Blocking the mobile team.</text>
+  <!-- Send button -->
+  <rect x="1068" y="630" width="108" height="64" rx="8" fill="#4f46e5"/>
+  <text x="1122" y="658" text-anchor="middle" font-size="18" fill="#ffffff">⚡</text>
+  <text x="1122" y="678" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">Fire Event</text>
+  <!-- Routing preview banner -->
+  <rect x="240" y="594" width="700" height="0" fill="none"/>
+  <rect x="220" y="576" width="980" height="2" fill="#4f46e5" opacity="0.3"/>
+  <!-- Routing preview panel (above composer, overlaying messages) -->
+  <rect x="240" y="440" width="940" height="128" rx="10" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+  <text x="260" y="462" font-size="12" font-weight="700" fill="#92400e">⚡ Routing preview for P04 — Architecture Decision</text>
+  <!-- Must respond -->
+  <text x="260" y="484" font-size="11" font-weight="700" fill="#374151">Must respond:</text>
+  <rect x="364" y="473" width="86" height="20" rx="10" fill="#fee2e2"/>
+  <text x="407" y="487" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">CTO</text>
+  <rect x="458" y="473" width="106" height="20" rx="10" fill="#fee2e2"/>
+  <text x="511" y="487" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">Chief Arch</text>
+  <rect x="572" y="473" width="114" height="20" rx="10" fill="#fee2e2"/>
+  <text x="629" y="487" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">Solution Arch</text>
+  <rect x="694" y="473" width="56" height="20" rx="10" fill="#fef3c7"/>
+  <text x="722" y="487" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706">PM</text>
+  <!-- Skipped -->
+  <text x="260" y="510" font-size="11" font-weight="700" fill="#374151">Skipped (not in roster):</text>
+  <rect x="420" y="499" width="116" height="20" rx="10" fill="#f3f4f6"/>
+  <text x="478" y="513" text-anchor="middle" font-size="10" fill="#9ca3af">Enterprise Arch</text>
+  <!-- SLA -->
+  <text x="260" y="534" font-size="11" fill="#92400e">SLA: <tspan font-weight="700">4 hours</tspan> to respond · Tickets will be auto-escalated on expiry</text>
+  <rect x="1072" y="452" width="96" height="26" rx="6" fill="#fde68a"/>
+  <text x="1120" y="470" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">4 tickets</text>
+</svg>

@@ -1,0 +1,85 @@
+<svg width="960" height="500" xmlns="http://www.w3.org/2000/svg" font-family="'Inter','Segoe UI',sans-serif">
+  <rect width="960" height="500" fill="#0f1117"/>
+  <!-- topbar -->
+  <rect x="0" y="0" width="960" height="48" fill="#0f1117"/>
+  <line x1="0" y1="48" x2="960" y2="48" stroke="#1e2640" stroke-width="1"/>
+  <text x="24" y="30" font-size="18" font-weight="700" fill="#f1f5f9">Ideas</text>
+  <rect x="700" y="13" width="80" height="24" rx="5" fill="#1e2640"/>
+  <text x="710" y="30" font-size="12" fill="#94a3b8">Votes ▾</text>
+  <rect x="790" y="13" width="64" height="24" rx="5" fill="#1e2640"/>
+  <text x="800" y="30" font-size="12" fill="#94a3b8">Filter ▾</text>
+  <rect x="864" y="13" width="80" height="24" rx="5" fill="#6366f1"/>
+  <text x="872" y="30" font-size="12" fill="#fff">+ New idea</text>
+
+  <!-- Idea card 1 - Planned -->
+  <rect x="24" y="64" width="912" height="88" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <rect x="40" y="80" width="48" height="56" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="55" y="100" font-size="11" fill="#6366f1">▲</text>
+  <text x="52" y="120" font-size="18" font-weight="700" fill="#818cf8">24</text>
+  <text x="48" y="134" font-size="9" fill="#475569">votes</text>
+  <text x="104" y="84" font-size="14" font-weight="600" fill="#f1f5f9">Dark mode for all dashboards</text>
+  <rect x="760" y="76" width="68" height="18" rx="4" fill="rgba(99,102,241,0.15)"/>
+  <text x="768" y="89" font-size="9" fill="#818cf8">🔵 Planned</text>
+  <text x="104" y="102" font-size="12" fill="#64748b">"Users on evening shifts keep asking for this — only chat page has it currently"</text>
+  <circle cx="110" cy="128" r="8" fill="#6366f1"/>
+  <text x="107" y="132" font-size="7" fill="#fff">TW</text>
+  <text x="124" y="132" font-size="11" fill="#64748b">Tejas  ·  Jan 10</text>
+  <rect x="196" y="122" width="56" height="18" rx="9" fill="#1e2640"/>
+  <text x="204" y="135" font-size="10" fill="#64748b">frontend</text>
+  <rect x="258" y="122" width="24" height="18" rx="9" fill="#1e2640"/>
+  <text x="266" y="135" font-size="10" fill="#64748b">ux</text>
+  <text x="800" y="132" font-size="11" fill="#64748b">💬 3 comments</text>
+
+  <!-- Idea card 2 - Under Review -->
+  <rect x="24" y="164" width="912" height="88" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <rect x="40" y="180" width="48" height="56" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="55" y="200" font-size="11" fill="#6366f1">▲</text>
+  <text x="52" y="220" font-size="18" font-weight="700" fill="#818cf8">18</text>
+  <text x="48" y="234" font-size="9" fill="#475569">votes</text>
+  <text x="104" y="184" font-size="14" font-weight="600" fill="#f1f5f9">CSV export for Reports page</text>
+  <rect x="760" y="176" width="96" height="18" rx="4" fill="rgba(251,191,36,0.12)"/>
+  <text x="766" y="189" font-size="9" fill="#fbbf24">🟡 Under Review</text>
+  <text x="104" y="202" font-size="12" fill="#64748b">"Finance team needs monthly velocity exports to share with management"</text>
+  <circle cx="110" cy="228" r="8" fill="#a78bfa"/>
+  <text x="107" y="232" font-size="7" fill="#fff">PS</text>
+  <text x="124" y="232" font-size="11" fill="#64748b">Priya  ·  Jan 12</text>
+  <rect x="196" y="222" width="52" height="18" rx="9" fill="#1e2640"/>
+  <text x="204" y="235" font-size="10" fill="#64748b">reports</text>
+  <rect x="254" y="222" width="48" height="18" rx="9" fill="#1e2640"/>
+  <text x="262" y="235" font-size="10" fill="#64748b">export</text>
+  <text x="800" y="232" font-size="11" fill="#64748b">💬 1 comment</text>
+
+  <!-- Idea card 3 - Open -->
+  <rect x="24" y="264" width="912" height="88" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <rect x="40" y="280" width="48" height="56" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="55" y="300" font-size="11" fill="#6366f1">▲</text>
+  <text x="56" y="320" font-size="18" font-weight="700" fill="#94a3b8">7</text>
+  <text x="48" y="334" font-size="9" fill="#475569">votes</text>
+  <text x="104" y="284" font-size="14" font-weight="600" fill="#f1f5f9">Add Slack notification integration</text>
+  <rect x="800" y="276" width="48" height="18" rx="4" fill="rgba(100,116,139,0.12)"/>
+  <text x="808" y="289" font-size="9" fill="#64748b">○ Open</text>
+  <text x="104" y="302" font-size="12" fill="#64748b">"Would reduce context switching when we get alerts from CI/CD"</text>
+  <circle cx="110" cy="328" r="8" fill="#10b981"/>
+  <text x="107" y="332" font-size="7" fill="#fff">AK</text>
+  <text x="124" y="332" font-size="11" fill="#64748b">Arun  ·  Jan 14</text>
+  <rect x="196" y="322" width="72" height="18" rx="9" fill="#1e2640"/>
+  <text x="204" y="335" font-size="10" fill="#64748b">integrations</text>
+  <text x="800" y="332" font-size="11" fill="#64748b">💬 0 comments</text>
+
+  <!-- Idea card 4 - Declined -->
+  <rect x="24" y="364" width="912" height="88" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1" opacity="0.7"/>
+  <rect x="40" y="380" width="48" height="56" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="55" y="400" font-size="11" fill="#475569">▲</text>
+  <text x="56" y="420" font-size="18" font-weight="700" fill="#475569">2</text>
+  <text x="48" y="434" font-size="9" fill="#475569">votes</text>
+  <text x="104" y="384" font-size="14" font-weight="600" fill="#64748b">Emoji reactions on chat messages</text>
+  <rect x="800" y="376" width="62" height="18" rx="4" fill="rgba(248,113,113,0.1)"/>
+  <text x="808" y="389" font-size="9" fill="#f87171">✗ Declined</text>
+  <text x="104" y="402" font-size="12" fill="#475569">"Nice to have but out of scope for this phase"</text>
+  <circle cx="110" cy="428" r="8" fill="#818cf8"/>
+  <text x="107" y="432" font-size="7" fill="#fff">RV</text>
+  <text x="124" y="432" font-size="11" fill="#475569">Rohan  ·  Jan 8</text>
+  <rect x="196" y="422" width="32" height="18" rx="9" fill="#1e2640"/>
+  <text x="204" y="435" font-size="10" fill="#475569">chat</text>
+  <text x="800" y="432" font-size="11" fill="#475569">💬 2 comments</text>
+</svg>

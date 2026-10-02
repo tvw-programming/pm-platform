@@ -1,0 +1,129 @@
+<svg width="960" height="500" xmlns="http://www.w3.org/2000/svg" font-family="'Inter','Segoe UI',sans-serif">
+  <rect width="960" height="500" fill="#0f1117"/>
+  <!-- topbar -->
+  <rect x="0" y="0" width="960" height="48" fill="#0f1117"/>
+  <line x1="0" y1="48" x2="960" y2="48" stroke="#1e2640" stroke-width="1"/>
+  <text x="24" y="30" font-size="18" font-weight="700" fill="#f1f5f9">Tasks</text>
+  <!-- controls -->
+  <rect x="200" y="13" width="76" height="24" rx="5" fill="#1e2640"/>
+  <text x="218" y="30" font-size="12" fill="#94a3b8">Board ▾</text>
+  <rect x="284" y="13" width="96" height="24" rx="5" fill="#1e2640"/>
+  <text x="298" y="30" font-size="12" fill="#94a3b8">Sprint 12 ▾</text>
+  <rect x="388" y="13" width="68" height="24" rx="5" fill="#1e2640"/>
+  <text x="404" y="30" font-size="12" fill="#94a3b8">Filter</text>
+  <rect x="890" y="13" width="56" height="24" rx="5" fill="#6366f1"/>
+  <text x="900" y="30" font-size="12" fill="#fff">+ Task</text>
+
+  <!-- TODO column -->
+  <rect x="24" y="64" width="286" height="412" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <text x="44" y="90" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1">TODO</text>
+  <rect x="160" y="76" width="28" height="18" rx="9" fill="#1e2640"/>
+  <text x="168" y="89" font-size="10" fill="#64748b">8</text>
+
+  <!-- Todo card 1 -->
+  <rect x="40" y="102" width="254" height="82" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="56" y="122" font-size="12" font-weight="600" fill="#e2e8f0">#88 Fix login session bug</text>
+  <rect x="56" y="130" width="38" height="16" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="64" y="142" font-size="9" fill="#f87171">● High</text>
+  <rect x="102" y="130" width="50" height="16" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="110" y="142" font-size="9" fill="#818cf8">🔴 Bug</text>
+  <text x="56" y="164" font-size="11" fill="#64748b">👤 Tejas W.</text>
+  <text x="240" y="164" font-size="10" fill="#475569">5 SP</text>
+
+  <!-- Todo card 2 -->
+  <rect x="40" y="194" width="254" height="82" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="56" y="214" font-size="12" font-weight="600" fill="#e2e8f0">#89 Write API docs</text>
+  <rect x="56" y="222" width="34" height="16" rx="4" fill="rgba(100,116,139,0.15)"/>
+  <text x="64" y="234" font-size="9" fill="#94a3b8">◔ Low</text>
+  <rect x="98" y="222" width="52" height="16" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="106" y="234" font-size="9" fill="#818cf8">⚙️ Chore</text>
+  <text x="56" y="256" font-size="11" fill="#64748b">👤 Priya S.</text>
+  <text x="240" y="256" font-size="10" fill="#475569">2 SP</text>
+
+  <!-- Todo card 3 -->
+  <rect x="40" y="286" width="254" height="82" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="56" y="306" font-size="12" font-weight="600" fill="#e2e8f0">#90 Upgrade dependencies</text>
+  <rect x="56" y="314" width="40" height="16" rx="4" fill="rgba(251,191,36,0.15)"/>
+  <text x="64" y="326" font-size="9" fill="#fbbf24">◑ Med</text>
+  <rect x="104" y="314" width="52" height="16" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="112" y="326" font-size="9" fill="#818cf8">⚙️ Chore</text>
+  <text x="56" y="348" font-size="11" fill="#64748b">👤 Rohan V.</text>
+  <text x="240" y="348" font-size="10" fill="#475569">2 SP</text>
+
+  <!-- + Add task -->
+  <rect x="40" y="380" width="254" height="36" rx="6" fill="none" stroke="#2d3a5c" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="144" y="403" font-size="12" fill="#475569" text-anchor="middle">+ Add task</text>
+
+  <!-- IN PROGRESS column -->
+  <rect x="337" y="64" width="286" height="412" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <text x="357" y="90" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1">IN PROGRESS</text>
+  <rect x="478" y="76" width="28" height="18" rx="9" fill="#fbbf24" opacity="0.2"/>
+  <text x="486" y="89" font-size="10" fill="#fbbf24">4</text>
+
+  <!-- In Progress card 1 -->
+  <rect x="353" y="102" width="254" height="82" rx="6" fill="#1a2035" stroke="#fbbf24" stroke-width="1" opacity="0.8"/>
+  <text x="369" y="122" font-size="12" font-weight="600" fill="#e2e8f0">#91 OAuth implementation</text>
+  <rect x="369" y="130" width="38" height="16" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="377" y="142" font-size="9" fill="#f87171">● High</text>
+  <rect x="415" y="130" width="54" height="16" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="423" y="142" font-size="9" fill="#818cf8">🔵 Feature</text>
+  <text x="369" y="164" font-size="11" fill="#64748b">👤 Arun K.</text>
+  <text x="558" y="164" font-size="10" fill="#475569">5 SP</text>
+
+  <!-- In Progress card 2 -->
+  <rect x="353" y="194" width="254" height="82" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="369" y="214" font-size="12" font-weight="600" fill="#e2e8f0">#92 DB migration v3</text>
+  <rect x="369" y="222" width="40" height="16" rx="4" fill="rgba(251,191,36,0.15)"/>
+  <text x="377" y="234" font-size="9" fill="#fbbf24">◑ Med</text>
+  <rect x="417" y="222" width="54" height="16" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="425" y="234" font-size="9" fill="#818cf8">🔵 Feature</text>
+  <text x="369" y="256" font-size="11" fill="#64748b">👤 Rohan V.</text>
+  <text x="558" y="256" font-size="10" fill="#475569">3 SP</text>
+
+  <!-- In Progress card 3 -->
+  <rect x="353" y="286" width="254" height="82" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="369" y="306" font-size="12" font-weight="600" fill="#e2e8f0">#93 UI component review</text>
+  <rect x="369" y="314" width="34" height="16" rx="4" fill="rgba(100,116,139,0.15)"/>
+  <text x="377" y="326" font-size="9" fill="#94a3b8">◔ Low</text>
+  <rect x="411" y="314" width="52" height="16" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="419" y="326" font-size="9" fill="#818cf8">⚙️ Chore</text>
+  <text x="369" y="348" font-size="11" fill="#64748b">👤 Priya S.</text>
+  <text x="558" y="348" font-size="10" fill="#475569">1 SP</text>
+
+  <!-- DONE column -->
+  <rect x="650" y="64" width="286" height="412" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <text x="670" y="90" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1">DONE</text>
+  <rect x="718" y="76" width="32" height="18" rx="9" fill="#10b981" opacity="0.2"/>
+  <text x="726" y="89" font-size="10" fill="#10b981">17</text>
+
+  <!-- Done card 1 -->
+  <rect x="666" y="102" width="254" height="82" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1" opacity="0.6"/>
+  <text x="682" y="122" font-size="12" font-weight="600" fill="#64748b">#80 Set up CI pipeline</text>
+  <rect x="682" y="130" width="40" height="16" rx="4" fill="rgba(251,191,36,0.1)"/>
+  <text x="690" y="142" font-size="9" fill="#64748b">◑ Med</text>
+  <rect x="730" y="130" width="52" height="16" rx="4" fill="rgba(99,102,241,0.08)"/>
+  <text x="738" y="142" font-size="9" fill="#475569">⚙️ Chore</text>
+  <text x="682" y="158" font-size="11" fill="#475569">👤 Priya S.</text>
+  <text x="872" y="158" font-size="11" fill="#10b981">✓</text>
+  <text x="682" y="175" font-size="10" fill="#475569">3 SP</text>
+
+  <!-- Done card 2 -->
+  <rect x="666" y="194" width="254" height="82" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1" opacity="0.6"/>
+  <text x="682" y="214" font-size="12" font-weight="600" fill="#64748b">#81 API endpoint tests</text>
+  <rect x="682" y="222" width="40" height="16" rx="4" fill="rgba(251,191,36,0.1)"/>
+  <text x="690" y="234" font-size="9" fill="#64748b">◑ Med</text>
+  <rect x="730" y="222" width="52" height="16" rx="4" fill="rgba(99,102,241,0.08)"/>
+  <text x="738" y="234" font-size="9" fill="#475569">⚙️ Chore</text>
+  <text x="682" y="256" font-size="11" fill="#475569">👤 Tejas W.</text>
+  <text x="872" y="256" font-size="11" fill="#10b981">✓</text>
+
+  <!-- Done card 3 -->
+  <rect x="666" y="286" width="254" height="82" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1" opacity="0.6"/>
+  <text x="682" y="306" font-size="12" font-weight="600" fill="#64748b">#82 Auth middleware</text>
+  <rect x="682" y="314" width="38" height="16" rx="4" fill="rgba(248,113,113,0.1)"/>
+  <text x="690" y="326" font-size="9" fill="#64748b">● High</text>
+  <rect x="728" y="314" width="54" height="16" rx="4" fill="rgba(99,102,241,0.08)"/>
+  <text x="736" y="326" font-size="9" fill="#475569">🔵 Feature</text>
+  <text x="682" y="348" font-size="11" fill="#475569">👤 Arun K.</text>
+  <text x="872" y="348" font-size="11" fill="#10b981">✓</text>
+</svg>

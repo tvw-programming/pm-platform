@@ -1,0 +1,131 @@
+<svg width="960" height="580" xmlns="http://www.w3.org/2000/svg" font-family="'Inter','Segoe UI',sans-serif">
+  <rect width="960" height="580" fill="#0f1117"/>
+  <!-- topbar -->
+  <rect x="0" y="0" width="960" height="48" fill="#0f1117"/>
+  <line x1="0" y1="48" x2="960" y2="48" stroke="#1e2640" stroke-width="1"/>
+  <text x="24" y="30" font-size="18" font-weight="700" fill="#f1f5f9">Chat</text>
+  <rect x="766" y="13" width="80" height="24" rx="5" fill="#1e2640"/>
+  <text x="778" y="30" font-size="12" fill="#94a3b8">📋 Roster</text>
+  <rect x="856" y="13" width="84" height="24" rx="5" fill="#1e2640"/>
+  <text x="864" y="30" font-size="12" fill="#94a3b8">📊 Tracker</text>
+
+  <!-- Filter tabs -->
+  <rect x="0" y="48" width="960" height="40" fill="#161b2e"/>
+  <line x1="0" y1="88" x2="960" y2="88" stroke="#1e2640" stroke-width="1"/>
+  <rect x="24" y="60" width="60" height="26" rx="5" fill="#6366f1"/>
+  <text x="40" y="77" font-size="12" fill="#fff">All</text>
+  <rect x="100" y="60" width="82" height="26" rx="5" fill="#1e2640"/>
+  <text x="112" y="77" font-size="12" fill="#94a3b8">Mentions</text>
+  <rect x="196" y="60" width="90" height="26" rx="5" fill="#1e2640"/>
+  <text x="206" y="77" font-size="12" fill="#94a3b8">Mandatory</text>
+  <rect x="300" y="56" width="16" height="16" rx="8" fill="#f87171"/>
+  <text x="305" y="68" font-size="9" fill="#fff">7</text>
+  <rect x="326" y="60" width="88" height="26" rx="5" fill="#1e2640"/>
+  <text x="336" y="77" font-size="12" fill="#94a3b8">Playbooks</text>
+
+  <!-- Message area -->
+  <rect x="0" y="88" width="640" height="388" fill="#0f1117"/>
+
+  <!-- Message 1 - normal -->
+  <circle cx="44" cy="120" r="16" fill="#6366f1"/>
+  <text x="38" y="124" font-size="11" fill="#fff">TW</text>
+  <text x="68" y="112" font-size="12" font-weight="600" fill="#e2e8f0">Tejas Waghulde</text>
+  <text x="68" y="130" font-size="12" fill="#94a3b8">Starting work on the auth layer today</text>
+  <text x="580" y="112" font-size="10" fill="#475569">10:14</text>
+
+  <!-- Divider -->
+  <line x1="24" y1="154" x2="616" y2="154" stroke="#1e2640" stroke-width="1"/>
+  <rect x="200" y="148" width="200" height="14" rx="7" fill="#1e2640"/>
+  <text x="221" y="159" font-size="9" fill="#475569" text-anchor="middle">🔔  work_event  ·  P01 New Feature</text>
+  <text x="310" y="159" font-size="9" fill="#6366f1">Playbook fired</text>
+
+  <!-- Playbook routing summary -->
+  <rect x="64" y="166" width="520" height="64" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="80" y="184" font-size="11" font-weight="600" fill="#818cf8">P01 · New Feature Request</text>
+  <text x="80" y="200" font-size="11" fill="#10b981">✅  Must respond:  CTO, Chief Architect, PM, FE Tech Lead</text>
+  <text x="80" y="216" font-size="11" fill="#fbbf24">⏭  Skipped:  QA Lead (not in roster)</text>
+  <text x="80" y="222" font-size="10" fill="#475569">○  Not asked:  UX Designer, AppSec</text>
+
+  <!-- Message 2 -->
+  <circle cx="44" cy="260" r="16" fill="#818cf8"/>
+  <text x="40" y="264" font-size="10" fill="#fff">PM</text>
+  <text x="68" y="252" font-size="12" font-weight="600" fill="#e2e8f0">Arun Kumar  <tspan font-size="10" fill="#475569">  Project Manager</tspan></text>
+  <text x="68" y="270" font-size="12" fill="#94a3b8">"Looks good, assigning to Sprint 13"</text>
+  <rect x="68" y="278" width="82" height="16" rx="4" fill="rgba(16,185,129,0.12)"/>
+  <text x="76" y="290" font-size="9" fill="#10b981">✓ Mandatory</text>
+  <text x="580" y="252" font-size="10" fill="#475569">10:15</text>
+
+  <!-- Message 3 -->
+  <circle cx="44" cy="318" r="16" fill="#10b981"/>
+  <text x="38" y="322" font-size="10" fill="#fff">CTO</text>
+  <text x="68" y="310" font-size="12" font-weight="600" fill="#e2e8f0">Tejas Waghulde  <tspan font-size="10" fill="#475569">  CTO</tspan></text>
+  <text x="68" y="328" font-size="12" fill="#94a3b8">"Approved — proceed with implementation"</text>
+  <rect x="68" y="336" width="82" height="16" rx="4" fill="rgba(16,185,129,0.12)"/>
+  <text x="76" y="348" font-size="9" fill="#10b981">✓ Mandatory</text>
+  <text x="580" y="310" font-size="10" fill="#475569">10:16</text>
+
+  <!-- Composer -->
+  <rect x="0" y="476" width="640" height="104" fill="#161b2e"/>
+  <line x1="0" y1="476" x2="640" y2="476" stroke="#1e2640" stroke-width="1"/>
+  <rect x="24" y="492" width="80" height="24" rx="5" fill="#6366f1"/>
+  <text x="36" y="508" font-size="11" fill="#fff">Normal ▾</text>
+  <rect x="24" y="522" width="520" height="36" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="40" y="545" font-size="12" fill="#475569">Type a message...</text>
+  <!-- template chips -->
+  <rect x="40" y="492" width="40" height="22" rx="11" fill="#1e2640" x="112"/>
+  <rect x="112" y="492" width="44" height="22" rx="11" fill="#1e2640"/>
+  <text x="120" y="507" font-size="10" fill="#64748b">auth</text>
+  <rect x="162" y="492" width="36" height="22" rx="11" fill="#1e2640"/>
+  <text x="170" y="507" font-size="10" fill="#64748b">api</text>
+  <rect x="204" y="492" width="60" height="22" rx="11" fill="#1e2640"/>
+  <text x="212" y="507" font-size="10" fill="#64748b">deploy</text>
+  <rect x="594" y="522" width="24" height="36" rx="4" fill="#6366f1"/>
+  <text x="600" y="545" font-size="14" fill="#fff">→</text>
+
+  <!-- Ticket bar -->
+  <rect x="640" y="88" width="320" height="388" fill="#161b2e"/>
+  <line x1="640" y1="88" x2="640" y2="580" stroke="#1e2640" stroke-width="1"/>
+  <text x="660" y="110" font-size="12" font-weight="700" fill="#e2e8f0">Active Tickets</text>
+  <line x1="640" y1="120" x2="960" y2="120" stroke="#1e2640" stroke-width="1"/>
+
+  <!-- Ticket 1 -->
+  <rect x="656" y="130" width="288" height="72" rx="6" fill="#1a2035" stroke="#f87171" stroke-width="1" opacity="0.8"/>
+  <text x="670" y="150" font-size="10" font-weight="700" fill="#f87171">🎫  T-001  ·  P01 New Feature</text>
+  <text x="670" y="166" font-size="11" fill="#e2e8f0">OAuth approval gate</text>
+  <text x="670" y="180" font-size="10" fill="#64748b">CTO  ·  ⏰ 22h remaining</text>
+  <rect x="670" y="188" width="72" height="22" rx="5" fill="#10b981"/>
+  <text x="680" y="203" font-size="10" fill="#fff">Approve ✓</text>
+  <rect x="752" y="188" width="60" height="22" rx="5" fill="rgba(248,113,113,0.2)" stroke="#f87171" stroke-width="1"/>
+  <text x="762" y="203" font-size="10" fill="#f87171">Reject ✗</text>
+
+  <!-- Ticket 2 -->
+  <rect x="656" y="212" width="288" height="72" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="670" y="232" font-size="10" font-weight="700" fill="#818cf8">🎫  T-002  ·  P01 New Feature</text>
+  <text x="670" y="248" font-size="11" fill="#e2e8f0">Architecture sign-off</text>
+  <text x="670" y="262" font-size="10" fill="#64748b">Chief Architect  ·  ⏰ 46h remaining</text>
+  <rect x="670" y="270" width="72" height="22" rx="5" fill="#10b981"/>
+  <text x="680" y="285" font-size="10" fill="#fff">Approve ✓</text>
+  <rect x="752" y="270" width="60" height="22" rx="5" fill="rgba(248,113,113,0.2)" stroke="#f87171" stroke-width="1"/>
+  <text x="762" y="285" font-size="10" fill="#f87171">Reject ✗</text>
+
+  <!-- Ticket 3 - expiring soon -->
+  <rect x="656" y="294" width="288" height="72" rx="6" fill="#1a2035" stroke="#fbbf24" stroke-width="1"/>
+  <text x="670" y="314" font-size="10" font-weight="700" fill="#fbbf24">🎫  T-003  ·  P05 Code Review</text>
+  <text x="670" y="330" font-size="11" fill="#e2e8f0">Code review complete</text>
+  <text x="670" y="344" font-size="10" fill="#fbbf24">FE Tech Lead  ·  ⚠ 8h remaining</text>
+  <rect x="670" y="352" width="82" height="22" rx="5" fill="#10b981"/>
+  <text x="680" y="367" font-size="10" fill="#fff">Mark Done ✓</text>
+
+  <!-- Playbook tracker -->
+  <rect x="640" y="476" width="320" height="104" fill="#161b2e"/>
+  <line x1="640" y1="476" x2="960" y2="476" stroke="#1e2640" stroke-width="1"/>
+  <text x="660" y="498" font-size="12" font-weight="700" fill="#e2e8f0">Playbook Tracker</text>
+  <text x="660" y="518" font-size="11" fill="#94a3b8">P01 · New Feature</text>
+  <rect x="660" y="524" width="200" height="6" rx="3" fill="#1e2640"/>
+  <rect x="660" y="524" width="90" height="6" rx="3" fill="#6366f1"/>
+  <text x="868" y="530" font-size="10" fill="#64748b">2 / 4</text>
+  <text x="660" y="548" font-size="11" fill="#94a3b8">P05 · Code Review</text>
+  <rect x="660" y="554" width="200" height="6" rx="3" fill="#1e2640"/>
+  <rect x="660" y="554" width="150" height="6" rx="3" fill="#fbbf24"/>
+  <text x="868" y="560" font-size="10" fill="#64748b">3 / 4</text>
+</svg>

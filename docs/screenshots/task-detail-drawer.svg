@@ -1,0 +1,87 @@
+<svg width="960" height="500" xmlns="http://www.w3.org/2000/svg" font-family="'Inter','Segoe UI',sans-serif">
+  <rect width="960" height="500" fill="#0f1117"/>
+  <!-- topbar -->
+  <rect x="0" y="0" width="960" height="48" fill="#0f1117"/>
+  <line x1="0" y1="48" x2="960" y2="48" stroke="#1e2640" stroke-width="1"/>
+  <text x="24" y="30" font-size="18" font-weight="700" fill="#f1f5f9">Tasks</text>
+
+  <!-- Board dimmed behind drawer -->
+  <rect x="0" y="48" width="620" height="452" fill="#0f1117" opacity="0.85"/>
+  <rect x="24" y="64" width="180" height="380" rx="6" fill="#161b2e" stroke="#1e2640" stroke-width="1" opacity="0.5"/>
+  <text x="44" y="86" font-size="10" fill="#475569" letter-spacing="1">TODO (8)</text>
+  <rect x="40" y="98" width="148" height="60" rx="5" fill="#1a2035" opacity="0.4"/>
+  <rect x="224" y="64" width="180" height="380" rx="6" fill="#161b2e" stroke="#1e2640" stroke-width="1" opacity="0.5"/>
+  <text x="244" y="86" font-size="10" fill="#475569" letter-spacing="1">IN PROGRESS (4)</text>
+  <rect x="240" y="98" width="148" height="60" rx="5" fill="#1a2035" opacity="0.4"/>
+  <rect x="416" y="64" width="180" height="380" rx="6" fill="#161b2e" stroke="#1e2640" stroke-width="1" opacity="0.5"/>
+  <text x="436" y="86" font-size="10" fill="#475569" letter-spacing="1">DONE (17)</text>
+
+  <!-- Drawer panel -->
+  <rect x="620" y="0" width="340" height="500" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+
+  <!-- Drawer header -->
+  <rect x="620" y="0" width="340" height="48" fill="#161b2e"/>
+  <line x1="620" y1="48" x2="960" y2="48" stroke="#1e2640" stroke-width="1"/>
+  <text x="640" y="20" font-size="10" fill="#475569">#91</text>
+  <text x="640" y="36" font-size="14" font-weight="700" fill="#f1f5f9">OAuth Implementation</text>
+  <text x="930" y="30" font-size="18" fill="#475569" text-anchor="middle">✕</text>
+
+  <!-- Metadata rows -->
+  <line x1="640" y1="64" x2="940" y2="64" stroke="#1e2640" stroke-width="1"/>
+  <text x="640" y="82" font-size="11" fill="#64748b">Type</text>
+  <rect x="750" y="70" width="54" height="18" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="758" y="83" font-size="10" fill="#818cf8">🔵 Feature</text>
+
+  <text x="640" y="106" font-size="11" fill="#64748b">Status</text>
+  <rect x="750" y="94" width="84" height="18" rx="4" fill="rgba(251,191,36,0.12)"/>
+  <text x="758" y="107" font-size="10" fill="#fbbf24">▶ In Progress</text>
+
+  <text x="640" y="130" font-size="11" fill="#64748b">Priority</text>
+  <rect x="750" y="118" width="54" height="18" rx="4" fill="rgba(248,113,113,0.12)"/>
+  <text x="758" y="131" font-size="10" fill="#f87171">● High</text>
+
+  <text x="640" y="154" font-size="11" fill="#64748b">Sprint</text>
+  <text x="750" y="154" font-size="11" fill="#94a3b8">Sprint 12</text>
+
+  <text x="640" y="178" font-size="11" fill="#64748b">Assignee</text>
+  <circle cx="758" cy="172" r="8" fill="#6366f1"/>
+  <text x="755" y="176" font-size="8" fill="#fff">A</text>
+  <text x="772" y="178" font-size="11" fill="#94a3b8">Arun Kumar</text>
+
+  <text x="640" y="202" font-size="11" fill="#64748b">Labels</text>
+  <rect x="750" y="190" width="34" height="18" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="758" y="203" font-size="10" fill="#818cf8">auth</text>
+  <rect x="790" y="190" width="26" height="18" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="798" y="203" font-size="10" fill="#818cf8">api</text>
+
+  <text x="640" y="226" font-size="11" fill="#64748b">Points</text>
+  <text x="750" y="226" font-size="11" fill="#94a3b8">5 SP</text>
+
+  <line x1="640" y1="238" x2="940" y2="238" stroke="#1e2640" stroke-width="1"/>
+
+  <!-- Description -->
+  <text x="640" y="258" font-size="12" font-weight="600" fill="#e2e8f0">Description</text>
+  <text x="640" y="276" font-size="11" fill="#94a3b8">Implement OAuth 2.0 login with Google and</text>
+  <text x="640" y="294" font-size="11" fill="#94a3b8">GitHub providers. Token refresh must work</text>
+  <text x="640" y="312" font-size="11" fill="#94a3b8">silently for 7 days using rotating tokens.</text>
+
+  <line x1="640" y1="328" x2="940" y2="328" stroke="#1e2640" stroke-width="1"/>
+
+  <!-- Activity -->
+  <text x="640" y="348" font-size="12" font-weight="600" fill="#e2e8f0">Activity</text>
+  <circle cx="648" cy="366" r="8" fill="#6366f1"/>
+  <text x="645" y="370" font-size="8" fill="#fff">T</text>
+  <text x="664" y="362" font-size="11" fill="#94a3b8">Tejas: "Started auth provider setup"</text>
+  <text x="664" y="376" font-size="10" fill="#475569">2h ago</text>
+
+  <circle cx="648" cy="396" r="8" fill="#818cf8"/>
+  <text x="645" y="400" font-size="8" fill="#fff">A</text>
+  <text x="664" y="392" font-size="11" fill="#94a3b8">Arun: "Blocked on redirect URI config"</text>
+  <text x="664" y="406" font-size="10" fill="#475569">1h ago</text>
+
+  <!-- Comment input -->
+  <rect x="640" y="426" width="282" height="36" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="656" y="449" font-size="11" fill="#475569">Add a comment...</text>
+  <rect x="896" y="432" width="26" height="24" rx="4" fill="#6366f1"/>
+  <text x="903" y="448" font-size="10" fill="#fff">→</text>
+</svg>

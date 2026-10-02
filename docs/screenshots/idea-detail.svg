@@ -1,0 +1,86 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">💡  Ideas</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Ideas</text>
+  <!-- Idea list (left) -->
+  <rect x="220" y="56" width="380" height="694" fill="#f9fafb" stroke="#e5e7eb"/>
+  <rect x="240" y="72" width="340" height="88" rx="8" fill="#eef2ff" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="260" y="96" font-size="13" font-weight="600" fill="#111827">AI-powered sprint suggestions</text>
+  <text x="260" y="112" font-size="11" fill="#6b7280">Auto-suggest sprint tasks based on backlog priority...</text>
+  <rect x="260" y="122" width="62" height="20" rx="10" fill="#dbeafe"/>
+  <text x="291" y="136" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8">Planned</text>
+  <text x="554" y="128" text-anchor="end" font-size="12" font-weight="700" fill="#4f46e5">▲ 24</text>
+  <rect x="240" y="168" width="340" height="80" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="260" y="190" font-size="13" font-weight="600" fill="#111827">Slack integration for tickets</text>
+  <text x="260" y="206" font-size="11" fill="#6b7280">Push ticket notifications to Slack channels...</text>
+  <rect x="260" y="216" width="76" height="20" rx="10" fill="#fef3c7"/>
+  <text x="298" y="230" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706">Under Review</text>
+  <text x="554" y="226" text-anchor="end" font-size="12" font-weight="700" fill="#6b7280">▲ 18</text>
+  <rect x="240" y="256" width="340" height="80" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="260" y="278" font-size="13" font-weight="600" fill="#111827">CSV export for reports</text>
+  <text x="260" y="294" font-size="11" fill="#6b7280">Download velocity and cycle time as CSV...</text>
+  <rect x="260" y="304" width="46" height="20" rx="10" fill="#f3f4f6"/>
+  <text x="283" y="318" text-anchor="middle" font-size="10" fill="#9ca3af">Open</text>
+  <text x="554" y="316" text-anchor="end" font-size="12" font-weight="700" fill="#6b7280">▲ 11</text>
+  <!-- Idea detail panel -->
+  <rect x="600" y="56" width="600" height="694" fill="#ffffff" stroke="#e5e7eb"/>
+  <!-- Detail header -->
+  <rect x="600" y="56" width="600" height="80" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="620" y="88" font-size="16" font-weight="700" fill="#111827">AI-powered sprint suggestions</text>
+  <text x="620" y="108" font-size="12" fill="#9ca3af">Submitted by Alex Johnson  ·  2 weeks ago</text>
+  <text x="1180" y="76" text-anchor="end" font-size="16" fill="#9ca3af">×</text>
+  <!-- Vote + Status -->
+  <rect x="620" y="148" width="80" height="64" rx="8" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="660" y="174" text-anchor="middle" font-size="24" fill="#4f46e5">▲</text>
+  <text x="660" y="196" text-anchor="middle" font-size="16" font-weight="800" fill="#4f46e5">24</text>
+  <text x="716" y="166" font-size="12" font-weight="600" fill="#374151">votes</text>
+  <text x="716" y="184" font-size="11" fill="#9ca3af">Click ▲ to</text>
+  <text x="716" y="200" font-size="11" fill="#9ca3af">vote / unvote</text>
+  <text x="820" y="160" font-size="12" font-weight="700" fill="#9ca3af">STATUS</text>
+  <rect x="820" y="168" width="76" height="26" rx="13" fill="#dbeafe"/>
+  <text x="858" y="185" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">Planned</text>
+  <text x="916" y="160" font-size="12" font-weight="700" fill="#9ca3af">LABELS</text>
+  <rect x="916" y="168" width="56" height="26" rx="13" fill="#d1fae5"/>
+  <text x="944" y="185" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">AI/ML</text>
+  <rect x="980" y="168" width="56" height="26" rx="13" fill="#fef3c7"/>
+  <text x="1008" y="185" text-anchor="middle" font-size="11" font-weight="600" fill="#d97706">UX</text>
+  <!-- Description -->
+  <text x="620" y="240" font-size="12" font-weight="700" fill="#9ca3af">DESCRIPTION</text>
+  <rect x="620" y="248" width="556" height="100" rx="8" fill="#f9fafb"/>
+  <text x="636" y="270" font-size="13" fill="#374151">When planning a sprint, the system should analyze backlog item priority, story</text>
+  <text x="636" y="288" font-size="13" fill="#374151">points, team capacity, and historical velocity to suggest an optimal set of tasks</text>
+  <text x="636" y="306" font-size="13" fill="#374151">to pull in. The PM can accept/reject individual suggestions.</text>
+  <text x="636" y="332" font-size="12" fill="#9ca3af">Acceptance criteria: suggestion accuracy ≥ 80% on the first sprint run.</text>
+  <!-- Linked roadmap epic -->
+  <text x="620" y="376" font-size="12" font-weight="700" fill="#9ca3af">LINKED ROADMAP EPIC</text>
+  <rect x="620" y="384" width="556" height="44" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="636" y="406" font-size="13" font-weight="600" fill="#15803d">🟣 AI Features Epic  ·  Q3 2025</text>
+  <text x="1156" y="406" text-anchor="end" font-size="12" fill="#9ca3af">+ Link epic</text>
+  <!-- Comments -->
+  <text x="620" y="454" font-size="12" font-weight="700" fill="#9ca3af">COMMENTS  3</text>
+  <rect x="620" y="462" width="556" height="64" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <circle cx="640" cy="494" r="14" fill="#ddd6fe"/>
+  <text x="640" y="499" text-anchor="middle" font-size="10" font-weight="700" fill="#7c3aed">JK</text>
+  <text x="664" y="484" font-size="12" font-weight="600" fill="#111827">James Kim</text>
+  <text x="664" y="500" font-size="12" fill="#374151">We could use the existing velocity data from Reports for the ML model.</text>
+  <text x="664" y="516" font-size="10" fill="#9ca3af">3 days ago</text>
+  <rect x="620" y="532" width="556" height="64" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <circle cx="640" cy="564" r="14" fill="#dcfce7"/>
+  <text x="640" y="569" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">AJ</text>
+  <text x="664" y="554" font-size="12" font-weight="600" fill="#111827">Alex Johnson</text>
+  <text x="664" y="570" font-size="12" fill="#374151">Good point — let's include capacity as a factor too.</text>
+  <text x="664" y="586" font-size="10" fill="#9ca3af">2 days ago</text>
+  <!-- Comment input -->
+  <rect x="620" y="610" width="556" height="44" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="636" y="637" font-size="13" fill="#9ca3af">Add a comment...</text>
+  <!-- Status change -->
+  <rect x="620" y="668" width="264" height="38" rx="8" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="752" y="692" text-anchor="middle" font-size="12" fill="#6b7280">Change Status ▾</text>
+  <rect x="896" y="668" width="280" height="38" rx="8" fill="#4f46e5"/>
+  <text x="1036" y="692" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">Link to Roadmap Epic</text>
+</svg>

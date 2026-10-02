@@ -1,0 +1,88 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <!-- Sidebar -->
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <text x="28" y="90" font-size="12" fill="#94a3b8">PLAN</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">📋  Tasks</text>
+  <text x="36" y="162" font-size="13" fill="#64748b">📦  Backlog</text>
+  <text x="36" y="198" font-size="13" fill="#64748b">🏃  Sprints</text>
+  <text x="36" y="234" font-size="13" fill="#64748b">🗺  Roadmap</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="248" y="22" font-size="12" fill="#9ca3af">Plan /</text>
+  <text x="292" y="22" font-size="12" font-weight="600" fill="#111827">Tasks</text>
+  <!-- Filter bar -->
+  <rect x="220" y="56" width="980" height="52" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <!-- Filter button (active) -->
+  <rect x="240" y="70" width="104" height="30" rx="6" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+  <text x="292" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#4f46e5">⚙ Filters (3)</text>
+  <!-- View toggle -->
+  <rect x="354" y="70" width="64" height="30" rx="6" fill="#f3f4f6"/>
+  <text x="386" y="90" text-anchor="middle" font-size="12" fill="#6b7280">Board</text>
+  <rect x="422" y="70" width="64" height="30" rx="6" fill="#f3f4f6"/>
+  <text x="454" y="90" text-anchor="middle" font-size="12" fill="#6b7280">List</text>
+  <!-- Search -->
+  <rect x="900" y="70" width="284" height="30" rx="6" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="918" y="90" font-size="12" fill="#9ca3af">🔍  Search tasks...</text>
+  <!-- Filter dropdown panel -->
+  <rect x="240" y="108" width="440" height="420" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" filter="url(#fsh)"/>
+  <defs><filter id="fsh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0002"/></filter></defs>
+  <text x="260" y="136" font-size="13" font-weight="700" fill="#111827">Filters</text>
+  <text x="640" y="136" font-size="12" fill="#4f46e5" text-anchor="end">Clear all</text>
+  <line x1="240" y1="146" x2="680" y2="146" stroke="#f3f4f6" stroke-width="1"/>
+  <!-- Type -->
+  <text x="260" y="168" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">TYPE</text>
+  <rect x="260" y="176" width="84" height="28" rx="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="302" y="195" text-anchor="middle" font-size="12" font-weight="600" fill="#2563eb">🔵 Feature</text>
+  <rect x="352" y="176" width="68" height="28" rx="14" fill="#fee2e2"/>
+  <text x="386" y="195" text-anchor="middle" font-size="12" fill="#9ca3af">🔴 Bug</text>
+  <rect x="428" y="176" width="66" height="28" rx="14" fill="#f3f4f6"/>
+  <text x="461" y="195" text-anchor="middle" font-size="12" fill="#9ca3af">⚙ Chore</text>
+  <rect x="502" y="176" width="64" height="28" rx="14" fill="#f3f4f6"/>
+  <text x="534" y="195" text-anchor="middle" font-size="12" fill="#9ca3af">🔬 Spike</text>
+  <!-- Priority -->
+  <text x="260" y="228" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">PRIORITY</text>
+  <rect x="260" y="236" width="66" height="28" rx="14" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="293" y="255" text-anchor="middle" font-size="12" font-weight="600" fill="#dc2626">● High</text>
+  <rect x="334" y="236" width="80" height="28" rx="14" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="374" y="255" text-anchor="middle" font-size="12" font-weight="600" fill="#d97706">◑ Medium</text>
+  <rect x="422" y="236" width="62" height="28" rx="14" fill="#f3f4f6"/>
+  <text x="453" y="255" text-anchor="middle" font-size="12" fill="#9ca3af">◔ Low</text>
+  <!-- Assignee -->
+  <text x="260" y="286" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">ASSIGNEE</text>
+  <rect x="260" y="294" width="340" height="36" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="278" y="317" font-size="13" fill="#9ca3af">Search members...</text>
+  <circle cx="540" cy="312" r="13" fill="#ddd6fe"/>
+  <text x="540" y="317" text-anchor="middle" font-size="11" font-weight="600" fill="#7c3aed">AJ</text>
+  <text x="560" y="317" font-size="12" fill="#4f46e5">Alex J.</text>
+  <text x="600" y="317" font-size="14" fill="#6b7280">×</text>
+  <!-- Label -->
+  <text x="260" y="352" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">LABEL</text>
+  <rect x="260" y="360" width="72" height="28" rx="14" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="296" y="379" text-anchor="middle" font-size="12" font-weight="600" fill="#16a34a">backend</text>
+  <rect x="340" y="360" width="76" height="28" rx="14" fill="#f3f4f6"/>
+  <text x="378" y="379" text-anchor="middle" font-size="12" fill="#9ca3af">frontend</text>
+  <rect x="424" y="360" width="50" height="28" rx="14" fill="#f3f4f6"/>
+  <text x="449" y="379" text-anchor="middle" font-size="12" fill="#9ca3af">api</text>
+  <rect x="482" y="360" width="64" height="28" rx="14" fill="#f3f4f6"/>
+  <text x="514" y="379" text-anchor="middle" font-size="12" fill="#9ca3af">design</text>
+  <!-- Sprint -->
+  <text x="260" y="412" font-size="11" font-weight="700" fill="#9ca3af" letter-spacing="0.06em">SPRINT</text>
+  <rect x="260" y="420" width="340" height="36" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="278" y="443" font-size="13" fill="#111827">Q2 Sprint 4 (current)</text>
+  <text x="590" y="443" font-size="12" fill="#9ca3af">▾</text>
+  <!-- Apply button -->
+  <rect x="260" y="480" width="340" height="38" rx="8" fill="#4f46e5"/>
+  <text x="430" y="504" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Apply 3 Filters</text>
+  <!-- Active chips in toolbar -->
+  <rect x="502" y="70" width="96" height="30" rx="15" fill="#eef2ff"/>
+  <text x="550" y="90" text-anchor="middle" font-size="11" fill="#4f46e5">🔵 Feature ×</text>
+  <rect x="604" y="70" width="84" height="30" rx="15" fill="#eef2ff"/>
+  <text x="646" y="90" text-anchor="middle" font-size="11" fill="#4f46e5">● High ×</text>
+  <rect x="694" y="70" width="98" height="30" rx="15" fill="#eef2ff"/>
+  <text x="743" y="90" text-anchor="middle" font-size="11" fill="#4f46e5">backend ×</text>
+  <!-- Board content (dimmed) -->
+  <rect x="240" y="136" width="960" height="580" rx="0" fill="#f3f4f6" opacity="0.4"/>
+</svg>

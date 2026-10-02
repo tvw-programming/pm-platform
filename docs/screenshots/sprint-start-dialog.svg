@@ -1,0 +1,41 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect width="1200" height="750" fill="#1e2130" opacity="0.5"/>
+  <defs><filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="12" stdDeviation="28" flood-color="#0004"/></filter></defs>
+  <rect x="350" y="96" width="500" height="558" rx="12" fill="#ffffff" filter="url(#sh)"/>
+  <!-- Header -->
+  <rect x="350" y="96" width="500" height="68" rx="12" fill="#059669"/>
+  <rect x="350" y="140" width="500" height="24" fill="#059669"/>
+  <text x="600" y="122" text-anchor="middle" font-size="16" font-weight="700" fill="#ffffff">🚀 Start Sprint</text>
+  <text x="600" y="144" text-anchor="middle" font-size="12" fill="#a7f3d0">Locks sprint scope and begins the countdown</text>
+  <!-- Sprint name -->
+  <text x="374" y="192" font-size="12" font-weight="600" fill="#374151">Sprint name</text>
+  <rect x="374" y="200" width="452" height="40" rx="8" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="390" y="225" font-size="14" fill="#111827">Q2 Sprint 5</text>
+  <!-- Sprint goal -->
+  <text x="374" y="262" font-size="12" font-weight="600" fill="#374151">Sprint goal <tspan fill="#9ca3af" font-weight="400">(optional)</tspan></text>
+  <rect x="374" y="270" width="452" height="72" rx="8" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="390" y="292" font-size="13" fill="#111827">Complete OAuth integration and </text>
+  <text x="390" y="310" font-size="13" fill="#111827">stabilize the notification system</text>
+  <!-- Date range -->
+  <text x="374" y="364" font-size="12" font-weight="600" fill="#374151">Start date</text>
+  <rect x="374" y="372" width="214" height="40" rx="8" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="390" y="397" font-size="13" fill="#111827">📅  Jun 10, 2025</text>
+  <text x="608" y="364" font-size="12" font-weight="600" fill="#374151">End date</text>
+  <rect x="612" y="372" width="214" height="40" rx="8" fill="#f9fafb" stroke="#d1d5db"/>
+  <text x="628" y="397" font-size="13" fill="#111827">📅  Jun 24, 2025</text>
+  <!-- Duration pill -->
+  <rect x="374" y="422" width="452" height="36" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="600" y="445" text-anchor="middle" font-size="12" fill="#15803d">⏱  2-week sprint  ·  10 working days</text>
+  <!-- Scope summary -->
+  <text x="374" y="480" font-size="12" font-weight="600" fill="#374151">Sprint scope</text>
+  <rect x="374" y="488" width="452" height="60" rx="8" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="390" y="510" font-size="13" fill="#92400e">⚠  This will lock 12 tasks into the sprint.</text>
+  <text x="390" y="528" font-size="12" fill="#92400e">Tasks cannot be added/removed once the sprint starts</text>
+  <text x="390" y="544" font-size="12" fill="#92400e">without Admin permission.</text>
+  <!-- Buttons -->
+  <rect x="374" y="570" width="214" height="44" rx="10" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="481" y="597" text-anchor="middle" font-size="13" font-weight="600" fill="#374151">Cancel</text>
+  <rect x="612" y="570" width="214" height="44" rx="10" fill="#059669"/>
+  <text x="719" y="597" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Start Sprint →</text>
+</svg>

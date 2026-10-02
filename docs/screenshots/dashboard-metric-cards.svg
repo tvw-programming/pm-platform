@@ -1,0 +1,82 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <!-- Top bar -->
+  <rect x="0" y="0" width="1200" height="56" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="0" y="0" width="220" height="56" fill="#1e2130"/>
+  <text x="28" y="22" font-size="11" font-weight="700" fill="#ffffff" opacity="0.5" letter-spacing="1">CGEN PM</text>
+  <text x="28" y="40" font-size="14" font-weight="700" fill="#ffffff">Dashboard</text>
+  <text x="260" y="34" font-size="14" font-weight="600" fill="#111827">Good morning, Alex 👋</text>
+  <rect x="920" y="14" width="120" height="28" rx="6" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="980" y="33" text-anchor="middle" font-size="12" fill="#6b7280">Q2 Sprint 4  ▾</text>
+  <circle cx="1140" cy="28" r="18" fill="#ddd6fe"/>
+  <text x="1140" y="33" text-anchor="middle" font-size="13" font-weight="700" fill="#7c3aed">AJ</text>
+  <!-- Section label -->
+  <text x="240" y="90" font-size="13" font-weight="700" fill="#6b7280" letter-spacing="0.06em">SPRINT HEALTH</text>
+  <!-- Card 1 — Open Tasks -->
+  <rect x="240" y="104" width="218" height="124" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="240" y="104" width="218" height="4" rx="2" fill="#6366f1"/>
+  <text x="258" y="130" font-size="12" fill="#6b7280">Open Tasks</text>
+  <text x="258" y="175" font-size="42" font-weight="800" fill="#111827" font-variant-numeric="tabular-nums">34</text>
+  <rect x="348" y="154" width="90" height="24" rx="12" fill="#fef3c7"/>
+  <text x="393" y="171" text-anchor="middle" font-size="12" font-weight="600" fill="#d97706">▲ 3 today</text>
+  <text x="258" y="216" font-size="11" fill="#9ca3af">vs 31 yesterday</text>
+  <!-- Card 2 — In Progress -->
+  <rect x="474" y="104" width="218" height="124" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="474" y="104" width="218" height="4" rx="2" fill="#3b82f6"/>
+  <text x="492" y="130" font-size="12" fill="#6b7280">In Progress</text>
+  <text x="492" y="175" font-size="42" font-weight="800" fill="#111827">12</text>
+  <rect x="554" y="154" width="116" height="24" rx="12" fill="#dbeafe"/>
+  <text x="612" y="171" text-anchor="middle" font-size="12" font-weight="600" fill="#2563eb">= same as yest.</text>
+  <text x="492" y="216" font-size="11" fill="#9ca3af">6 of 12 have PRs</text>
+  <!-- Card 3 — Completed -->
+  <rect x="708" y="104" width="218" height="124" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="708" y="104" width="218" height="4" rx="2" fill="#10b981"/>
+  <text x="726" y="130" font-size="12" fill="#6b7280">Completed</text>
+  <text x="726" y="175" font-size="42" font-weight="800" fill="#111827">47</text>
+  <rect x="788" y="154" width="114" height="24" rx="12" fill="#d1fae5"/>
+  <text x="845" y="171" text-anchor="middle" font-size="12" font-weight="600" fill="#059669">▲ 8 this week</text>
+  <text x="726" y="216" font-size="11" fill="#9ca3af">Sprint goal: 60 pts</text>
+  <!-- Card 4 — Blocked -->
+  <rect x="942" y="104" width="218" height="124" rx="10" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5"/>
+  <rect x="942" y="104" width="218" height="4" rx="2" fill="#ef4444"/>
+  <text x="960" y="130" font-size="12" fill="#6b7280">Blocked</text>
+  <text x="960" y="175" font-size="42" font-weight="800" fill="#ef4444">5</text>
+  <rect x="1002" y="154" width="130" height="24" rx="12" fill="#fee2e2"/>
+  <text x="1067" y="171" text-anchor="middle" font-size="12" font-weight="600" fill="#dc2626">▲ 2 need action</text>
+  <text x="960" y="216" font-size="11" fill="#9ca3af">Oldest: 3 days</text>
+  <!-- Annotation arrows and labels -->
+  <line x1="349" y1="240" x2="349" y2="270" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="290" y="288" font-size="11" fill="#4f46e5" font-weight="600">▲ Green = good (more done)</text>
+  <line x1="1057" y1="240" x2="1057" y2="270" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="990" y="288" font-size="11" fill="#ef4444" font-weight="600">Red border = needs attention</text>
+  <!-- Delta badge legend -->
+  <rect x="240" y="310" width="920" height="56" rx="8" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+  <text x="260" y="334" font-size="12" font-weight="700" fill="#92400e">Delta Badge Colors</text>
+  <rect x="380" y="322" width="60" height="22" rx="11" fill="#d1fae5"/>
+  <text x="410" y="338" text-anchor="middle" font-size="11" font-weight="600" fill="#059669">▲ Green</text>
+  <text x="452" y="338" font-size="11" fill="#92400e">= Good direction (more done, fewer blocked)</text>
+  <rect x="700" y="322" width="52" height="22" rx="11" fill="#fee2e2"/>
+  <text x="726" y="338" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">▼ Red</text>
+  <text x="765" y="338" font-size="11" fill="#92400e">= Bad direction (more blocked, fewer done)</text>
+  <rect x="1000" y="322" width="46" height="22" rx="11" fill="#f3f4f6"/>
+  <text x="1023" y="338" text-anchor="middle" font-size="11" font-weight="600" fill="#6b7280">= Grey</text>
+  <text x="1058" y="338" font-size="11" fill="#92400e">= No change</text>
+  <!-- My Work Panel -->
+  <text x="240" y="400" font-size="13" font-weight="700" fill="#6b7280" letter-spacing="0.06em">MY WORK TODAY</text>
+  <rect x="240" y="414" width="920" height="52" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="252" y="430" width="8" height="20" rx="2" fill="#ef4444"/>
+  <text x="272" y="445" font-size="13" font-weight="600" fill="#111827">Fix auth token refresh on mobile</text>
+  <rect x="600" y="433" width="52" height="18" rx="9" fill="#fee2e2"/>
+  <text x="626" y="446" text-anchor="middle" font-size="10" font-weight="600" fill="#ef4444">High</text>
+  <rect x="664" y="433" width="84" height="18" rx="9" fill="#e0e7ff"/>
+  <text x="706" y="446" text-anchor="middle" font-size="10" font-weight="600" fill="#4f46e5">In Progress</text>
+  <rect x="760" y="433" width="38" height="18" rx="9" fill="#f3f4f6"/>
+  <text x="779" y="446" text-anchor="middle" font-size="10" fill="#9ca3af">Bug</text>
+  <rect x="240" y="470" width="920" height="52" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="252" y="486" width="8" height="20" rx="2" fill="#f59e0b"/>
+  <text x="272" y="501" font-size="13" font-weight="600" fill="#111827">Design review: Settings redesign</text>
+  <rect x="600" y="489" width="58" height="18" rx="9" fill="#fef3c7"/>
+  <text x="629" y="502" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706">Medium</text>
+  <rect x="670" y="489" width="50" height="18" rx="9" fill="#f3f4f6"/>
+  <text x="695" y="502" text-anchor="middle" font-size="10" fill="#6b7280">Review</text>
+</svg>

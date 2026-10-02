@@ -1,0 +1,83 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <text x="36" y="90" font-size="13" fill="#64748b">📋  Tasks</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">📦  Backlog</text>
+  <text x="36" y="162" font-size="13" fill="#64748b">🏃  Sprints</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Backlog → Sprint Planning</text>
+  <!-- Left panel: Backlog -->
+  <rect x="240" y="70" width="460" height="660" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="240" y="70" width="460" height="52" rx="10" fill="#f9fafb"/>
+  <rect x="240" y="108" width="460" height="14" fill="#f9fafb"/>
+  <text x="260" y="102" font-size="13" font-weight="700" fill="#111827">Backlog</text>
+  <text x="420" y="102" font-size="12" fill="#9ca3af">24 items</text>
+  <rect x="620" y="84" width="64" height="26" rx="6" fill="#f3f4f6"/>
+  <text x="652" y="102" text-anchor="middle" font-size="12" fill="#6b7280">Sort ▾</text>
+  <!-- Backlog tasks -->
+  <rect x="256" y="132" width="428" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="276" y="157" font-size="13" font-weight="600" fill="#111827">Implement OAuth2 login</text>
+  <rect x="276" y="163" width="46" height="18" rx="9" fill="#fee2e2"/>
+  <text x="299" y="176" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">High</text>
+  <rect x="330" y="163" width="58" height="18" rx="9" fill="#dbeafe"/>
+  <text x="359" y="176" text-anchor="middle" font-size="10" fill="#2563eb">Feature</text>
+  <text x="664" y="176" font-size="11" fill="#9ca3af">8 pts</text>
+  <rect x="256" y="202" width="428" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="276" y="227" font-size="13" font-weight="600" fill="#111827">Email notification templates</text>
+  <rect x="276" y="233" width="58" height="18" rx="9" fill="#fef3c7"/>
+  <text x="305" y="246" text-anchor="middle" font-size="10" fill="#d97706">Medium</text>
+  <text x="664" y="246" font-size="11" fill="#9ca3af">5 pts</text>
+  <!-- DRAGGING CARD -->
+  <rect x="256" y="272" width="428" height="64" rx="8" fill="#eef2ff" stroke="#818cf8" stroke-width="2" opacity="0.4"/>
+  <text x="276" y="297" font-size="13" fill="#9ca3af">API rate limiting middleware</text>
+  <!-- Ghost/placeholder -->
+  <rect x="256" y="342" width="428" height="64" rx="8" fill="#f9fafb" stroke="#e5e7eb" stroke-dasharray="6,4"/>
+  <rect x="256" y="412" width="428" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="276" y="437" font-size="13" font-weight="600" fill="#111827">Redesign profile page</text>
+  <rect x="256" y="482" width="428" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="276" y="507" font-size="13" font-weight="600" fill="#111827">Fix CORS headers on staging</text>
+  <!-- DRAGGING CARD floating -->
+  <rect x="390" y="300" width="428" height="64" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="2" filter="url(#dsh)" transform="rotate(-2 390 300)"/>
+  <defs><filter id="dsh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="4" dy="8" stdDeviation="12" flood-color="#4f46e530"/></filter></defs>
+  <text x="410" y="326" font-size="13" font-weight="600" fill="#111827" transform="rotate(-2 390 300)">API rate limiting middleware</text>
+  <rect x="410" y="332" width="58" height="18" rx="9" fill="#fef3c7" transform="rotate(-2 390 300)"/>
+  <text x="439" y="345" text-anchor="middle" font-size="10" fill="#d97706" transform="rotate(-2 390 300)">Medium</text>
+  <text x="795" y="345" font-size="11" fill="#9ca3af" transform="rotate(-2 390 300)">3 pts</text>
+  <!-- Arrow -->
+  <path d="M 710 332 L 760 332" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#arr)" fill="none"/>
+  <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L0,8 L8,4 z" fill="#4f46e5"/></marker></defs>
+  <!-- Right panel: Sprint -->
+  <rect x="720" y="70" width="460" height="660" rx="10" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <rect x="720" y="70" width="460" height="52" rx="10" fill="#eef2ff"/>
+  <rect x="720" y="108" width="460" height="14" fill="#eef2ff"/>
+  <text x="740" y="102" font-size="13" font-weight="700" fill="#4f46e5">Q2 Sprint 5 — Planning</text>
+  <rect x="1064" y="82" width="96" height="26" rx="6" fill="#4f46e5"/>
+  <text x="1112" y="100" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">Start Sprint</text>
+  <!-- Sprint total -->
+  <rect x="740" y="122" width="420" height="32" rx="6" fill="#f3f4f6"/>
+  <text x="750" y="143" font-size="12" fill="#6b7280">Story points:</text>
+  <rect x="840" y="129" width="120" height="18" rx="3" fill="#e5e7eb"/>
+  <rect x="840" y="129" width="72" height="18" rx="3" fill="#4f46e5"/>
+  <text x="954" y="143" font-size="11" fill="#6b7280">18 / 30 pts</text>
+  <!-- Sprint tasks -->
+  <rect x="740" y="166" width="420" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="760" y="191" font-size="13" font-weight="600" fill="#111827">Implement OAuth2 login</text>
+  <rect x="760" y="199" width="46" height="18" rx="9" fill="#fee2e2"/>
+  <text x="783" y="212" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">High</text>
+  <text x="1140" y="212" font-size="11" fill="#9ca3af">8 pts</text>
+  <rect x="740" y="236" width="420" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="760" y="261" font-size="13" font-weight="600" fill="#111827">Email notification templates</text>
+  <text x="1140" y="275" font-size="11" fill="#9ca3af">5 pts</text>
+  <!-- Drop target highlight -->
+  <rect x="740" y="306" width="420" height="64" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-dasharray="6,4" stroke-width="2"/>
+  <text x="950" y="344" text-anchor="middle" font-size="13" fill="#6366f1">Drop here to add to sprint</text>
+  <rect x="740" y="376" width="420" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="760" y="401" font-size="13" font-weight="600" fill="#111827">Fix CORS headers on staging</text>
+  <text x="1140" y="414" font-size="11" fill="#9ca3af">2 pts</text>
+  <!-- Drag indicator label -->
+  <rect x="500" y="390" width="200" height="34" rx="17" fill="#111827" opacity="0.85"/>
+  <text x="600" y="412" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">Dragging to sprint →</text>
+</svg>

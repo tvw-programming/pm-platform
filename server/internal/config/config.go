@@ -37,8 +37,8 @@ func Load() *Config {
 			DBName:   getEnv("DB_NAME", "pm_platform"),
 		},
 		Server: ServerConfig{
-			Port:        getEnv("SERVER_PORT", "3001"),
-			CORSOrigins: getEnv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000"),
+			Port:        getEnv("SERVER_PORT", "5589"),
+			CORSOrigins: getEnv("CORS_ORIGINS", "http://localhost:5588,http://localhost:5590,http://localhost:3000"),
 		},
 	}
 }

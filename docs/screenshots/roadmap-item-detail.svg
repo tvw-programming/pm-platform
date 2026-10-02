@@ -1,0 +1,81 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">🗺  Roadmap</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Roadmap</text>
+  <!-- Timeline (simplified background) -->
+  <rect x="220" y="56" width="700" height="694" fill="#f9fafb"/>
+  <!-- Timeline bars -->
+  <rect x="240" y="80" width="660" height="36" fill="#ffffff" stroke="#e5e7eb" rx="4"/>
+  <!-- Month headers -->
+  <text x="290" y="102" font-size="11" fill="#9ca3af">Jan</text>
+  <text x="400" y="102" font-size="11" fill="#9ca3af">Feb</text>
+  <text x="510" y="102" font-size="11" fill="#9ca3af">Mar</text>
+  <text x="620" y="102" font-size="11" fill="#9ca3af">Apr</text>
+  <text x="730" y="102" font-size="11" fill="#9ca3af">May</text>
+  <text x="840" y="102" font-size="11" fill="#9ca3af">Jun</text>
+  <!-- Epic bars -->
+  <rect x="260" y="136" width="320" height="32" rx="6" fill="#7c3aed" opacity="0.85"/>
+  <text x="275" y="157" font-size="12" font-weight="600" fill="#ffffff">Auth Overhaul Epic</text>
+  <rect x="260" y="180" width="480" height="32" rx="6" fill="#2563eb" opacity="0.8"/>
+  <text x="275" y="201" font-size="12" font-weight="600" fill="#ffffff">Dashboard Redesign Initiative</text>
+  <!-- Selected bar (highlighted) -->
+  <rect x="400" y="224" width="240" height="32" rx="6" fill="#059669" stroke="#022c22" stroke-width="2"/>
+  <text x="415" y="245" font-size="12" font-weight="600" fill="#ffffff">Notification System Epic</text>
+  <rect x="260" y="268" width="160" height="32" rx="6" fill="#f59e0b" opacity="0.8"/>
+  <text x="275" y="289" font-size="12" font-weight="600" fill="#ffffff">Mobile App v2</text>
+  <!-- DETAIL PANEL -->
+  <rect x="920" y="56" width="280" height="694" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="920" y="56" width="280" height="64" fill="#059669"/>
+  <text x="1060" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Notification System</text>
+  <text x="1060" y="98" text-anchor="middle" font-size="11" fill="#a7f3d0">Epic  ·  In Progress</text>
+  <text x="1180" y="72" text-anchor="middle" font-size="16" fill="#ffffff" opacity="0.7">×</text>
+  <!-- Fields -->
+  <text x="940" y="142" font-size="11" font-weight="700" fill="#9ca3af">TYPE</text>
+  <rect x="940" y="150" width="52" height="22" rx="11" fill="#d1fae5"/>
+  <text x="966" y="165" text-anchor="middle" font-size="11" font-weight="600" fill="#065f46">Epic</text>
+  <text x="940" y="192" font-size="11" font-weight="700" fill="#9ca3af">STATUS</text>
+  <rect x="940" y="200" width="92" height="22" rx="11" fill="#dbeafe"/>
+  <text x="986" y="215" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">In Progress</text>
+  <text x="940" y="242" font-size="11" font-weight="700" fill="#9ca3af">OWNER</text>
+  <circle cx="952" cy="258" r="12" fill="#ddd6fe"/>
+  <text x="952" y="263" text-anchor="middle" font-size="10" font-weight="600" fill="#7c3aed">AJ</text>
+  <text x="970" y="262" font-size="12" fill="#111827">Alex Johnson</text>
+  <text x="940" y="294" font-size="11" font-weight="700" fill="#9ca3af">DATES</text>
+  <text x="940" y="310" font-size="12" fill="#111827">Mar 1 – Jun 30, 2025</text>
+  <text x="1140" y="310" font-size="11" fill="#9ca3af">4 mo</text>
+  <!-- Progress -->
+  <text x="940" y="342" font-size="11" font-weight="700" fill="#9ca3af">PROGRESS</text>
+  <rect x="940" y="350" width="220" height="10" rx="5" fill="#e5e7eb"/>
+  <rect x="940" y="350" width="143" height="10" rx="5" fill="#059669"/>
+  <text x="1170" y="362" text-anchor="end" font-size="11" font-weight="600" fill="#059669">65%</text>
+  <!-- Linked sprints -->
+  <text x="940" y="392" font-size="11" font-weight="700" fill="#9ca3af">LINKED SPRINTS</text>
+  <rect x="940" y="400" width="220" height="28" rx="6" fill="#f3f4f6"/>
+  <text x="952" y="419" font-size="12" fill="#374151">Q2 Sprint 3  ✓</text>
+  <rect x="940" y="434" width="220" height="28" rx="6" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="952" y="453" font-size="12" fill="#4f46e5">Q2 Sprint 4 (current)</text>
+  <rect x="940" y="468" width="220" height="28" rx="6" fill="#f3f4f6"/>
+  <text x="952" y="487" font-size="12" fill="#9ca3af">Q2 Sprint 5  planned</text>
+  <!-- Linked tasks -->
+  <text x="940" y="520" font-size="11" font-weight="700" fill="#9ca3af">TASKS  12 total · 7 done</text>
+  <rect x="940" y="528" width="220" height="24" rx="6" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="952" y="545" font-size="11" fill="#374151">Email templates</text>
+  <rect x="1132" y="532" width="28" height="16" rx="8" fill="#d1fae5"/>
+  <text x="1146" y="544" text-anchor="middle" font-size="9" fill="#15803d">Done</text>
+  <rect x="940" y="558" width="220" height="24" rx="6" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="952" y="575" font-size="11" fill="#374151">Push notification service</text>
+  <rect x="1108" y="562" width="52" height="16" rx="8" fill="#dbeafe"/>
+  <text x="1134" y="574" text-anchor="middle" font-size="9" fill="#1d4ed8">In Prog.</text>
+  <rect x="940" y="588" width="220" height="24" rx="6" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="952" y="605" font-size="11" fill="#374151">Notification preferences UI</text>
+  <rect x="1132" y="592" width="28" height="16" rx="8" fill="#fef3c7"/>
+  <text x="1146" y="604" text-anchor="middle" font-size="9" fill="#d97706">Todo</text>
+  <!-- Edit button -->
+  <rect x="940" y="680" width="220" height="38" rx="8" fill="#4f46e5"/>
+  <text x="1050" y="704" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Edit Epic</text>
+</svg>

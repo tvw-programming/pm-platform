@@ -1,0 +1,99 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <rect x="16" y="100" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="124" font-size="13" font-weight="600" fill="#818cf8">📬  Feedback</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Feedback</text>
+  <rect x="1064" y="14" width="110" height="28" rx="8" fill="#4f46e5"/>
+  <text x="1119" y="33" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">+ New Item</text>
+  <!-- Status tabs -->
+  <rect x="220" y="56" width="980" height="44" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="240" y="68" width="60" height="26" rx="6" fill="#eef2ff"/>
+  <text x="270" y="86" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">Open 8</text>
+  <text x="342" y="86" font-size="12" fill="#6b7280">Triaging 3</text>
+  <text x="416" y="86" font-size="12" fill="#6b7280">Accepted 12</text>
+  <text x="498" y="86" font-size="12" fill="#6b7280">Declined 4</text>
+  <!-- Feedback list + detail panel -->
+  <!-- List (left) -->
+  <rect x="220" y="100" width="400" height="650" fill="#f9fafb" stroke="#e5e7eb"/>
+  <!-- Item 1 — selected/being triaged -->
+  <rect x="236" y="116" width="368" height="88" rx="8" fill="#eef2ff" stroke="#818cf8" stroke-width="1.5"/>
+  <rect x="236" y="116" width="4" height="88" rx="2" fill="#ef4444"/>
+  <text x="254" y="136" font-size="13" font-weight="600" fill="#111827">Login fails on Safari 17</text>
+  <text x="254" y="152" font-size="11" fill="#6b7280">OAuth callback not completing in Safari with SameSite cookies.</text>
+  <rect x="254" y="160" width="44" height="20" rx="10" fill="#fee2e2"/>
+  <text x="276" y="174" text-anchor="middle" font-size="10" font-weight="700" fill="#dc2626">High</text>
+  <rect x="306" y="160" width="50" height="20" rx="10" fill="#f3f4f6"/>
+  <text x="331" y="174" text-anchor="middle" font-size="10" fill="#9ca3af">Customer</text>
+  <text x="580" y="174" text-anchor="end" font-size="10" fill="#9ca3af">2d ago</text>
+  <!-- Item 2 -->
+  <rect x="236" y="212" width="368" height="80" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="236" y="212" width="4" height="80" rx="2" fill="#f59e0b"/>
+  <text x="254" y="232" font-size="13" font-weight="600" fill="#111827">Sprint velocity shows wrong data</text>
+  <text x="254" y="248" font-size="11" fill="#6b7280">Velocity chart counting tasks not in a sprint.</text>
+  <rect x="254" y="256" width="58" height="20" rx="10" fill="#fef3c7"/>
+  <text x="283" y="270" text-anchor="middle" font-size="10" font-weight="700" fill="#d97706">Medium</text>
+  <rect x="320" y="256" width="50" height="20" rx="10" fill="#f3f4f6"/>
+  <text x="345" y="270" text-anchor="middle" font-size="10" fill="#9ca3af">Internal</text>
+  <!-- Item 3 -->
+  <rect x="236" y="300" width="368" height="80" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="236" y="300" width="4" height="80" rx="2" fill="#6b7280"/>
+  <text x="254" y="320" font-size="13" font-weight="600" fill="#111827">Dark mode for mobile app</text>
+  <text x="254" y="336" font-size="11" fill="#6b7280">Request from 3 enterprise customers for dark theme.</text>
+  <rect x="254" y="344" width="38" height="20" rx="10" fill="#f3f4f6"/>
+  <text x="273" y="358" text-anchor="middle" font-size="10" fill="#9ca3af">Low</text>
+  <!-- Detail panel (right) -->
+  <rect x="620" y="100" width="560" height="650" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="620" y="100" width="560" height="64" fill="#f9fafb" stroke="#e5e7eb"/>
+  <rect x="620" y="100" width="4" height="64" rx="2" fill="#ef4444"/>
+  <text x="640" y="124" font-size="15" font-weight="700" fill="#111827">Login fails on Safari 17</text>
+  <text x="640" y="142" font-size="11" fill="#9ca3af">Submitted 2 days ago  ·  Source: Customer support ticket #4821</text>
+  <!-- Fields -->
+  <text x="640" y="186" font-size="11" font-weight="700" fill="#9ca3af">SEVERITY</text>
+  <rect x="640" y="194" width="52" height="24" rx="12" fill="#fee2e2"/>
+  <text x="666" y="210" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">High</text>
+  <text x="720" y="186" font-size="11" font-weight="700" fill="#9ca3af">SOURCE</text>
+  <rect x="720" y="194" width="76" height="24" rx="12" fill="#f3f4f6"/>
+  <text x="758" y="210" text-anchor="middle" font-size="11" fill="#374151">Customer</text>
+  <text x="826" y="186" font-size="11" font-weight="700" fill="#9ca3af">ASSIGNEE</text>
+  <circle cx="840" cy="206" r="12" fill="#dcfce7"/>
+  <text x="840" y="211" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">SR</text>
+  <text x="858" y="210" font-size="12" fill="#111827">Sara Reyes</text>
+  <!-- Description -->
+  <text x="640" y="246" font-size="12" font-weight="700" fill="#9ca3af">DESCRIPTION</text>
+  <rect x="640" y="254" width="516" height="80" rx="8" fill="#f9fafb"/>
+  <text x="656" y="274" font-size="12" fill="#374151">On Safari 17 with default cookie settings, the OAuth2 callback</text>
+  <text x="656" y="292" font-size="12" fill="#374151">is blocked by SameSite=Strict. Users are redirected back to the</text>
+  <text x="656" y="310" font-size="12" fill="#374151">login page instead of being authenticated. Affects ~12% of users.</text>
+  <!-- Status progression -->
+  <text x="640" y="360" font-size="12" font-weight="700" fill="#9ca3af">TRIAGE STATUS</text>
+  <rect x="640" y="368" width="516" height="56" rx="8" fill="#fffbeb" stroke="#fde68a"/>
+  <rect x="660" y="380" width="76" height="26" rx="13" fill="#4f46e5"/>
+  <text x="698" y="397" text-anchor="middle" font-size="11" font-weight="600" fill="#ffffff">Open →</text>
+  <rect x="752" y="380" width="84" height="26" rx="13" fill="#e5e7eb"/>
+  <text x="794" y="397" text-anchor="middle" font-size="11" fill="#9ca3af">Triaging →</text>
+  <rect x="852" y="380" width="80" height="26" rx="13" fill="#e5e7eb"/>
+  <text x="892" y="397" text-anchor="middle" font-size="11" fill="#9ca3af">Accepted →</text>
+  <rect x="948" y="380" width="76" height="26" rx="13" fill="#e5e7eb"/>
+  <text x="986" y="397" text-anchor="middle" font-size="11" fill="#9ca3af">Declined</text>
+  <!-- Link to task -->
+  <text x="640" y="452" font-size="12" font-weight="700" fill="#9ca3af">LINKED TASK</text>
+  <rect x="640" y="460" width="516" height="44" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="656" y="482" font-size="12" fill="#9ca3af">No linked task yet</text>
+  <text x="1138" y="482" text-anchor="end" font-size="12" fill="#4f46e5">+ Create Task</text>
+  <!-- Triage actions -->
+  <text x="640" y="530" font-size="12" font-weight="700" fill="#9ca3af">TRIAGE ACTIONS</text>
+  <rect x="640" y="538" width="160" height="40" rx="8" fill="#3b82f6"/>
+  <text x="720" y="563" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">→ Start Triaging</text>
+  <rect x="812" y="538" width="160" height="40" rx="8" fill="#059669"/>
+  <text x="892" y="563" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">✓ Accept</text>
+  <rect x="984" y="538" width="160" height="40" rx="8" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="1064" y="563" text-anchor="middle" font-size="13" font-weight="600" fill="#374151">✗ Decline</text>
+  <!-- Note on Accept -->
+  <rect x="640" y="594" width="516" height="44" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="656" y="614" font-size="12" fill="#15803d">✓ Accepting will prompt to link or create a task and move this</text>
+  <text x="656" y="630" font-size="12" fill="#15803d">feedback item to <tspan font-weight="600">Accepted</tspan> status.</text>
+</svg>

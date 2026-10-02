@@ -1,0 +1,113 @@
+<svg width="960" height="500" xmlns="http://www.w3.org/2000/svg" font-family="'Inter','Segoe UI',sans-serif">
+  <rect width="960" height="500" fill="#0f1117"/>
+  <!-- topbar -->
+  <rect x="0" y="0" width="960" height="48" fill="#0f1117"/>
+  <line x1="0" y1="48" x2="960" y2="48" stroke="#1e2640" stroke-width="1"/>
+  <text x="24" y="30" font-size="18" font-weight="700" fill="#f1f5f9">Backlog</text>
+  <rect x="816" y="13" width="120" height="24" rx="5" fill="#6366f1"/>
+  <text x="828" y="30" font-size="12" fill="#fff">Start Sprint ▶</text>
+
+  <!-- Search bar -->
+  <rect x="24" y="64" width="540" height="32" rx="6" fill="#161b2e" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="42" y="84" font-size="12" fill="#475569">🔍  Filter by title, label, or assignee...</text>
+  <rect x="576" y="64" width="80" height="32" rx="6" fill="#1e2640"/>
+  <text x="590" y="84" font-size="12" fill="#94a3b8">Sort: Pri ▾</text>
+
+  <!-- Column headers -->
+  <rect x="24" y="106" width="912" height="28" rx="0" fill="#161b2e"/>
+  <line x1="24" y1="134" x2="936" y2="134" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="44" y="124" font-size="10" font-weight="700" fill="#475569" letter-spacing="0.5">TITLE</text>
+  <text x="520" y="124" font-size="10" font-weight="700" fill="#475569" letter-spacing="0.5">PRIORITY</text>
+  <text x="604" y="124" font-size="10" font-weight="700" fill="#475569" letter-spacing="0.5">TYPE</text>
+  <text x="700" y="124" font-size="10" font-weight="700" fill="#475569" letter-spacing="0.5">SP</text>
+  <text x="750" y="124" font-size="10" font-weight="700" fill="#475569" letter-spacing="0.5">ASSIGNEE</text>
+
+  <!-- Backlog rows -->
+  <!-- row 1 -->
+  <rect x="24" y="134" width="912" height="44" fill="none"/>
+  <line x1="24" y1="178" x2="936" y2="178" stroke="#1e2640" stroke-width="1"/>
+  <rect x="36" y="147" width="14" height="14" rx="3" fill="none" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="60" y="160" font-size="13" fill="#e2e8f0">#101  Implement dark mode toggle</text>
+  <rect x="510" y="146" width="54" height="18" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="520" y="159" font-size="10" fill="#f87171">● High</text>
+  <rect x="594" y="146" width="60" height="18" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="602" y="159" font-size="10" fill="#818cf8">🔵 Feature</text>
+  <text x="710" y="160" font-size="12" fill="#94a3b8">5 SP</text>
+  <circle cx="762" cy="156" r="9" fill="#6366f1"/>
+  <text x="759" y="160" font-size="8" fill="#fff">T</text>
+  <text x="778" y="160" font-size="12" fill="#94a3b8">Tejas</text>
+
+  <!-- row 2 -->
+  <rect x="24" y="178" width="912" height="44" fill="rgba(255,255,255,0.01)"/>
+  <line x1="24" y1="222" x2="936" y2="222" stroke="#1e2640" stroke-width="1"/>
+  <rect x="36" y="191" width="14" height="14" rx="3" fill="none" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="60" y="204" font-size="13" fill="#e2e8f0">#102  Upgrade dependencies to latest</text>
+  <rect x="510" y="190" width="46" height="18" rx="4" fill="rgba(251,191,36,0.15)"/>
+  <text x="518" y="203" font-size="10" fill="#fbbf24">◑ Med</text>
+  <rect x="594" y="190" width="56" height="18" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="602" y="203" font-size="10" fill="#818cf8">⚙️ Chore</text>
+  <text x="710" y="204" font-size="12" fill="#94a3b8">2 SP</text>
+  <circle cx="762" cy="200" r="9" fill="#818cf8"/>
+  <text x="759" y="204" font-size="8" fill="#fff">R</text>
+  <text x="778" y="204" font-size="12" fill="#94a3b8">Rohan</text>
+
+  <!-- row 3 -->
+  <rect x="24" y="222" width="912" height="44" fill="none"/>
+  <line x1="24" y1="266" x2="936" y2="266" stroke="#1e2640" stroke-width="1"/>
+  <rect x="36" y="235" width="14" height="14" rx="3" fill="none" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="60" y="248" font-size="13" fill="#e2e8f0">#103  Add rate limiting to API endpoints</text>
+  <rect x="510" y="234" width="54" height="18" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="520" y="247" font-size="10" fill="#f87171">● High</text>
+  <rect x="594" y="234" width="60" height="18" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="602" y="247" font-size="10" fill="#818cf8">🔵 Feature</text>
+  <text x="710" y="248" font-size="12" fill="#94a3b8">3 SP</text>
+  <circle cx="762" cy="244" r="9" fill="#10b981"/>
+  <text x="759" y="248" font-size="8" fill="#fff">A</text>
+  <text x="778" y="248" font-size="12" fill="#94a3b8">Arun</text>
+
+  <!-- row 4 -->
+  <rect x="24" y="266" width="912" height="44" fill="rgba(255,255,255,0.01)"/>
+  <line x1="24" y1="310" x2="936" y2="310" stroke="#1e2640" stroke-width="1"/>
+  <rect x="36" y="279" width="14" height="14" rx="3" fill="none" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="60" y="292" font-size="13" fill="#e2e8f0">#104  Fix timezone bug in date picker</text>
+  <rect x="510" y="278" width="54" height="18" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="520" y="291" font-size="10" fill="#f87171">● High</text>
+  <rect x="594" y="278" width="44" height="18" rx="4" fill="rgba(248,113,113,0.12)"/>
+  <text x="602" y="291" font-size="10" fill="#f87171">🔴 Bug</text>
+  <text x="710" y="292" font-size="12" fill="#94a3b8">2 SP</text>
+  <circle cx="762" cy="288" r="9" fill="#a78bfa"/>
+  <text x="759" y="292" font-size="8" fill="#fff">P</text>
+  <text x="778" y="292" font-size="12" fill="#94a3b8">Priya</text>
+
+  <!-- row 5 -->
+  <rect x="24" y="310" width="912" height="44" fill="none"/>
+  <line x1="24" y1="354" x2="936" y2="354" stroke="#1e2640" stroke-width="1"/>
+  <rect x="36" y="323" width="14" height="14" rx="3" fill="none" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="60" y="336" font-size="13" fill="#e2e8f0">#105  Write E2E tests for auth flow</text>
+  <rect x="510" y="322" width="46" height="18" rx="4" fill="rgba(251,191,36,0.15)"/>
+  <text x="518" y="335" font-size="10" fill="#fbbf24">◑ Med</text>
+  <rect x="594" y="322" width="56" height="18" rx="4" fill="rgba(99,102,241,0.12)"/>
+  <text x="602" y="335" font-size="10" fill="#818cf8">⚙️ Chore</text>
+  <text x="710" y="336" font-size="12" fill="#94a3b8">3 SP</text>
+  <circle cx="762" cy="332" r="9" fill="#6366f1"/>
+  <text x="759" y="336" font-size="8" fill="#fff">T</text>
+  <text x="778" y="336" font-size="12" fill="#94a3b8">Tejas</text>
+
+  <!-- row 6 -->
+  <rect x="24" y="354" width="912" height="44" fill="rgba(255,255,255,0.01)"/>
+  <line x1="24" y1="398" x2="936" y2="398" stroke="#1e2640" stroke-width="1"/>
+  <rect x="36" y="367" width="14" height="14" rx="3" fill="none" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="60" y="380" font-size="13" fill="#e2e8f0">#106  Explore GraphQL for data layer</text>
+  <rect x="510" y="366" width="40" height="18" rx="4" fill="rgba(100,116,139,0.15)"/>
+  <text x="518" y="379" font-size="10" fill="#94a3b8">◔ Low</text>
+  <rect x="594" y="366" width="52" height="18" rx="4" fill="rgba(251,191,36,0.12)"/>
+  <text x="602" y="379" font-size="10" fill="#fbbf24">🔬 Spike</text>
+  <text x="710" y="380" font-size="12" fill="#94a3b8">3 SP</text>
+  <circle cx="762" cy="376" r="9" fill="#10b981"/>
+  <text x="759" y="380" font-size="8" fill="#fff">A</text>
+  <text x="778" y="380" font-size="12" fill="#94a3b8">Arun</text>
+
+  <!-- footer summary -->
+  <rect x="24" y="410" width="912" height="36" rx="0" fill="#161b2e"/>
+  <text x="44" y="433" font-size="11" fill="#64748b">6 items  ·  18 story points total</text>
+</svg>

@@ -1,0 +1,62 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <!-- Background overlay (modal) -->
+  <rect width="1200" height="750" fill="#000000" opacity="0.4"/>
+  <!-- Modal dialog -->
+  <rect x="280" y="80" width="640" height="590" rx="12" fill="#ffffff"/>
+  <!-- Modal header -->
+  <rect x="280" y="80" width="640" height="64" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
+  <rect x="280" y="120" width="640" height="24" fill="#f9fafb"/>
+  <text x="304" y="114" font-size="16" font-weight="700" fill="#111827">Link Idea to Roadmap Epic</text>
+  <text x="892" y="114" text-anchor="end" font-size="18" fill="#9ca3af">×</text>
+  <!-- Idea being linked -->
+  <rect x="296" y="160" width="608" height="64" rx="8" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="316" y="182" font-size="12" font-weight="700" fill="#9ca3af">IDEA TO LINK</text>
+  <text x="316" y="202" font-size="14" font-weight="600" fill="#111827">AI-powered sprint suggestions</text>
+  <text x="316" y="216" font-size="12" fill="#9ca3af">▲ 24 votes  ·  Planned</text>
+  <!-- Search box -->
+  <text x="296" y="252" font-size="12" font-weight="700" fill="#374151">Search Roadmap Epics</text>
+  <rect x="296" y="260" width="608" height="40" rx="8" fill="#ffffff" stroke="#c7d2fe" stroke-width="2"/>
+  <text x="314" y="285" font-size="13" fill="#9ca3af">🔍  Search by epic name or quarter...</text>
+  <!-- Epic list -->
+  <text x="296" y="326" font-size="11" font-weight="700" fill="#9ca3af">MATCHING EPICS (4)</text>
+  <!-- Epic 1 — highlighted/selected -->
+  <rect x="296" y="334" width="608" height="72" rx="8" fill="#eef2ff" stroke="#818cf8" stroke-width="2"/>
+  <circle cx="316" cy="370" r="12" fill="#818cf8"/>
+  <text x="316" y="375" text-anchor="middle" font-size="12" fill="#ffffff">✓</text>
+  <text x="336" y="356" font-size="14" font-weight="700" fill="#111827">AI Features Epic</text>
+  <text x="336" y="374" font-size="12" fill="#6b7280">Q3 2025  ·  Owner: Alex J.  ·  3 linked items</text>
+  <text x="336" y="392" font-size="11" fill="#818cf8">AI/ML automation for the core PM workflow</text>
+  <rect x="816" y="348" width="64" height="24" rx="12" fill="#dbeafe"/>
+  <text x="848" y="364" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8">In Progress</text>
+  <!-- Epic 2 -->
+  <rect x="296" y="414" width="608" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="316" cy="446" r="12" fill="#e5e7eb"/>
+  <text x="336" y="438" font-size="14" font-weight="600" fill="#111827">Sprint Planning Improvements</text>
+  <text x="336" y="456" font-size="12" fill="#6b7280">Q4 2025  ·  Owner: Sara R.  ·  1 linked item</text>
+  <text x="336" y="470" font-size="11" fill="#9ca3af">Streamline sprint setup and planning</text>
+  <rect x="816" y="428" width="52" height="24" rx="12" fill="#f3f4f6"/>
+  <text x="842" y="444" text-anchor="middle" font-size="10" fill="#9ca3af">Planned</text>
+  <!-- Epic 3 -->
+  <rect x="296" y="486" width="608" height="64" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <circle cx="316" cy="518" r="12" fill="#e5e7eb"/>
+  <text x="336" y="510" font-size="14" font-weight="600" fill="#111827">Developer Tooling</text>
+  <text x="336" y="528" font-size="12" fill="#6b7280">Q4 2025  ·  Owner: James K.  ·  0 linked items</text>
+  <text x="336" y="542" font-size="11" fill="#9ca3af">CI/CD integrations and dev toolchain improvements</text>
+  <!-- Preview of what will happen -->
+  <rect x="296" y="568" width="608" height="64" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="314" y="588" font-size="12" font-weight="700" fill="#15803d">After linking</text>
+  <text x="314" y="606" font-size="12" fill="#374151">The idea will appear under the <tspan font-weight="600">AI Features Epic</tspan> in the Roadmap view.</text>
+  <text x="314" y="622" font-size="12" fill="#374151">The idea's status will update to <tspan font-weight="600">Planned</tspan> (already set).</text>
+  <!-- Action buttons -->
+  <rect x="296" y="642" width="180" height="40" rx="8" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="386" y="667" text-anchor="middle" font-size="13" fill="#374151">Cancel</text>
+  <rect x="724" y="642" width="180" height="40" rx="8" fill="#4f46e5"/>
+  <text x="814" y="667" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Link to Epic</text>
+  <!-- Annotation arrow pointing to selected epic -->
+  <path d="M 940 360 L 910 360" stroke="#4f46e5" stroke-width="2" stroke-dasharray="4 3" fill="none" marker-end="url(#arr)"/>
+  <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L0,8 L8,4 z" fill="#4f46e5"/></marker></defs>
+  <rect x="942" y="342" width="218" height="44" rx="6" fill="#4f46e5"/>
+  <text x="1051" y="360" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">Click epic to select it</text>
+  <text x="1051" y="378" text-anchor="middle" font-size="11" fill="#c7d2fe">Checkmark shows selection</text>
+</svg>

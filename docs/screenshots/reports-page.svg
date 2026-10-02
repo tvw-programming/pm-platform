@@ -1,0 +1,103 @@
+<svg width="960" height="520" xmlns="http://www.w3.org/2000/svg" font-family="'Inter','Segoe UI',sans-serif">
+  <rect width="960" height="520" fill="#0f1117"/>
+  <!-- topbar -->
+  <rect x="0" y="0" width="960" height="48" fill="#0f1117"/>
+  <line x1="0" y1="48" x2="960" y2="48" stroke="#1e2640" stroke-width="1"/>
+  <text x="24" y="30" font-size="18" font-weight="700" fill="#f1f5f9">Reports</text>
+  <rect x="700" y="13" width="160" height="24" rx="5" fill="#1e2640"/>
+  <text x="712" y="30" font-size="12" fill="#94a3b8">Last 6 sprints ▾</text>
+
+  <!-- Velocity chart -->
+  <rect x="24" y="64" width="440" height="200" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <text x="44" y="86" font-size="13" font-weight="600" fill="#e2e8f0">Velocity</text>
+  <text x="44" y="102" font-size="10" fill="#64748b">Story points completed per sprint</text>
+  <!-- Y axis -->
+  <text x="44" y="180" font-size="9" fill="#475569">50</text>
+  <text x="44" y="204" font-size="9" fill="#475569">40</text>
+  <text x="44" y="228" font-size="9" fill="#475569">30</text>
+  <line x1="68" y1="116" x2="68" y2="248" stroke="#2d3a5c" stroke-width="1"/>
+  <line x1="68" y1="248" x2="440" y2="248" stroke="#2d3a5c" stroke-width="1"/>
+  <!-- bars -->
+  <rect x="86" y="208" width="36" height="40" rx="3" fill="#6366f1" opacity="0.6"/>
+  <rect x="144" y="196" width="36" height="52" rx="3" fill="#6366f1" opacity="0.7"/>
+  <rect x="202" y="188" width="36" height="60" rx="3" fill="#6366f1" opacity="0.7"/>
+  <rect x="260" y="200" width="36" height="48" rx="3" fill="#6366f1" opacity="0.8"/>
+  <rect x="318" y="176" width="36" height="72" rx="3" fill="#6366f1" opacity="0.85"/>
+  <rect x="376" y="164" width="36" height="84" rx="3" fill="#818cf8"/>
+  <!-- x labels -->
+  <text x="90" y="262" font-size="9" fill="#475569">S7</text>
+  <text x="148" y="262" font-size="9" fill="#475569">S8</text>
+  <text x="206" y="262" font-size="9" fill="#475569">S9</text>
+  <text x="262" y="262" font-size="9" fill="#475569">S10</text>
+  <text x="320" y="262" font-size="9" fill="#475569">S11</text>
+  <text x="378" y="262" font-size="9" fill="#818cf8">S12</text>
+  <text x="44" y="252" font-size="10" fill="#64748b">Avg: 41 SP  ↑ +14%</text>
+
+  <!-- Burn-down chart -->
+  <rect x="496" y="64" width="440" height="200" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <text x="516" y="86" font-size="13" font-weight="600" fill="#e2e8f0">Sprint 12 Burn-down</text>
+  <text x="516" y="102" font-size="10" fill="#64748b">Remaining story points per day</text>
+  <line x1="540" y1="116" x2="540" y2="248" stroke="#2d3a5c" stroke-width="1"/>
+  <line x1="540" y1="248" x2="912" y2="248" stroke="#2d3a5c" stroke-width="1"/>
+  <!-- ideal line (dashed) -->
+  <polyline points="548,128 590,142 632,156 674,170 716,184 758,198 800,212 842,226 884,240 912,248" stroke="#2d3a5c" stroke-width="1.5" stroke-dasharray="5,3" fill="none"/>
+  <!-- actual line -->
+  <polyline points="548,128 590,146 632,162 674,174 716,182 758,188 800,192" stroke="#818cf8" stroke-width="2.5" fill="none"/>
+  <circle cx="800" cy="192" r="4" fill="#818cf8"/>
+  <text x="806" y="196" font-size="9" fill="#818cf8">Day 6</text>
+  <text x="516" y="262" font-size="9" fill="#2d3a5c">─ ─ Ideal   </text>
+  <text x="566" y="262" font-size="9" fill="#818cf8">── Actual</text>
+
+  <!-- Cycle Time -->
+  <rect x="24" y="284" width="440" height="200" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <text x="44" y="306" font-size="13" font-weight="600" fill="#e2e8f0">Cycle Time</text>
+  <text x="44" y="322" font-size="10" fill="#64748b">Median days from creation to Done</text>
+  <!-- horizontal bars -->
+  <text x="44" y="356" font-size="11" fill="#94a3b8">Bug</text>
+  <rect x="100" y="344" width="80" height="16" rx="3" fill="#6366f1" opacity="0.7"/>
+  <text x="188" y="356" font-size="11" fill="#64748b">2.1d</text>
+  <text x="44" y="384" font-size="11" fill="#94a3b8">Chore</text>
+  <rect x="100" y="372" width="52" height="16" rx="3" fill="#6366f1" opacity="0.5"/>
+  <text x="160" y="384" font-size="11" fill="#64748b">1.3d</text>
+  <text x="44" y="412" font-size="11" fill="#94a3b8">Feature</text>
+  <rect x="100" y="400" width="190" height="16" rx="3" fill="#818cf8" opacity="0.7"/>
+  <text x="298" y="412" font-size="11" fill="#64748b">4.8d</text>
+  <text x="44" y="440" font-size="11" fill="#94a3b8">Spike</text>
+  <rect x="100" y="428" width="248" height="16" rx="3" fill="#a78bfa" opacity="0.7"/>
+  <text x="356" y="440" font-size="11" fill="#64748b">6.2d</text>
+  <text x="44" y="472" font-size="10" fill="#64748b">S7–S12 median  ·  n=89 tasks</text>
+
+  <!-- Team Capacity -->
+  <rect x="496" y="284" width="440" height="200" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <text x="516" y="306" font-size="13" font-weight="600" fill="#e2e8f0">Team Capacity — Sprint 12</text>
+  <!-- header row -->
+  <text x="516" y="330" font-size="10" font-weight="600" fill="#475569" letter-spacing="0.5">MEMBER</text>
+  <text x="700" y="330" font-size="10" font-weight="600" fill="#475569" letter-spacing="0.5">STATUS</text>
+  <text x="780" y="330" font-size="10" font-weight="600" fill="#475569" letter-spacing="0.5">CAPACITY</text>
+  <line x1="516" y1="336" x2="916" y2="336" stroke="#2d3a5c" stroke-width="1"/>
+  <!-- rows -->
+  <circle cx="524" cy="354" r="8" fill="#6366f1"/><text x="521" y="358" font-size="7" fill="#fff">TW</text>
+  <text x="540" y="358" font-size="12" fill="#e2e8f0">Tejas W.</text>
+  <rect x="700" y="347" width="64" height="16" rx="4" fill="rgba(16,185,129,0.15)"/><text x="708" y="359" font-size="10" fill="#10b981">Available</text>
+  <rect x="780" y="347" width="100" height="12" rx="3" fill="#1e2640"/><rect x="780" y="347" width="100" height="12" rx="3" fill="#10b981" opacity="0.6"/><text x="888" y="358" font-size="10" fill="#64748b">40 SP</text>
+
+  <circle cx="524" cy="382" r="8" fill="#818cf8"/><text x="521" y="386" font-size="7" fill="#fff">AK</text>
+  <text x="540" y="386" font-size="12" fill="#e2e8f0">Arun K.</text>
+  <rect x="700" y="375" width="64" height="16" rx="4" fill="rgba(16,185,129,0.15)"/><text x="708" y="387" font-size="10" fill="#10b981">Available</text>
+  <rect x="780" y="375" width="100" height="12" rx="3" fill="#1e2640"/><rect x="780" y="375" width="100" height="12" rx="3" fill="#10b981" opacity="0.6"/><text x="888" y="386" font-size="10" fill="#64748b">40 SP</text>
+
+  <circle cx="524" cy="410" r="8" fill="#a78bfa"/><text x="521" y="414" font-size="7" fill="#fff">PS</text>
+  <text x="540" y="414" font-size="12" fill="#e2e8f0">Priya S.</text>
+  <rect x="700" y="403" width="56" height="16" rx="4" fill="rgba(251,191,36,0.15)"/><text x="708" y="415" font-size="10" fill="#fbbf24">Partial</text>
+  <rect x="780" y="403" width="100" height="12" rx="3" fill="#1e2640"/><rect x="780" y="403" width="50" height="12" rx="3" fill="#fbbf24" opacity="0.6"/><text x="888" y="414" font-size="10" fill="#64748b">20 SP</text>
+
+  <circle cx="524" cy="438" r="8" fill="#0ea5e9"/><text x="521" y="442" font-size="7" fill="#fff">RV</text>
+  <text x="540" y="438" font-size="12" fill="#e2e8f0">Rohan V.</text>
+  <rect x="700" y="431" width="64" height="16" rx="4" fill="rgba(16,185,129,0.15)"/><text x="708" y="443" font-size="10" fill="#10b981">Available</text>
+  <rect x="780" y="431" width="100" height="12" rx="3" fill="#1e2640"/><rect x="780" y="431" width="100" height="12" rx="3" fill="#10b981" opacity="0.6"/><text x="888" y="442" font-size="10" fill="#64748b">40 SP</text>
+
+  <circle cx="524" cy="466" r="8" fill="#f59e0b"/><text x="521" y="470" font-size="7" fill="#fff">MN</text>
+  <text x="540" y="466" font-size="12" fill="#64748b">Meera N.</text>
+  <rect x="700" y="459" width="64" height="16" rx="4" fill="rgba(248,113,113,0.1)"/><text x="706" y="471" font-size="10" fill="#f87171">On Leave</text>
+  <rect x="780" y="459" width="100" height="12" rx="3" fill="#1e2640"/><text x="888" y="470" font-size="10" fill="#64748b">0 SP</text>
+</svg>

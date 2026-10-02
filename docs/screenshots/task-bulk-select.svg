@@ -1,0 +1,81 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="1200" height="750" fill="#f3f4f6"/>
+  <rect x="0" y="0" width="220" height="750" fill="#1e2130"/>
+  <text x="28" y="36" font-size="14" font-weight="700" fill="#ffffff">CGen PM</text>
+  <rect x="16" y="88" width="188" height="36" rx="8" fill="#4f46e5" opacity="0.2"/>
+  <text x="36" y="112" font-size="13" font-weight="600" fill="#818cf8">📋  Tasks</text>
+  <text x="36" y="150" font-size="13" fill="#64748b">📦  Backlog</text>
+  <text x="36" y="186" font-size="13" fill="#64748b">🏃  Sprints</text>
+  <!-- Top bar -->
+  <rect x="220" y="0" width="980" height="56" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="248" y="34" font-size="14" font-weight="600" fill="#111827">Tasks</text>
+  <!-- Bulk action bar (appears when items selected) -->
+  <rect x="220" y="56" width="980" height="52" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1"/>
+  <rect x="240" y="70" width="28" height="28" rx="4" fill="#4f46e5"/>
+  <text x="254" y="89" text-anchor="middle" font-size="14" fill="#ffffff">✓</text>
+  <text x="280" y="88" font-size="13" font-weight="600" fill="#4f46e5">4 tasks selected</text>
+  <!-- Bulk actions -->
+  <rect x="460" y="70" width="116" height="28" rx="6" fill="#ffffff" stroke="#c7d2fe"/>
+  <text x="518" y="89" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">Move to Sprint</text>
+  <rect x="584" y="70" width="104" height="28" rx="6" fill="#ffffff" stroke="#c7d2fe"/>
+  <text x="636" y="89" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">Assign to…</text>
+  <rect x="696" y="70" width="80" height="28" rx="6" fill="#ffffff" stroke="#c7d2fe"/>
+  <text x="736" y="89" text-anchor="middle" font-size="12" font-weight="600" fill="#4f46e5">Add Label</text>
+  <rect x="784" y="70" width="76" height="28" rx="6" fill="#ffffff" stroke="#fca5a5"/>
+  <text x="822" y="89" text-anchor="middle" font-size="12" font-weight="600" fill="#dc2626">Archive</text>
+  <text x="1170" y="89" text-anchor="middle" font-size="14" fill="#6b7280">×</text>
+  <!-- Board column: TODO -->
+  <rect x="240" y="120" width="220" height="36" rx="8" fill="#f3f4f6"/>
+  <text x="258" y="143" font-size="12" font-weight="700" fill="#6b7280">TODO  8</text>
+  <!-- Task card 1 — selected -->
+  <rect x="240" y="162" width="220" height="88" rx="8" fill="#eef2ff" stroke="#818cf8" stroke-width="2"/>
+  <rect x="255" y="177" width="18" height="18" rx="4" fill="#4f46e5"/>
+  <text x="264" y="191" text-anchor="middle" font-size="11" fill="#ffffff">✓</text>
+  <text x="284" y="192" font-size="12" font-weight="600" fill="#111827">Migrate DB schema</text>
+  <rect x="255" y="200" width="46" height="18" rx="9" fill="#fee2e2"/>
+  <text x="278" y="213" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">High</text>
+  <rect x="308" y="200" width="52" height="18" rx="9" fill="#f3f4f6"/>
+  <text x="334" y="213" text-anchor="middle" font-size="10" fill="#6b7280">Backend</text>
+  <circle cx="430" cy="218" r="13" fill="#ddd6fe"/>
+  <text x="430" y="223" text-anchor="middle" font-size="10" font-weight="600" fill="#7c3aed">MK</text>
+  <!-- Task card 2 — selected -->
+  <rect x="240" y="256" width="220" height="88" rx="8" fill="#eef2ff" stroke="#818cf8" stroke-width="2"/>
+  <rect x="255" y="271" width="18" height="18" rx="4" fill="#4f46e5"/>
+  <text x="264" y="285" text-anchor="middle" font-size="11" fill="#ffffff">✓</text>
+  <text x="284" y="286" font-size="12" font-weight="600" fill="#111827">Add rate limiting</text>
+  <rect x="255" y="294" width="58" height="18" rx="9" fill="#fef3c7"/>
+  <text x="284" y="307" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706">Medium</text>
+  <!-- Task card 3 — not selected -->
+  <rect x="240" y="350" width="220" height="88" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="255" y="365" width="18" height="18" rx="4" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="284" y="380" font-size="12" font-weight="600" fill="#111827">Write unit tests</text>
+  <rect x="255" y="388" width="62" height="18" rx="9" fill="#fef3c7"/>
+  <text x="286" y="401" text-anchor="middle" font-size="10" fill="#d97706">Medium</text>
+  <!-- IN PROGRESS column -->
+  <rect x="476" y="120" width="220" height="36" rx="8" fill="#eff6ff"/>
+  <text x="494" y="143" font-size="12" font-weight="700" fill="#2563eb">IN PROGRESS  4</text>
+  <!-- Task card 4 — selected -->
+  <rect x="476" y="162" width="220" height="88" rx="8" fill="#eef2ff" stroke="#818cf8" stroke-width="2"/>
+  <rect x="491" y="177" width="18" height="18" rx="4" fill="#4f46e5"/>
+  <text x="500" y="191" text-anchor="middle" font-size="11" fill="#ffffff">✓</text>
+  <text x="520" y="192" font-size="12" font-weight="600" fill="#111827">Auth token refresh</text>
+  <rect x="491" y="200" width="46" height="18" rx="9" fill="#fee2e2"/>
+  <text x="514" y="213" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">High</text>
+  <!-- Task card 5 — selected -->
+  <rect x="476" y="256" width="220" height="88" rx="8" fill="#eef2ff" stroke="#818cf8" stroke-width="2"/>
+  <rect x="491" y="271" width="18" height="18" rx="4" fill="#4f46e5"/>
+  <text x="500" y="285" text-anchor="middle" font-size="11" fill="#ffffff">✓</text>
+  <text x="520" y="286" font-size="12" font-weight="600" fill="#111827">Profile API endpoint</text>
+  <!-- REVIEW column -->
+  <rect x="712" y="120" width="220" height="36" rx="8" fill="#fffbeb"/>
+  <text x="730" y="143" font-size="12" font-weight="700" fill="#92400e">REVIEW  2</text>
+  <rect x="712" y="162" width="220" height="88" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="727" y="177" width="18" height="18" rx="4" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="756" y="192" font-size="12" font-weight="600" fill="#111827">Settings redesign</text>
+  <!-- DONE column -->
+  <rect x="948" y="120" width="220" height="36" rx="8" fill="#f0fdf4"/>
+  <text x="966" y="143" font-size="12" font-weight="700" fill="#15803d">DONE  12</text>
+  <rect x="948" y="162" width="220" height="88" rx="8" fill="#ffffff" stroke="#e5e7eb"/>
+  <rect x="963" y="177" width="18" height="18" rx="4" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="992" y="192" font-size="12" font-weight="600" fill="#111827">Dashboard metrics</text>
+</svg>

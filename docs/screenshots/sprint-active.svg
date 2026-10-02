@@ -1,0 +1,85 @@
+<svg width="960" height="520" xmlns="http://www.w3.org/2000/svg" font-family="'Inter','Segoe UI',sans-serif">
+  <rect width="960" height="520" fill="#0f1117"/>
+  <!-- topbar -->
+  <rect x="0" y="0" width="960" height="48" fill="#0f1117"/>
+  <line x1="0" y1="48" x2="960" y2="48" stroke="#1e2640" stroke-width="1"/>
+  <text x="24" y="22" font-size="13" fill="#64748b">Sprints  /</text>
+  <text x="90" y="22" font-size="13" fill="#94a3b8">Sprint 13</text>
+  <rect x="24" y="30" width="64" height="14" rx="4" fill="rgba(16,185,129,0.15)"/>
+  <text x="36" y="41" font-size="9" fill="#10b981">● ACTIVE</text>
+
+  <!-- Sprint header bar -->
+  <rect x="0" y="48" width="960" height="60" fill="#161b2e"/>
+  <line x1="0" y1="108" x2="960" y2="108" stroke="#1e2640" stroke-width="1"/>
+  <text x="24" y="70" font-size="18" font-weight="700" fill="#f1f5f9">Sprint 13</text>
+  <text x="24" y="92" font-size="11" fill="#64748b">Jan 15 – Jan 26  ·  8 days remaining</text>
+  <text x="200" y="92" font-size="11" fill="#64748b">Goal: OAuth + rate limiting</text>
+  <!-- progress bar -->
+  <rect x="600" y="58" width="200" height="8" rx="4" fill="#1e2640"/>
+  <rect x="600" y="58" width="80" height="8" rx="4" fill="#6366f1"/>
+  <text x="600" y="80" font-size="10" fill="#64748b">6 / 15 SP done  (40%)</text>
+  <rect x="820" y="58" width="110" height="32" rx="5" fill="rgba(248,113,113,0.12)" stroke="#f87171" stroke-width="1"/>
+  <text x="840" y="79" font-size="12" fill="#f87171">Close Sprint</text>
+
+  <!-- Column headers -->
+  <text x="44" y="136" font-size="10" font-weight="700" fill="#64748b" letter-spacing="1">TODO  (3)</text>
+  <text x="360" y="136" font-size="10" font-weight="700" fill="#fbbf24" letter-spacing="1">IN PROGRESS  (2)</text>
+  <text x="680" y="136" font-size="10" font-weight="700" fill="#10b981" letter-spacing="1">DONE  (0)</text>
+
+  <!-- TODO cards -->
+  <rect x="24" y="146" width="286" height="76" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="40" y="166" font-size="12" font-weight="600" fill="#e2e8f0">#92  DB migration v3</text>
+  <rect x="40" y="172" width="46" height="18" rx="4" fill="rgba(251,191,36,0.15)"/>
+  <text x="48" y="185" font-size="10" fill="#fbbf24">◑ Med</text>
+  <text x="40" y="210" font-size="11" fill="#64748b">👤 Rohan V.  ·  3 SP</text>
+
+  <rect x="24" y="232" width="286" height="76" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="40" y="252" font-size="12" font-weight="600" fill="#e2e8f0">#93  UI component review</text>
+  <rect x="40" y="258" width="40" height="18" rx="4" fill="rgba(100,116,139,0.15)"/>
+  <text x="48" y="271" font-size="10" fill="#94a3b8">◔ Low</text>
+  <text x="40" y="296" font-size="11" fill="#64748b">👤 Priya S.  ·  1 SP</text>
+
+  <rect x="24" y="318" width="286" height="76" rx="6" fill="#1a2035" stroke="#2d3a5c" stroke-width="1"/>
+  <text x="40" y="338" font-size="12" font-weight="600" fill="#e2e8f0">#101  Dark mode toggle</text>
+  <rect x="40" y="344" width="54" height="18" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="48" y="357" font-size="10" fill="#f87171">● High</text>
+  <text x="40" y="382" font-size="11" fill="#64748b">👤 Tejas W.  ·  5 SP</text>
+
+  <!-- IN PROGRESS cards -->
+  <rect x="337" y="146" width="286" height="76" rx="6" fill="#1a2035" stroke="#fbbf24" stroke-width="1"/>
+  <text x="353" y="166" font-size="12" font-weight="600" fill="#e2e8f0">#91  OAuth implementation</text>
+  <rect x="353" y="172" width="54" height="18" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="361" y="185" font-size="10" fill="#f87171">● High</text>
+  <text x="353" y="210" font-size="11" fill="#64748b">👤 Arun K.  ·  5 SP</text>
+  <rect x="556" y="155" width="56" height="18" rx="9" fill="rgba(251,191,36,0.15)"/>
+  <text x="566" y="168" font-size="9" fill="#fbbf24">In Progress</text>
+
+  <rect x="337" y="232" width="286" height="76" rx="6" fill="#1a2035" stroke="#fbbf24" stroke-width="1"/>
+  <text x="353" y="252" font-size="12" font-weight="600" fill="#e2e8f0">#104  Fix timezone bug</text>
+  <rect x="353" y="258" width="54" height="18" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="361" y="271" font-size="10" fill="#f87171">● High</text>
+  <text x="353" y="296" font-size="11" fill="#64748b">👤 Priya S.  ·  2 SP</text>
+  <rect x="556" y="241" width="56" height="18" rx="9" fill="rgba(251,191,36,0.15)"/>
+  <text x="566" y="254" font-size="9" fill="#fbbf24">In Progress</text>
+
+  <!-- DONE column (empty) -->
+  <rect x="650" y="146" width="286" height="200" rx="6" fill="#161b2e" stroke="#1e2640" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="793" y="250" font-size="12" fill="#2d3a5c" text-anchor="middle">No tasks done yet</text>
+
+  <!-- Burn-down mini chart -->
+  <rect x="24" y="420" width="912" height="80" rx="8" fill="#161b2e" stroke="#1e2640" stroke-width="1"/>
+  <text x="44" y="442" font-size="12" font-weight="600" fill="#e2e8f0">Sprint 13 Burn-down</text>
+  <polyline points="80,488 124,484 168,476 212,466 256,454 300,440" stroke="#2d3a5c" stroke-width="1.5" stroke-dasharray="4,3" fill="none"/>
+  <polyline points="80,488 124,482 168,470 212,458 256,450 300,444" stroke="#818cf8" stroke-width="2" fill="none"/>
+  <circle cx="300" cy="444" r="4" fill="#818cf8"/>
+  <text x="80" y="500" font-size="9" fill="#475569">D1</text>
+  <text x="124" y="500" font-size="9" fill="#475569">D2</text>
+  <text x="168" y="500" font-size="9" fill="#475569">D3</text>
+  <text x="212" y="500" font-size="9" fill="#475569">D4</text>
+  <text x="256" y="500" font-size="9" fill="#475569">D5</text>
+  <text x="300" y="500" font-size="9" fill="#818cf8">D6</text>
+  <text x="344" y="500" font-size="9" fill="#2d3a5c">D7</text>
+  <text x="388" y="500" font-size="9" fill="#2d3a5c">D8</text>
+  <text x="700" y="450" font-size="10" fill="#2d3a5c">─ ─ Ideal</text>
+  <text x="780" y="450" font-size="10" fill="#818cf8">── Actual</text>
+</svg>
