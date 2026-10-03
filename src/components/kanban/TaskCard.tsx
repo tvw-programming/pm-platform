@@ -10,7 +10,7 @@ import { CircleSlash, ListChecks, MessageSquare, Paperclip, TriangleAlert } from
 import type { Task } from '@/types/domain';
 import { priorityTokens, taskTypeTokens } from '@/app/tokens';
 import { useWorkspace } from '@/state/WorkspaceProvider';
-import { UserAvatar } from '@/components/common/UserAvatar';
+import { AgentAssignee } from '@/components/common/AgentAssignee';
 import { PriorityChip, TypeChip } from '@/components/common/TokenChip';
 import { formatShortDate } from '@/utils/format';
 import { checklistProgress, taskIsOverdue } from '@/utils/selectors';
@@ -106,6 +106,17 @@ export function TaskCard({
         <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap sx={{ mb: cardLabels.length ? 0.75 : 1 }}>
           <TypeChip type={task.type} />
           <PriorityChip priority={task.priority} />
+          {task.origin === 'plan' ? (
+            <Chip size="small" label="Plan" sx={{ height: 19, fontSize: 10.5 }} />
+          ) : null}
+          {task.executionPolicy?.status && task.executionPolicy.status !== 'idle' ? (
+            <Chip
+              size="small"
+              label={task.executionPolicy.status.replace(/_/g, ' ')}
+              color={task.executionPolicy.status === 'awaiting_approval' ? 'warning' : 'default'}
+              sx={{ height: 19, fontSize: 10.5 }}
+            />
+          ) : null}
         </Stack>
 
         {cardLabels.length > 0 ? (
@@ -180,7 +191,7 @@ export function TaskCard({
                 {formatShortDate(task.dueDate)}
               </Typography>
             ) : null}
-            <UserAvatar user={assignee} size={22} />
+            <AgentAssignee task={task} humanUser={assignee} size={22} />
           </Stack>
         </Stack>
       </CardContent>

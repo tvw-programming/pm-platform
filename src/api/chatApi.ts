@@ -15,6 +15,10 @@ import type {
   Skill,
   LMStudioConfig,
   LMStudioHealth,
+  AgentOpsSummary,
+  ApprovedChildTask,
+  HandoffContract,
+  PlanChild,
 } from '@/types/chat';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5589';
@@ -146,6 +150,86 @@ export function putLMStudio(data: {
   timeout_sec?: number;
 }): Promise<{ config: LMStudioConfig; health: LMStudioHealth }> {
   return request('/api/runtime/lmstudio', { method: 'PUT', body: JSON.stringify(data) });
+}
+
+// ─── Phase 2 ───
+
+export function getAgentOps(projectId = 'project-default'): Promise<AgentOpsSummary> {
+  return request(`/api/agent-ops?project_id=${encodeURIComponent(projectId)}`);
+}
+
+export function listTeamTemplates(): Promise<{ templates: { id: string; name: string; description: string; roles: string[] }[] }> {
+  return request('/api/team-templates');
+}
+
+export function installTeamTemplate(id: string, data: { project_id?: string; seat_run_id?: string }): Promise<{ agents: AgentInstance[] }> {
+  return request(`/api/team-templates/${id}/install`, { method: 'POST', body: JSON.stringify(data) });
+}
+
+export function createHandoff(data: { run_id?: string; project_id?: string; payload: HandoffContract & { from_agent_id?: string } }): Promise<{ handoff: unknown; message: ChatMessage }> {
+  return request('/api/handoffs', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export function passHandoff(id: string, data: { run_id?: string; target_roles?: string[] }): Promise<{ handoff: unknown; wakes: unknown[] }> {
+  return request(`/api/handoffs/${id}/pass`, { method: 'POST', body: JSON.stringify(data) });
+}
+
+export function createPlan(data: {
+  run_id?: string;
+  project_id?: string;
+  agent_id?: string;
+  goal: string;
+  body_markdown?: string;
+  children: PlanChild[];
+}): Promise<{ plan: { id: string }; ticket: ChatTicket; message: ChatMessage }> {
+  return request('/api/plans', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export function approvePlan(id: string, runId = 'run-default'): Promise<{ plan: unknown; children: ApprovedChildTask[] }> {
+  return request(`/api/plans/${id}/approve`, { method: 'POST', body: JSON.stringify({ run_id: runId }) });
+}
+
+export function rejectPlan(id: string, runId = 'run-default', comment = ''): Promise<unknown> {
+  return request(`/api/plans/${id}/reject`, { method: 'POST', body: JSON.stringify({ run_id: runId, comment }) });
+}
+
+export function getProjectAgentConfig(projectId: string): Promise<{
+  project_id: string;
+  repo_url?: string;
+  primary_cwd?: string;
+  soft_token_budget?: number;
+  hard_token_budget?: number;
+  tokens_used: number;
+  budget_paused: boolean;
+}> {
+  return request(`/api/projects/${projectId}/agent-config`);
+}
+
+export function putProjectAgentConfig(projectId: string, data: {
+  repo_url?: string;
+  primary_cwd?: string;
+  soft_token_budget?: number;
+  hard_token_budget?: number;
+  budget_paused?: boolean;
+}): Promise<unknown> {
+  return request(`/api/projects/${projectId}/agent-config`, { method: 'PATCH', body: JSON.stringify(data) });
+}
+
+export function listRoutines(projectId = 'project-default'): Promise<{ id: string; key: string; name: string; description: string; cron_expr: string; enabled: boolean }[]> {
+  return request(`/api/routines?project_id=${encodeURIComponent(projectId)}`);
+}
+
+export function runRoutine(key: string, runId = 'run-default'): Promise<unknown> {
+  return request(`/api/routines/${key}/run`, { method: 'POST', body: JSON.stringify({ run_id: runId }) });
+}
+
+export function transitionTask(taskId: string, data: {
+  project_id?: string;
+  from_status: string;
+  to_status: string;
+  comment?: string;
+}): Promise<{ effective_status: string; policy?: unknown }> {
+  return request(`/api/tasks/${taskId}/transition`, { method: 'POST', body: JSON.stringify(data) });
 }
 
 export function removeRosterRole(runId: string, roleId: string): Promise<void> {

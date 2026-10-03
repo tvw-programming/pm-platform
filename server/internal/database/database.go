@@ -39,12 +39,19 @@ func Connect(cfg *config.DatabaseConfig) *gorm.DB {
 			&models.Skill{},
 			&models.AgentSkill{},
 			&models.RuntimeConfig{},
+			&models.Handoff{},
+			&models.TaskPlan{},
+			&models.Routine{},
+			&models.RoutineRun{},
+			&models.ProjectAgentConfig{},
+			&models.ExecutionPolicyRecord{},
 		); err != nil {
 			log.Fatalf("failed to auto-migrate: %v", err)
 		}
 
 		seedSkills(db)
 		seedRuntimeConfig(db)
+		seedProjectAgentConfig(db)
 
 		log.Println("database connected and migrated")
 	})
@@ -92,6 +99,28 @@ Produce a plan with sections in order:
 Do not create FE/BE/QA child tasks until a human approve_reject ticket is approved.
 Cite goal/epic IDs when known. End with a short handoff summary for implementers.`,
 		},
+		{
+			Slug:        "github-pr-workflow",
+			Name:        "GitHub PR Workflow",
+			Description: "Use when: opening/updating a PR that is functionally complete. Don't use when: work still incomplete.",
+			Body: `# GitHub PR Workflow
+
+Draft a PR-shaped handoff (Phase 2 — no GitHub API required):
+- Imperative PR title
+- Body: Summary / Implementation notes / Verification / Risk
+- Include UI screenshot refs when pixels moved
+- Emit a cgen-handoff block with pr_title, pr_body, verification_steps, to_roles including qa_lead`,
+		},
+		{
+			Slug:        "qa-acceptance",
+			Name:        "QA Acceptance",
+			Description: "Use when: verifying AC / writing test plan from a handoff. Don't use when: designing architecture.",
+			Body: `# QA Acceptance
+
+Review FE/BE handoffs against acceptance criteria.
+Emit pass/fail matrix, file bug tasks for fails, and recommend ship/no-ship to PM.
+Respect execution policy review rounds — request changes instead of infinite ping-pong.`,
+		},
 	}
 
 	for _, s := range skills {
@@ -118,6 +147,25 @@ func seedRuntimeConfig(db *gorm.DB) {
 		}
 		if err := db.Create(&cfg).Error; err != nil {
 			log.Printf("seed runtime_config: %v", err)
+		}
+	}
+}
+
+func seedProjectAgentConfig(db *gorm.DB) {
+	var existing models.ProjectAgentConfig
+	if err := db.Where("project_id = ?", "project-default").First(&existing).Error; err == gorm.ErrRecordNotFound {
+		soft := int64(200000)
+		hard := int64(500000)
+		cfg := models.ProjectAgentConfig{
+			ID:              uuid.New().String(),
+			ProjectID:       "project-default",
+			RepoURL:         "https://github.com/tvw-programming/pm-platform",
+			PrimaryCwd:      ".",
+			SoftTokenBudget: &soft,
+			HardTokenBudget: &hard,
+		}
+		if err := db.Create(&cfg).Error; err != nil {
+			log.Printf("seed project_agent_config: %v", err)
 		}
 	}
 }

@@ -11,7 +11,7 @@ import 'ag-grid-community/styles/ag-theme-material.css';
 import type { ID, Task } from '@/types/domain';
 import { useWorkspace } from '@/state/WorkspaceProvider';
 import { PriorityChip, StatusChip, TypeChip } from '@/components/common/TokenChip';
-import { UserAvatar } from '@/components/common/UserAvatar';
+import { AgentAssignee } from '@/components/common/AgentAssignee';
 import { EmptyState } from '@/components/common/States';
 import { formatShortDate } from '@/utils/format';
 import { taskIsOverdue } from '@/utils/selectors';
@@ -26,6 +26,12 @@ interface TaskRow {
   status: Task['status'];
   priority: Task['priority'];
   assigneeId?: ID;
+  assigneeKind?: Task['assigneeKind'];
+  assigneeAgentName?: string;
+  assigneeRoleId?: string;
+  executionPolicy?: Task['executionPolicy'];
+  origin?: Task['origin'];
+  task: Task;
   projectKey: string;
   sprintName: string;
   points: number | null;
@@ -98,13 +104,12 @@ function makeAssigneeCellRenderer(
   const AssigneeCellRenderer = React.memo(function AssigneeCellRenderer(
     params: ICellRendererParams<TaskRow>,
   ) {
-    const user = userById(params.value ?? undefined);
+    const row = params.data;
+    if (!row) return null;
+    const user = userById(row.assigneeId);
     return (
       <Stack direction="row" spacing={1} alignItems="center" sx={{ height: '100%' }}>
-        <UserAvatar user={user} size={22} />
-        <Typography variant="body2" noWrap>
-          {user?.name ?? 'Unassigned'}
-        </Typography>
+        <AgentAssignee task={row.task} humanUser={user} size={22} showName />
       </Stack>
     );
   });
@@ -135,6 +140,12 @@ export function TaskListTable({
         status: task.status,
         priority: task.priority,
         assigneeId: task.assigneeId,
+        assigneeKind: task.assigneeKind,
+        assigneeAgentName: task.assigneeAgentName,
+        assigneeRoleId: task.assigneeRoleId,
+        executionPolicy: task.executionPolicy,
+        origin: task.origin,
+        task,
         projectKey: projectById(task.projectId)?.key ?? '—',
         sprintName: state.sprints.find((s) => s.id === task.sprintId)?.name ?? 'Backlog',
         points: task.storyPoints ?? null,

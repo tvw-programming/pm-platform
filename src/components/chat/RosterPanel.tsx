@@ -28,6 +28,9 @@ interface RosterPanelProps {
   onHireAgent: (data: { name: string; role_id: string; instructions?: string; model?: string }) => Promise<AgentInstance>;
   onPatchAgent: (id: string, data: { status?: string }) => Promise<AgentInstance>;
   onAssignAndRun: (agentId: string, input: string) => Promise<void>;
+  onInstallPod?: () => Promise<AgentInstance[]>;
+  onRunRoutine?: (key: string) => Promise<void>;
+  onCreateDemoPlan?: () => Promise<void>;
   onOpenAgent?: (agent: AgentInstance) => void;
 }
 
@@ -53,6 +56,9 @@ export const RosterPanel = memo(function RosterPanel({
   onHireAgent,
   onPatchAgent,
   onAssignAndRun,
+  onInstallPod,
+  onRunRoutine,
+  onCreateDemoPlan,
   onOpenAgent,
 }: RosterPanelProps) {
   const [catalog, setCatalog] = useState<RoleDef[]>([]);
@@ -69,6 +75,10 @@ export const RosterPanel = memo(function RosterPanel({
   const [assignInput, setAssignInput] = useState('');
   const [assignBusy, setAssignBusy] = useState(false);
   const [assignError, setAssignError] = useState<string | null>(null);
+  const [podBusy, setPodBusy] = useState(false);
+  const [routineBusy, setRoutineBusy] = useState(false);
+  const [demoBusy, setDemoBusy] = useState(false);
+  const [phase2Error, setPhase2Error] = useState<string | null>(null);
 
   useEffect(() => {
     api.getRoleCatalog().then(data => setCatalog(data.roles)).catch(() => {});
@@ -153,10 +163,84 @@ export const RosterPanel = memo(function RosterPanel({
         variant="contained"
         startIcon={<Bot size={14} />}
         onClick={() => setHireOpen(true)}
-        sx={{ mb: 2 }}
+        sx={{ mb: 1 }}
       >
         Hire AI teammate
       </Button>
+
+      {(onInstallPod || onRunRoutine || onCreateDemoPlan) && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mb: 2 }}>
+          {onInstallPod && (
+            <Button
+              fullWidth
+              size="small"
+              variant="outlined"
+              disabled={podBusy}
+              startIcon={podBusy ? <CircularProgress size={12} /> : <Users size={14} />}
+              onClick={async () => {
+                setPodBusy(true);
+                setPhase2Error(null);
+                try {
+                  await onInstallPod();
+                } catch (err) {
+                  setPhase2Error(err instanceof Error ? err.message : 'Install pod failed');
+                } finally {
+                  setPodBusy(false);
+                }
+              }}
+            >
+              Install Product Eng Pod
+            </Button>
+          )}
+          {onRunRoutine && (
+            <Button
+              fullWidth
+              size="small"
+              variant="outlined"
+              disabled={routineBusy}
+              startIcon={routineBusy ? <CircularProgress size={12} /> : <Sparkles size={14} />}
+              onClick={async () => {
+                setRoutineBusy(true);
+                setPhase2Error(null);
+                try {
+                  await onRunRoutine('daily-triage');
+                } catch (err) {
+                  setPhase2Error(err instanceof Error ? err.message : 'Routine failed');
+                } finally {
+                  setRoutineBusy(false);
+                }
+              }}
+            >
+              Run daily triage
+            </Button>
+          )}
+          {onCreateDemoPlan && (
+            <Button
+              fullWidth
+              size="small"
+              variant="outlined"
+              disabled={demoBusy}
+              startIcon={demoBusy ? <CircularProgress size={12} /> : <Sparkles size={14} />}
+              onClick={async () => {
+                setDemoBusy(true);
+                setPhase2Error(null);
+                try {
+                  await onCreateDemoPlan();
+                } catch (err) {
+                  setPhase2Error(err instanceof Error ? err.message : 'Demo plan failed');
+                } finally {
+                  setDemoBusy(false);
+                }
+              }}
+            >
+              Demo PM plan
+            </Button>
+          )}
+          {phase2Error && (
+            <Typography variant="caption" color="error">{phase2Error}</Typography>
+          )}
+        </Box>
+      )}
 
       {Object.entries(byTrack).sort(([a], [b]) => a.localeCompare(b)).map(([track, entries]) => (
         <Box key={track} sx={{ mb: 2 }}>

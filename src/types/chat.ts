@@ -35,9 +35,76 @@ export interface AgentInstance {
   model?: string;
   reports_to_agent_id?: string;
   token_budget?: number;
+  soft_token_budget?: number;
+  budget_paused?: boolean;
   tokens_used: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface HandoffContract {
+  contract_version: number;
+  handoff_id?: string;
+  from_role: string;
+  to_roles: string[];
+  task_id?: string;
+  summary: string;
+  acceptance_criteria?: string[];
+  open_questions?: string[];
+  artifacts?: string[];
+  playbook_hint?: string;
+  pr_title?: string;
+  pr_body?: string;
+  verification_steps?: string;
+  pr_url?: string;
+}
+
+export interface PlanChild {
+  title: string;
+  role_id: string;
+  acceptance_criteria?: string[];
+  blocked_by_indexes?: number[];
+  story_points?: number;
+}
+
+export interface PlanContract {
+  plan_id: string;
+  goal: string;
+  body?: string;
+  children: PlanChild[];
+  status: string;
+}
+
+export interface AgentOpsSummary {
+  project_id: string;
+  counts: Record<string, number>;
+  agents: AgentInstance[];
+  tokens_used: number;
+  pending_approvals: number;
+  project_config?: {
+    repo_url?: string;
+    primary_cwd?: string;
+    soft_token_budget?: number;
+    hard_token_budget?: number;
+    tokens_used?: number;
+    budget_paused?: boolean;
+  };
+}
+
+export interface ApprovedChildTask {
+  id: string;
+  key: string;
+  title: string;
+  role_id: string;
+  assignee_kind: string;
+  assignee_agent_id?: string;
+  acceptance_criteria?: string[];
+  blocked_by_task_ids?: string[];
+  story_points?: number;
+  status: string;
+  origin: string;
+  project_id: string;
+  sprint_id?: string;
 }
 
 export interface AgentRun {

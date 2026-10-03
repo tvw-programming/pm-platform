@@ -122,6 +122,7 @@ export interface WorkspaceState {
 export type WorkspaceAction =
   | { type: 'workspace/switch'; workspaceId: ID }
   | { type: 'task/create'; input: NewTaskInput }
+  | { type: 'task/upsertMany'; tasks: Task[] }
   | { type: 'task/update'; taskId: ID; patch: Partial<Task> }
   | { type: 'task/setStatus'; taskId: ID; status: TaskStatus; rank?: number }
   | { type: 'task/reorder'; taskId: ID; status: TaskStatus; rank: number }
@@ -214,6 +215,27 @@ export function workspaceReducer(state: WorkspaceState, action: WorkspaceAction)
     case 'workspace/switch':
       return { ...state, activeWorkspaceId: action.workspaceId };
 
+    case 'task/upsertMany': {
+      const incoming = action.tasks;
+      const byId = new Map(state.tasks.map((t) => [t.id, t]));
+      for (const t of incoming) {
+        byId.set(t.id, { ...byId.get(t.id), ...t, updatedAt: nowIso() });
+      }
+      return {
+        ...state,
+        tasks: Array.from(byId.values()),
+        activities: logActivity(state, {
+          kind: 'created',
+          actorId: state.currentUserId,
+          projectId: incoming[0]?.projectId ?? state.projects[0]?.id ?? '',
+          entityType: 'task',
+          entityId: incoming[0]?.id ?? '',
+          entityLabel: incoming[0]?.key ?? 'plan',
+          summary: `Imported ${incoming.length} agent-planned tasks`,
+        }),
+      };
+    }
+
     case 'task/create': {
       const { input } = action;
       const task: Task = {
@@ -227,6 +249,7 @@ export function workspaceReducer(state: WorkspaceState, action: WorkspaceAction)
         projectId: input.projectId,
         sprintId: input.sprintId,
         assigneeId: input.assigneeId,
+        assigneeKind: 'human',
         reporterId: state.currentUserId,
         labelIds: input.labelIds,
         storyPoints: input.storyPoints,

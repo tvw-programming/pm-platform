@@ -335,22 +335,37 @@ export function TaskDetailDrawer({ taskId, onClose }: TaskDetailDrawerProps): Re
                       }
                       slotProps={{ htmlInput: { min: 0, max: 100 } }}
                     />
-                    <TextField
-                      select
-                      label="Assignee"
-                      value={task.assigneeId ?? ''}
-                      onChange={(e) => update({ assigneeId: e.target.value || undefined })}
-                    >
-                      <MenuItem value="">Unassigned</MenuItem>
-                      {members.map((user) => (
-                        <MenuItem key={user.id} value={user.id}>
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <UserAvatar user={user} size={20} showTooltip={false} />
-                            <span>{user.name}</span>
-                          </Stack>
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    {task.assigneeKind === 'agent' ? (
+                      <TextField
+                        label="Assignee"
+                        value={`${task.assigneeAgentName || task.assigneeRoleId || 'Agent'} (AI)`}
+                        slotProps={{ input: { readOnly: true } }}
+                        helperText={
+                          task.executionPolicy?.status && task.executionPolicy.status !== 'idle'
+                            ? `Policy: ${task.executionPolicy.status.replace(/_/g, ' ')} · rounds ${task.executionPolicy.reviewRoundsUsed ?? 0}/${task.executionPolicy.maxReviewRounds}`
+                            : task.origin === 'plan'
+                              ? 'Created from approved agent plan'
+                              : 'Agent-owned task'
+                        }
+                      />
+                    ) : (
+                      <TextField
+                        select
+                        label="Assignee"
+                        value={task.assigneeId ?? ''}
+                        onChange={(e) => update({ assigneeId: e.target.value || undefined, assigneeKind: 'human' })}
+                      >
+                        <MenuItem value="">Unassigned</MenuItem>
+                        {members.map((user) => (
+                          <MenuItem key={user.id} value={user.id}>
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <UserAvatar user={user} size={20} showTooltip={false} />
+                              <span>{user.name}</span>
+                            </Stack>
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
                     <TextField
                       select
                       label="Reporter"

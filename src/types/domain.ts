@@ -124,6 +124,15 @@ export interface Risk {
   mitigation: string;
 }
 
+export interface ProjectAgentConfig {
+  repoUrl?: string;
+  primaryCwd?: string;
+  softTokenBudget?: number;
+  hardTokenBudget?: number;
+  tokensUsed?: number;
+  budgetPaused?: boolean;
+}
+
 export interface Project {
   id: ID;
   key: string;
@@ -141,6 +150,7 @@ export interface Project {
   color: string;
   productArea: string;
   workspaceId: ID;
+  agentConfig?: ProjectAgentConfig;
 }
 
 export interface Workspace {
@@ -192,6 +202,16 @@ export interface TaskDependency {
   targetTaskId: ID;
 }
 
+export type AssigneeKind = 'human' | 'agent';
+
+export interface TaskExecutionPolicy {
+  mode: 'normal' | 'strict';
+  commentRequired: boolean;
+  maxReviewRounds: number;
+  reviewRoundsUsed?: number;
+  status?: 'idle' | 'in_review' | 'awaiting_approval' | 'escalated' | 'cleared';
+}
+
 export interface Task {
   id: ID;
   key: string;
@@ -205,7 +225,13 @@ export interface Task {
   releaseId?: ID;
   epicId?: ID;
   parentId?: ID;
+  /** Polymorphic assignee: human user id when assigneeKind=human (default). */
   assigneeId?: ID;
+  assigneeKind?: AssigneeKind;
+  /** Set when assigneeKind === 'agent' — references AgentInstance.id */
+  assigneeAgentId?: ID;
+  assigneeAgentName?: string;
+  assigneeRoleId?: string;
   reporterId: ID;
   labelIds: ID[];
   storyPoints?: number;
@@ -219,6 +245,8 @@ export interface Task {
   dependencies: TaskDependency[];
   customFields: Record<ID, CustomFieldValue>;
   rank: number;
+  origin?: 'manual' | 'routine' | 'plan' | 'handoff';
+  executionPolicy?: TaskExecutionPolicy;
 }
 
 /* ---------------------------------------------------------------- sprints */
