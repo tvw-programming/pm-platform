@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -32,7 +32,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { Check, Lock, Plug, Plus, Shield } from 'lucide-react';
+import { Check, Lock, Plug, Plus, Shield, Cpu } from 'lucide-react';
 import { SETTINGS_SECTIONS, paths, type SettingsSectionId } from '@/app/navigation';
 import { TASK_STATUSES, WORKSPACE_ROLES } from '@/types/domain';
 import { taskStatusTokens } from '@/app/tokens';
@@ -43,6 +43,8 @@ import { useWorkspace } from '@/state/WorkspaceProvider';
 import { useColorMode } from '@/state/ColorModeProvider';
 import { useToast } from '@/state/ToastProvider';
 import { formatDateTime, titleCase } from '@/utils/format';
+import * as chatApi from '@/api/chatApi';
+import type { LMStudioHealth } from '@/types/chat';
 
 const ROLE_PERMISSIONS: { capability: string; owner: boolean; admin: boolean; member: boolean; viewer: boolean }[] = [
   { capability: 'View projects and tasks', owner: true, admin: true, member: true, viewer: true },
@@ -99,6 +101,7 @@ export function SettingsPage(): React.JSX.Element {
           {active === 'fields' ? <CustomFieldsSection /> : null}
           {active === 'statuses' ? <StatusSection /> : null}
           {active === 'chat-roles' ? <ChatRolesSection /> : null}
+          {active === 'local-ai' ? <LocalAISection /> : null}
           {active === 'notifications' ? <NotificationsSection /> : null}
           {active === 'integrations' ? <IntegrationsSection /> : null}
           {active === 'appearance' ? <AppearanceSection /> : null}
@@ -708,6 +711,112 @@ function ChatRolesSection(): React.JSX.Element {
         >
           Save role configuration
         </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+function LocalAISection(): React.JSX.Element {
+  const { notify } = useToast();
+  const [baseUrl, setBaseUrl] = useState('http://127.0.0.1:1234/v1');
+  const [apiKey, setApiKey] = useState('');
+  const [defaultModel, setDefaultModel] = useState('');
+  const [timeoutSec, setTimeoutSec] = useState(300);
+  const [health, setHealth] = useState<LMStudioHealth | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const refresh = async () => {
+    setLoading(true);
+    try {
+      const data = await chatApi.getLMStudio();
+      setBaseUrl(data.config.base_url || 'http://127.0.0.1:1234/v1');
+      setApiKey(data.config.api_key || '');
+      setDefaultModel(data.config.default_model || '');
+      setTimeoutSec(data.config.timeout_sec || 300);
+      setHealth(data.health);
+    } catch (err) {
+      setHealth({ ok: false, error: err instanceof Error ? err.message : 'Failed to load LM Studio config' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void refresh();
+  }, []);
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      const data = await chatApi.putLMStudio({
+        base_url: baseUrl,
+        api_key: apiKey,
+        default_model: defaultModel,
+        timeout_sec: timeoutSec,
+      });
+      setHealth(data.health);
+      notify(data.health?.ok ? 'Local AI settings saved — LM Studio healthy' : 'Saved — LM Studio not reachable yet', {
+        severity: data.health?.ok ? 'success' : 'warning',
+      });
+    } catch (err) {
+      notify(err instanceof Error ? err.message : 'Save failed', { severity: 'error' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const modelOptions = (health?.models || [])
+    .map((m) => {
+      if (m && typeof m === 'object' && 'id' in m) return String((m as { id: string }).id);
+      return '';
+    })
+    .filter(Boolean);
+
+  return (
+    <Card>
+      <CardHeader
+        avatar={<Cpu size={20} />}
+        title="Local AI (LM Studio)"
+        subheader="CGen agents call a local OpenAI-compatible endpoint. No cloud keys required."
+      />
+      <CardContent sx={{ pt: 0 }}>
+        <Stack spacing={2} sx={{ maxWidth: 560 }}>
+          {health?.ok ? (
+            <Alert severity="success">Healthy · {health.count ?? 0} model(s) at {health.base_url}</Alert>
+          ) : (
+            <Alert severity="warning">
+              {health?.error || (loading ? 'Checking LM Studio…' : 'LM Studio not reachable. Start it locally and load a model.')}
+            </Alert>
+          )}
+          <TextField label="Base URL" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} fullWidth helperText="Default http://127.0.0.1:1234/v1" />
+          <TextField label="API key (optional)" value={apiKey} onChange={(e) => setApiKey(e.target.value)} fullWidth />
+          {modelOptions.length > 0 ? (
+            <TextField select label="Default model" value={defaultModel} onChange={(e) => setDefaultModel(e.target.value)} fullWidth>
+              <MenuItem value="">(none)</MenuItem>
+              {modelOptions.map((id) => (
+                <MenuItem key={id} value={id}>{id}</MenuItem>
+              ))}
+            </TextField>
+          ) : (
+            <TextField label="Default model" value={defaultModel} onChange={(e) => setDefaultModel(e.target.value)} fullWidth helperText="Leave blank to let LM Studio pick the loaded model" />
+          )}
+          <TextField
+            label="Timeout (seconds)"
+            type="number"
+            value={timeoutSec}
+            onChange={(e) => setTimeoutSec(Number(e.target.value) || 300)}
+            fullWidth
+          />
+          <Stack direction="row" spacing={1}>
+            <Button variant="contained" onClick={() => void save()} disabled={saving || loading}>
+              Save
+            </Button>
+            <Button color="inherit" onClick={() => void refresh()} disabled={loading}>
+              Refresh health
+            </Button>
+          </Stack>
+        </Stack>
       </CardContent>
     </Card>
   );

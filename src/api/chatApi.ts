@@ -10,6 +10,11 @@ import type {
   PlaybookInstance,
   RoleTemplates,
   SharedTemplates,
+  AgentInstance,
+  AgentRun,
+  Skill,
+  LMStudioConfig,
+  LMStudioHealth,
 } from '@/types/chat';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5589';
@@ -66,8 +71,81 @@ export function getRoster(runId: string): Promise<RosterEntry[]> {
   return request(`/api/roster/${runId}`);
 }
 
-export function setRoster(runId: string, entries: { role_id: string; user_id: string; user_name: string; present: boolean }[]): Promise<RosterEntry[]> {
+export function setRoster(runId: string, entries: {
+  role_id: string;
+  user_id?: string;
+  user_name?: string;
+  agent_id?: string | null;
+  present: boolean;
+}[]): Promise<RosterEntry[]> {
   return request(`/api/roster/${runId}`, { method: 'POST', body: JSON.stringify({ entries }) });
+}
+
+// ─── Agents ───
+
+export function listAgents(projectId = 'project-default'): Promise<AgentInstance[]> {
+  return request(`/api/agents?project_id=${encodeURIComponent(projectId)}`);
+}
+
+export function hireAgent(data: {
+  project_id?: string;
+  name: string;
+  role_id: string;
+  instructions?: string;
+  model?: string;
+  reports_to_agent_id?: string;
+  token_budget?: number;
+  seat_run_id?: string;
+  skill_slugs?: string[];
+}): Promise<{ agent: AgentInstance; roster_entry: RosterEntry }> {
+  return request('/api/agents', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export function getAgent(id: string): Promise<{ agent: AgentInstance; skills: Skill[] }> {
+  return request(`/api/agents/${id}`);
+}
+
+export function patchAgent(id: string, data: {
+  name?: string;
+  instructions?: string;
+  model?: string;
+  status?: string;
+  reports_to_agent_id?: string;
+  token_budget?: number;
+  seat_run_id?: string;
+}): Promise<AgentInstance> {
+  return request(`/api/agents/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+}
+
+export function createAgentRun(id: string, data: {
+  run_id: string;
+  wake_reason?: string;
+  input?: string;
+}): Promise<{ agent_run: AgentRun; message?: ChatMessage; error?: string }> {
+  return request(`/api/agents/${id}/runs`, { method: 'POST', body: JSON.stringify(data) });
+}
+
+export function listAgentRuns(id: string): Promise<AgentRun[]> {
+  return request(`/api/agents/${id}/runs`);
+}
+
+export function listSkills(): Promise<Skill[]> {
+  return request('/api/skills');
+}
+
+// ─── Runtime / LM Studio ───
+
+export function getLMStudio(): Promise<{ config: LMStudioConfig; health: LMStudioHealth }> {
+  return request('/api/runtime/lmstudio');
+}
+
+export function putLMStudio(data: {
+  base_url: string;
+  api_key?: string;
+  default_model?: string;
+  timeout_sec?: number;
+}): Promise<{ config: LMStudioConfig; health: LMStudioHealth }> {
+  return request('/api/runtime/lmstudio', { method: 'PUT', body: JSON.stringify(data) });
 }
 
 export function removeRosterRole(runId: string, roleId: string): Promise<void> {
@@ -94,7 +172,7 @@ export function getTemplateCatalog(): Promise<TemplateCatalog> {
   return request('/api/templates/');
 }
 
-export function getTemplatesForRole(roleId: string): Promise<{ role: RoleTemplates; shared: SharedTemplates }> {
+export function getTemplatesForRole(roleId: string): Promise<{ role: RoleTemplates; shared: SharedTemplates; role_templates?: RoleTemplates[] }> {
   return request(`/api/templates/${roleId}`);
 }
 

@@ -19,10 +19,11 @@ type SetRosterRequest struct {
 }
 
 type RosterEntryInput struct {
-	RoleID   string `json:"role_id"`
-	UserID   string `json:"user_id"`
-	UserName string `json:"user_name"`
-	Present  bool   `json:"present"`
+	RoleID   string  `json:"role_id"`
+	UserID   string  `json:"user_id"`
+	UserName string  `json:"user_name"`
+	AgentID  *string `json:"agent_id"`
+	Present  bool    `json:"present"`
 }
 
 func (h *RosterHandler) GetRoster(c *fiber.Ctx) error {
@@ -60,8 +61,27 @@ func (h *RosterHandler) SetRoster(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "invalid request body"})
 	}
 
-	// Upsert entries
+	// Upsert entries — human OR agent seat; one seat per run_id+role_id
 	for _, input := range req.Entries {
+		if input.AgentID == nil && input.UserID == "" {
+			return c.Status(400).JSON(fiber.Map{"error": "each entry needs user_id or agent_id"})
+		}
+		if input.AgentID != nil {
+			var agent models.AgentInstance
+			if err := h.DB.First(&agent, "id = ?", *input.AgentID).Error; err != nil {
+				return c.Status(400).JSON(fiber.Map{"error": "unknown agent_id: " + *input.AgentID})
+			}
+			if input.UserName == "" {
+				input.UserName = agent.Name
+			}
+			if input.UserID == "" {
+				input.UserID = "agent:" + agent.ID
+			}
+			if input.RoleID == "" {
+				input.RoleID = agent.RoleID
+			}
+		}
+
 		var existing models.RosterEntry
 		result := h.DB.Where("run_id = ? AND role_id = ?", runID, input.RoleID).First(&existing)
 
@@ -72,15 +92,22 @@ func (h *RosterHandler) SetRoster(c *fiber.Ctx) error {
 				RoleID:   input.RoleID,
 				UserID:   input.UserID,
 				UserName: input.UserName,
+				AgentID:  input.AgentID,
 				Present:  input.Present,
 			}
 			h.DB.Create(&entry)
 		} else {
-			h.DB.Model(&existing).Updates(map[string]interface{}{
+			updates := map[string]interface{}{
 				"user_id":   input.UserID,
 				"user_name": input.UserName,
 				"present":   input.Present,
-			})
+			}
+			if input.AgentID != nil {
+				updates["agent_id"] = *input.AgentID
+			} else {
+				updates["agent_id"] = nil
+			}
+			h.DB.Model(&existing).Updates(updates)
 		}
 	}
 
