@@ -70,7 +70,7 @@ Hire an agent (or Install Product Eng Pod). That seats them on the current run; 
 Hire/seat that role on the Roster for this run, ensure the agent is Active (not paused), and Local AI has a loaded default model.
 
 **Q: What is the auto virtual-team flow?**
-Post a new requirement (Event Mode **P23 / new_requirement**, or a message starting with `/require`). **pm** auto-wakes to Approve/Reject, then **sfd**/**sbd** and later **qa** wake without you clicking Assign/Run. sfd plans → pm approves the plan → sfd edits files under Settings `primary_cwd` → qa pass/fail.
+Post a work requirement in normal chat or Event Mode (plain language is enough — `[requirement]` / `/require` optional). **pm** auto-wakes to Approve/Reject; on Approve **sfd always auto-wakes** when seated (no Assign/Run). Optional **sbd** for backend asks; **qa** after coding. Each role posts start/done bullets. sfd plans → pm approves the plan → sfd edits under Settings `primary_cwd` → qa pass/fail.
 
 **Q: Where do agent code edits land?**
 Only inside the project **primary_cwd** from Settings → Agent Config (default/example: your Alumni-web folder). Nothing is written outside that folder.

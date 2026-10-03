@@ -216,19 +216,20 @@ After you hire the Product Eng Pod (pm, sfd, sbd, qa) and set **Settings → Age
 
 Do one of:
 
-1. **Event Mode** → playbook **P23 · New requirement** (`new_requirement`), or  
-2. Send a normal message that starts with `/require …` or contains `[requirement]`, or  
-3. Event Mode with `brd_ready` / `requirement_posted`
+1. **Normal chat** — post a work requirement in plain language (e.g. “Change the Alumni-web theme to light blue”). Tags like `[requirement]` / `/require` still work but are **not required**.  
+2. **Event Mode** — any work event with a body (including **P23 · New requirement**), or  
+3. Legacy: `/require …`, `[requirement]`, `brd_ready` / `requirement_posted`
+
+Casual hellos do not start the flow. Agent/system messages never start it.
 
 ### What happens next
 
-1. **pm** wakes and answers in few words: **Approve** or **Reject** (+ short reason if reject).  
-2. On Approve, pm chooses **sfd** and/or **sbd** (and later **qa**). Those agents wake automatically.  
-3. **sfd** posts: “I am starting my planning.” then a visible **plan** card.  
+1. **pm** posts “I am starting …” with bullets, then **Approve** or **Reject** (+ short reason if reject).  
+2. On Approve, **sfd is always auto-woken** when seated+active (no manual Assign/Run; not dependent on LM `CGEN_ROUTE`). **sbd** wakes only when the ask needs backend.  
+3. **sfd** posts start bullets → a visible **plan** card → done bullets.  
 4. **pm** Approve/Reject that plan (you can also use the plan ticket).  
-5. On plan Approve, **sfd** edits files only inside `primary_cwd` (visible in VS Code).  
-6. **sfd** posts: “Code update completed.”  
-7. **qa** posts: “I am starting testing.” then a pass/fail result.
+5. On plan Approve, **sfd** edits files only inside `primary_cwd` (visible in VS Code), with start/done bullets.  
+6. **qa** posts start bullets, verifies the requirement, then pass/fail + done bullets.
 
 If LM Studio is down or the coding folder is missing, Chat shows a clear system error instead of a silent failure.
 

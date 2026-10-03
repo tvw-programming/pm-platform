@@ -32,15 +32,14 @@ func NormalizeRoleID(raw string) string {
 }
 
 // ShouldStartAutoFlow decides if a new chat message kicks off the Phase 3 pipeline.
+// Flow v2: any human work chat (Event Mode or normal requirement-like text), not only
+// special tags / playbook triggers. Agent/system authors never start a flow.
 func ShouldStartAutoFlow(msg *models.Message) bool {
 	if msg == nil || strings.TrimSpace(msg.Body) == "" {
 		return false
 	}
-	if msg.Mode == models.ChatModeWork {
-		switch msg.EventType {
-		case "new_requirement", "brd_ready", "requirement_posted":
-			return true
-		}
+	if isAgentOrSystemAuthor(msg) {
+		return false
 	}
 	body := strings.TrimSpace(msg.Body)
 	lower := strings.ToLower(body)
@@ -50,7 +49,110 @@ func ShouldStartAutoFlow(msg *models.Message) bool {
 	if strings.Contains(lower, "[requirement]") {
 		return true
 	}
+	// Event Mode: any work chat with a body (not only new_requirement / brd_ready).
+	if msg.Mode == models.ChatModeWork {
+		return true
+	}
+	// Normal mode: human requirement-like messages (CTO/PM/etc. work asks).
+	return looksLikeHumanWorkRequirement(msg)
+}
+
+func isAgentOrSystemAuthor(msg *models.Message) bool {
+	if msg == nil {
+		return false
+	}
+	id := strings.TrimSpace(msg.AuthorID)
+	if id == "system" || strings.HasPrefix(id, "agent:") {
+		return true
+	}
+	// Role JSON sometimes marks AI posts even without agent: prefix.
+	for _, r := range parseAuthorRolesJSON(msg.AuthorRoles) {
+		if r == "ai_agent" || r == "system" {
+			return true
+		}
+	}
 	return false
+}
+
+func parseAuthorRolesJSON(raw string) []string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return nil
+	}
+	var roles []string
+	if err := json.Unmarshal([]byte(raw), &roles); err == nil {
+		return roles
+	}
+	return nil
+}
+
+// looksLikeHumanWorkRequirement catches plain CTO/human work asks without [requirement].
+func looksLikeHumanWorkRequirement(msg *models.Message) bool {
+	body := strings.TrimSpace(msg.Body)
+	if len(body) < 12 {
+		return false
+	}
+	lower := strings.ToLower(body)
+	switch lower {
+	case "hello", "hi", "hey", "thanks", "thank you", "ok", "okay", "ping", "lol", "hello team", "hi team":
+		return false
+	}
+	signals := []string{
+		"change ", "add ", "fix ", "update ", "implement ", "create ", "remove ", "delete ",
+		"ui", "button", "theme", "color", "page", "screen", "alumni", "requirement",
+		"feature", "bug", "nav", "header", "footer", "css", "style", "layout",
+		"please ", "need to", "should ", "make the", "set the", "background",
+		"project name", "repo", "path ", "scope change", "primary", "cwd",
+	}
+	for _, s := range signals {
+		if strings.Contains(lower, s) {
+			return true
+		}
+	}
+	// Leadership humans posting a substantial ask even without keyword hits.
+	for _, r := range parseAuthorRolesJSON(msg.AuthorRoles) {
+		switch NormalizeRoleID(r) {
+		case "cto", "project_manager", "full_stack_em", "product_owner", "ai_product_manager", "human_requester":
+			if len(body) >= 40 {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func statusStart(task string, bullets []string) string {
+	var b strings.Builder
+	b.WriteString("I am starting " + task + ".")
+	for _, x := range bullets {
+		b.WriteString("\n- ")
+		b.WriteString(x)
+	}
+	return b.String()
+}
+
+func statusDone(bullets []string) string {
+	var b strings.Builder
+	b.WriteString("Completed:")
+	for _, x := range bullets {
+		b.WriteString("\n- ")
+		b.WriteString(x)
+	}
+	return b.String()
+}
+
+func normalizeRequirementText(raw string) string {
+	t := strings.TrimSpace(raw)
+	lower := strings.ToLower(t)
+	for _, p := range []string{"/requirement", "/require"} {
+		if strings.HasPrefix(lower, p) {
+			t = strings.TrimSpace(t[len(p):])
+			break
+		}
+	}
+	t = strings.ReplaceAll(t, "[requirement]", "")
+	t = strings.ReplaceAll(t, "[Requirement]", "")
+	return strings.TrimSpace(t)
 }
 
 func (s *AgentService) postSystemChat(runID, body string) {
@@ -150,7 +252,7 @@ func (s *AgentService) StartAutoFlow(runID, projectID, requirementMsgID, require
 	if projectID == "" {
 		projectID = s.resolveProjectID(runID)
 	}
-	requirementText = strings.TrimSpace(requirementText)
+	requirementText = normalizeRequirementText(requirementText)
 	if requirementText == "" {
 		return nil, fmt.Errorf("requirement text is empty")
 	}
@@ -176,31 +278,41 @@ func (s *AgentService) StartAutoFlow(runID, projectID, requirementMsgID, require
 	}
 
 	s.ensurePodReportsToPM(projectID)
-	below := s.implementersBelowPM(projectID)
-	routeHint := strings.Join(displayRoles(below), ",")
-	if routeHint == "" {
-		routeHint = "sfd,sbd"
+
+	var pm models.AgentInstance
+	if err := s.DB.Where("project_id = ? AND role_id = ? AND status = ?", projectID, "project_manager", models.AgentStatusActive).
+		First(&pm).Error; err != nil {
+		s.failAutoFlow(&flow, "PM wake failed: no active project_manager. Hire/seat a Project Manager agent on the Roster first.")
+		return &flow, err
 	}
+	_, _ = s.SeatAgentOnRun(runID, &pm)
+	s.postAgentStatus(runID, &pm, statusStart("requirement triage", []string{
+		"Verify the human/CTO work ask is clear and actionable",
+		"Approve or Reject in short form",
+		"On Approve, sfd is auto-woken for FE work (no manual Assign/Run)",
+	}))
 
 	input := fmt.Sprintf(`New requirement to triage.
 
 REQUIREMENT:
 %s
 
-Your direct reports (implementers) available now: %s
 Respond in MINIMAL words.
 If you approve, reply exactly:
 Approve
 CGEN_DECISION: APPROVE
-CGEN_ROUTE: %s
-(Use CGEN_ROUTE to pick among sfd/sbd who report to you. Prefer everyone who should start now. qa is auto-woken later after coding — do not put qa here.)
+(Optional) CGEN_ROUTE: sbd — only if backend work is also needed. sfd is ALWAYS woken for FE after Approve. qa is auto-woken later after coding.
 
 If you reject, reply exactly:
 Reject — <one short reason>
 CGEN_DECISION: REJECT
-`, requirementText, routeHint, routeHint)
+`, requirementText)
 
-	ar, msg, err := s.WakeAgentByRole(runID, projectID, "project_manager", "auto_pm_triage", input)
+	ar, msg, err := s.Invoke(&pm, InvokeAgentRequest{
+		RunID:      runID,
+		WakeReason: "auto_pm_triage",
+		Input:      input,
+	})
 	if err != nil {
 		s.failAutoFlow(&flow, "PM wake failed: "+err.Error()+". Hire/seat a Project Manager agent on the Roster first.")
 		return &flow, err
@@ -313,26 +425,50 @@ func (s *AgentService) implementersBelowPM(projectID string) []string {
 	return out
 }
 
-// resolveRoutesAfterPMApprove prefers explicit CGEN_ROUTE, else the PM's reports (sfd/sbd).
-func (s *AgentService) resolveRoutesAfterPMApprove(projectID, body string) []string {
-	parsed := parseRoutes(body)
-	hierarchy := s.implementersBelowPM(projectID)
-	if len(parsed) == 0 {
-		return hierarchy
-	}
-	// Keep LM choice, but only roles that actually have an active agent.
-	active := map[string]bool{}
-	for _, r := range hierarchy {
-		active[r] = true
-	}
-	out := []string{}
-	for _, r := range parsed {
-		if active[r] {
-			out = append(out, r)
+func (s *AgentService) hasActiveRole(projectID, roleID string) bool {
+	var n int64
+	_ = s.DB.Model(&models.AgentInstance{}).
+		Where("project_id = ? AND role_id = ? AND status = ?", projectID, roleID, models.AgentStatusActive).
+		Count(&n).Error
+	return n > 0
+}
+
+func looksLikeBackendRequirement(text string) bool {
+	lower := strings.ToLower(text)
+	for _, s := range []string{"api", "backend", "endpoint", "schema", "database", "migration", "server", "sbd", "senior_be"} {
+		if strings.Contains(lower, s) {
+			return true
 		}
 	}
+	return false
+}
+
+// resolveRoutesAfterPMApprove hard-guarantees sfd for FE work after Approve.
+// CGEN_ROUTE / reports_to may add sbd; they must NOT be required for sfd to wake.
+func (s *AgentService) resolveRoutesAfterPMApprove(projectID, body, requirementText string) []string {
+	s.ensurePodReportsToPM(projectID)
+	out := []string{}
+
+	// HARD GUARANTEE: seated+active senior_fe always wakes on PM Approve (FE path).
+	if s.hasActiveRole(projectID, "senior_fe") {
+		out = append(out, "senior_fe")
+	}
+
+	parsed := parseRoutes(body)
+	wantBE := looksLikeBackendRequirement(requirementText)
+	for _, r := range parsed {
+		if r == "senior_be" {
+			wantBE = true
+		}
+	}
+	// reports_to: if sbd is under PM and LM/req asked for BE, include them.
+	if wantBE && s.hasActiveRole(projectID, "senior_be") {
+		out = append(out, "senior_be")
+	}
+
 	if len(out) == 0 {
-		return hierarchy
+		// Still return sfd so startFEPlanning can emit a clear "not seated" error.
+		return []string{"senior_fe"}
 	}
 	return out
 }
@@ -361,11 +497,21 @@ func (s *AgentService) createPMTicket(flow *models.AutoFlowRun, parentMsgID, kin
 }
 
 func (s *AgentService) advanceAfterPMTriage(flow *models.AutoFlowRun, body string) {
+	var pm models.AgentInstance
+	_ = s.DB.Where("project_id = ? AND role_id = ? AND status = ?", flow.ProjectID, "project_manager", models.AgentStatusActive).
+		First(&pm).Error
+
 	approved, rejected := parseDecision(body)
 	if rejected {
 		flow.Stage = models.AutoFlowStageRejected
 		flow.Status = "rejected"
 		_ = s.DB.Save(flow).Error
+		if pm.ID != "" {
+			s.postAgentStatus(flow.RunID, &pm, statusDone([]string{
+				"Rejected the requirement",
+				"Auto flow stopped — no implementer wake",
+			}))
+		}
 		s.postSystemChat(flow.RunID, "Auto flow stopped · PM rejected the requirement")
 		s.Hub.Broadcast(flow.RunID, websocket.Event{Type: "auto_flow_updated", Data: flow})
 		return
@@ -377,12 +523,18 @@ func (s *AgentService) advanceAfterPMTriage(flow *models.AutoFlowRun, body strin
 		return
 	}
 
-	routes := s.resolveRoutesAfterPMApprove(flow.ProjectID, body)
+	routes := s.resolveRoutesAfterPMApprove(flow.ProjectID, body, flow.RequirementText)
 	routesJSON, _ := json.Marshal(routes)
 	flow.RoutesJSON = string(routesJSON)
 	flow.Stage = models.AutoFlowStageRouting
 	_ = s.DB.Save(flow).Error
-	s.postSystemChat(flow.RunID, "PM approved · routing to "+strings.Join(displayRoles(routes), ", ")+" (below PM hierarchy)")
+	if pm.ID != "" {
+		s.postAgentStatus(flow.RunID, &pm, statusDone([]string{
+			"Approved the requirement",
+			"Auto-routing to " + strings.Join(displayRoles(routes), ", ") + " (sfd hard-guaranteed when seated)",
+		}))
+	}
+	s.postSystemChat(flow.RunID, "PM approved · auto-waking "+strings.Join(displayRoles(routes), ", ")+" (sfd guaranteed)")
 	s.Hub.Broadcast(flow.RunID, websocket.Event{Type: "auto_flow_updated", Data: flow})
 
 	started := 0
@@ -397,7 +549,7 @@ func (s *AgentService) advanceAfterPMTriage(flow *models.AutoFlowRun, body strin
 		}
 	}
 	if started == 0 {
-		s.failAutoFlow(flow, "PM approved but no active sfd/sbd under PM. Hire Product Eng Pod or seat senior_fe/senior_be reporting to the PM.")
+		s.failAutoFlow(flow, "PM approved but no active sfd. Hire Product Eng Pod or seat senior_fe on the Roster.")
 	}
 }
 
@@ -426,20 +578,30 @@ func (s *AgentService) startBEAck(flow *models.AutoFlowRun) {
 		return
 	}
 	_, _ = s.SeatAgentOnRun(flow.RunID, &agent)
-	s.postAgentStatus(flow.RunID, &agent, "I am starting my planning.")
+	s.postAgentStatus(flow.RunID, &agent, statusStart("backend planning", []string{
+		"Review backend scope of the approved requirement",
+		"Post a short API/schema plan (no file writes yet)",
+	}))
 	input := fmt.Sprintf(`Requirement (backend scope):
 %s
 
 Post a short backend plan (APIs/schemas). Use a cgen-plan fence if useful.
-Do not write files yet.`, flow.RequirementText)
-	_, _, err = s.Invoke(&agent, InvokeAgentRequest{
+Do not write files yet.
+When finished, summarize what you completed in bullet points.`, flow.RequirementText)
+	_, msg, err := s.Invoke(&agent, InvokeAgentRequest{
 		RunID:      flow.RunID,
 		WakeReason: "auto_be_planning",
 		Input:      input,
 	})
 	if err != nil {
 		s.postSystemChat(flow.RunID, "sbd wake failed: "+err.Error())
+		return
 	}
+	_ = msg
+	s.postAgentStatus(flow.RunID, &agent, statusDone([]string{
+		"Posted backend planning notes for the requirement",
+		"No file writes (planning only)",
+	}))
 }
 
 func (s *AgentService) startFEPlanning(flow *models.AutoFlowRun) {
@@ -453,7 +615,11 @@ func (s *AgentService) startFEPlanning(flow *models.AutoFlowRun) {
 		return
 	}
 	_, _ = s.SeatAgentOnRun(flow.RunID, &agent)
-	s.postAgentStatus(flow.RunID, &agent, "I am starting my planning.")
+	s.postAgentStatus(flow.RunID, &agent, statusStart("FE planning", []string{
+		"Turn the approved requirement into a short implementation plan",
+		"List files/UI changes and acceptance criteria",
+		"Do not write code yet — wait for PM plan approval",
+	}))
 
 	input := fmt.Sprintf(`You are sfd (Senior FE). Produce a visible implementation plan for:
 
@@ -523,8 +689,24 @@ func (s *AgentService) createFEPlanFromContent(flow *models.AutoFlowRun, agent *
 	_ = s.DB.Save(flow).Error
 	s.Hub.Broadcast(flow.RunID, websocket.Event{Type: "auto_flow_updated", Data: flow})
 	_ = ticket
+	s.postAgentStatus(flow.RunID, agent, statusDone([]string{
+		"Posted FE plan card for PM review",
+		"Goal: " + goal,
+		"Waiting for PM plan Approve before coding",
+	}))
 
 	// Auto-wake PM to approve/reject the FE plan (human can still use the ticket).
+	var pm models.AgentInstance
+	if err := s.DB.Where("project_id = ? AND role_id = ? AND status = ?", flow.ProjectID, "project_manager", models.AgentStatusActive).
+		First(&pm).Error; err != nil {
+		s.postSystemChat(flow.RunID, "PM plan-review wake failed: no active PM. Use the plan ticket Approve/Reject to continue.")
+		return
+	}
+	_, _ = s.SeatAgentOnRun(flow.RunID, &pm)
+	s.postAgentStatus(flow.RunID, &pm, statusStart("FE plan review", []string{
+		"Review the sfd plan against the original requirement",
+		"Approve or Reject in short form",
+	}))
 	pmInput := fmt.Sprintf(`FE plan awaiting your decision.
 
 Goal: %s
@@ -539,7 +721,11 @@ CGEN_DECISION: APPROVE
 Reject — <one short reason>
 CGEN_DECISION: REJECT
 `, goal, bodyMD)
-	_, pmMsg, err := s.WakeAgentByRole(flow.RunID, flow.ProjectID, "project_manager", "auto_pm_plan_review", pmInput)
+	_, pmMsg, err := s.Invoke(&pm, InvokeAgentRequest{
+		RunID:      flow.RunID,
+		WakeReason: "auto_pm_plan_review",
+		Input:      pmInput,
+	})
 	if err != nil {
 		s.postSystemChat(flow.RunID, "PM plan-review wake failed: "+err.Error()+". Use the plan ticket Approve/Reject to continue.")
 		return
@@ -578,6 +764,10 @@ func (s *AgentService) advanceAfterFEPlanReview(flow *models.AutoFlowRun, body s
 	if flow.Stage != models.AutoFlowStageFEPlanReview || flow.Status != "running" {
 		return
 	}
+	var pm models.AgentInstance
+	_ = s.DB.Where("project_id = ? AND role_id = ? AND status = ?", flow.ProjectID, "project_manager", models.AgentStatusActive).
+		First(&pm).Error
+
 	approved, rejected := parseDecision(body)
 	if rejected {
 		if flow.PlanID != nil {
@@ -586,6 +776,12 @@ func (s *AgentService) advanceAfterFEPlanReview(flow *models.AutoFlowRun, body s
 		flow.Stage = models.AutoFlowStageRejected
 		flow.Status = "rejected"
 		_ = s.DB.Save(flow).Error
+		if pm.ID != "" {
+			s.postAgentStatus(flow.RunID, &pm, statusDone([]string{
+				"Rejected the FE plan",
+				"Coding will not start",
+			}))
+		}
 		s.postSystemChat(flow.RunID, "Auto flow stopped · PM rejected the FE plan")
 		s.Hub.Broadcast(flow.RunID, websocket.Event{Type: "auto_flow_updated", Data: flow})
 		return
@@ -593,6 +789,12 @@ func (s *AgentService) advanceAfterFEPlanReview(flow *models.AutoFlowRun, body s
 	if !approved {
 		s.postSystemChat(flow.RunID, "PM plan reply unclear. Approve/Reject the plan ticket to continue coding.")
 		return
+	}
+	if pm.ID != "" {
+		s.postAgentStatus(flow.RunID, &pm, statusDone([]string{
+			"Approved the FE plan",
+			"Auto-waking sfd to implement under Settings primary_cwd",
+		}))
 	}
 	// Claim the transition so PM auto-approve + human ticket cannot double-start coding.
 	res := s.DB.Model(flow).Where("id = ? AND stage = ?", flow.ID, models.AutoFlowStageFEPlanReview).
@@ -639,6 +841,11 @@ func (s *AgentService) startFECoding(flow *models.AutoFlowRun) {
 		return
 	}
 	_, _ = s.SeatAgentOnRun(flow.RunID, &agent)
+	s.postAgentStatus(flow.RunID, &agent, statusStart("FE coding", []string{
+		"Implement the PM-approved plan under Settings primary_cwd",
+		"Edit files with list_dir / read_file / write_file only inside allowed cwd",
+		"Leave a clear completion note when done",
+	}))
 
 	input := fmt.Sprintf(`FE plan approved. Implement the requirement by editing files under the allowed cwd ONLY.
 
@@ -667,9 +874,13 @@ When finished, end with exactly: Code update completed.
 		content = msg.Body
 	}
 	if !reCodeDone.MatchString(content) {
-		// Ensure the required status line is visible even if the model forgot it.
 		s.postAgentStatus(flow.RunID, &agent, "Code update completed.")
 	}
+	s.postAgentStatus(flow.RunID, &agent, statusDone([]string{
+		"Applied code changes under " + cwd,
+		"Requirement implementation pass finished",
+		"Handing off to qa for verification",
+	}))
 	s.startQA(flow)
 }
 
@@ -684,7 +895,11 @@ func (s *AgentService) startQA(flow *models.AutoFlowRun) {
 		return
 	}
 	_, _ = s.SeatAgentOnRun(flow.RunID, &agent)
-	s.postAgentStatus(flow.RunID, &agent, "I am starting testing.")
+	s.postAgentStatus(flow.RunID, &agent, statusStart("testing", []string{
+		"Check whether the requirement is fulfilled in primary_cwd",
+		"Use read-only tools (no writes)",
+		"Report CGEN_QA: PASS or FAIL",
+	}))
 
 	cwd, _ := s.ensurePrimaryCwd(flow.ProjectID)
 	input := fmt.Sprintf(`Code update completed for:
@@ -728,6 +943,10 @@ Changes do not work as expected — <short reason>
 	flow.Stage = models.AutoFlowStageDone
 	flow.Status = "done"
 	_ = s.DB.Save(flow).Error
+	s.postAgentStatus(flow.RunID, &agent, statusDone([]string{
+		"Verified requirement fulfillment against cwd changes",
+		"QA verdict: " + verdict,
+	}))
 	s.postSystemChat(flow.RunID, fmt.Sprintf("Auto flow finished · QA %s", verdict))
 	s.Hub.Broadcast(flow.RunID, websocket.Event{Type: "auto_flow_updated", Data: flow})
 }
@@ -748,7 +967,7 @@ func (s *AgentService) HandleAutoFlowTicketResolution(ticket *models.Ticket) boo
 	switch ticket.Status {
 	case models.TicketStatusApproved:
 		if flow.Stage == models.AutoFlowStagePMTriage {
-			// No CGEN_ROUTE → resolveRoutesAfterPMApprove uses reports_to hierarchy (sfd/sbd).
+			// Human override Approve → sfd hard-guaranteed; sbd only if requirement needs BE.
 			s.advanceAfterPMTriage(&flow, "Approve\nCGEN_DECISION: APPROVE")
 		}
 	case models.TicketStatusRejected:
