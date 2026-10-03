@@ -81,7 +81,7 @@ Before sending an event, the routing preview shows three columns:
 | **Optional** | Roles that receive a notification but their ticket is advisory |
 | **Skipped** | Roles in the roster but not involved in this playbook |
 
-If a role is missing from your team's roster, the playbook shows a warning. Add the role in **Settings → Chat Roles** before firing.
+If a role is missing from the run Roster, the playbook shows a warning. Seat that role in Chat → **Roster** (Hire an agent or Add a human) before firing.
 
 ---
 
@@ -135,9 +135,34 @@ A playbook is considered **complete** when all mandatory tickets have been resol
 
 ## Roster setup
 
-The roster defines which team members fill which chat roles. A role is a functional position (e.g. "CTO", "Frontend Lead", "QA Engineer") that playbooks route tickets to.
+The Roster is the **seating chart for one chat run** (usually `run-default`). It maps each **role** (e.g. Project Manager, Senior FE, QA Lead) to either:
 
-### Configuring the roster (Admins only)
+- a **human** (name/placeholder), or
+- a **hired AI agent** (a long-lived project teammate seated on that role for this run)
+
+Playbooks, tickets, Assign/Run wakes, and handoffs use the Roster to decide **who must respond** and **which agent to wake**.
+
+### How to set it up effectively
+
+1. Open Chat → **Roster** panel (side drawer)
+2. **Hire** AI agents (or **Install Product Eng Pod**) — creates durable agents and seats them on roles
+3. Or **Add** a human seat: pick role + name (for hybrid teams / playbook coverage)
+4. Confirm required roles for your flow are present (PM, FE, BE, QA as needed)
+5. Use Event Mode / Assign/Run / Pass handoff — the system routes to seated roles/agents
+6. **Pause** an agent when you want to stop wakes without removing history
+
+**Impact:** A correct roster means tickets land on the right people/agents, LM wakes hit the right role, and plans/handoffs continue the chain. An empty or wrong roster means skipped playbook steps, failed wakes, or tickets with no assignee.
+
+### When to use — is it mandatory?
+
+- **Use when:** starting a feature thread, before Event Mode playbooks, before Hire Pod / Assign/Run, or whenever you change who’s responsible for a role
+- **Mandatory for AI Assign/Run?** Yes — the agent must be **seated** on the run for its role to wake
+- **Mandatory for opening Chat?** No — Chat loads without a full roster; set it up when you need coordinated work
+- **Teams page setup?** Not required for Roster/Chat agent flows
+
+### Project role catalog (Settings)
+
+Separately, admins can enable which roles exist for the project:
 
 1. Go to **Settings → Chat Roles**
 2. Click **+ Role** to add a new role or click an existing role to edit it
@@ -145,6 +170,8 @@ The roster defines which team members fill which chat roles. A role is a functio
 4. Set the role's **availability** — working hours, timezone, out-of-office dates
 
 ![Chat role settings panel](/screenshots/settings-chat-roles.svg)
+
+This catalog controls which roles are available to seat. Seating itself happens on the Chat **Roster** panel for the current run.
 
 ### Role availability
 
@@ -185,5 +212,5 @@ This is the most common event type for engineering teams.
 
 - **Keep event messages short** — the ticket creates the action item; the message is context
 - **Fire events before you've already decided** — the playbook is for collective decisions, not announcements
-- **Check the roster before a big event** — if a key role has no one assigned, the playbook will skip them
+- **Check the roster before a big event** — if a key role has no seat (human or AI), the playbook will skip them or Assign/Run will fail to wake
 - **Use templates for regular events** — most playbooks have a message template; use it as a starting point

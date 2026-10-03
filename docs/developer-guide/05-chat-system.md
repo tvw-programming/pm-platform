@@ -166,6 +166,32 @@ DELETE /api/roster/:runId/:roleId → remove one entry
 
 Roster entries are enriched server-side from the role catalog before being returned — the handler merges `RoleDef` data into the DB row.
 
+### Run-scoped seating (`run_id`)
+
+The Roster is **per chat run** (`run_id`, usually `run-default`), not workspace-global. Each entry maps one `role_id` on that run to either a human or an AI agent:
+
+| Field | Meaning |
+|---|---|
+| `user_id` / `user_name` | Human seat (or placeholder name) |
+| `agent_id` | Hired AI agent seated on this role for the run (`null` for human-only seats) |
+| `present` | Whether the seat is active for routing |
+
+Hire / Install Product Eng Pod creates durable `AgentInstance` rows and **seats** them via `RosterEntry.agent_id` on the current run. Agents outlive a single wake; seating is what binds them to this run’s playbooks and Assign/Run.
+
+### Humans vs `agent_id`
+
+- **Human seat:** `user_id` + `user_name` set; `agent_id` empty. Playbooks create tickets for that person.
+- **Agent seat:** `agent_id` set (often with `user_id` like `agent:<uuid>`). Playbooks and wakes resolve the seated agent for that role.
+- One role per run (unique `(run_id, role_id)`). Re-hire or re-seat updates the same row.
+
+### Playbook and wake dependency
+
+1. **Work events / playbooks** call `GetRoster(run_id)` before resolving Must Respond / Skipped / Not Asked. Missing seats → `SKIPPED_ROLE_ABSENT` (or empty assignee).
+2. **Assign/Run (manual wake)** validates the agent is `Active`, then checks a present roster row with matching `run_id` + `role_id` + `agent_id`. No seat → wake fails.
+3. **Handoffs / Pass** route to seated roles the same way — the chain continues only if the target role is seated.
+
+Pause sets agent status away from `Active` so wakes stop without deleting history or the seat.
+
 ---
 
 ## Role Configuration API
