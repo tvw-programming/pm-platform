@@ -2,7 +2,9 @@ import { memo, useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import type { ChatMessage, ChatTicket } from '@/types/chat';
+import Chip from '@mui/material/Chip';
+import Alert from '@mui/material/Alert';
+import type { ChatMessage, ChatTicket, AgentRun } from '@/types/chat';
 import { MessageBubble } from './MessageBubble';
 
 interface MessageListProps {
@@ -10,15 +12,24 @@ interface MessageListProps {
   tickets: ChatTicket[];
   loading: boolean;
   currentUserId: string;
+  runningAgentRuns: Record<string, AgentRun>;
   onResolveTicket: (ticketId: string, status: string, comment: string) => void;
 }
 
-export const MessageList = memo(function MessageList({ messages, tickets, loading, currentUserId, onResolveTicket }: MessageListProps) {
+export const MessageList = memo(function MessageList({
+  messages,
+  tickets,
+  loading,
+  currentUserId,
+  runningAgentRuns,
+  onResolveTicket,
+}: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const running = Object.values(runningAgentRuns);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages.length]);
+  }, [messages.length, running.length]);
 
   if (loading) {
     return (
@@ -28,11 +39,11 @@ export const MessageList = memo(function MessageList({ messages, tickets, loadin
     );
   }
 
-  if (messages.length === 0) {
+  if (messages.length === 0 && running.length === 0) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, flexDirection: 'column', gap: 1 }}>
         <Typography variant="body2" color="text.secondary">No messages yet</Typography>
-        <Typography variant="caption" color="text.disabled">Send a message or start a work event</Typography>
+        <Typography variant="caption" color="text.disabled">Hire an AI teammate, assign work, or send a message</Typography>
       </Box>
     );
   }
@@ -49,6 +60,22 @@ export const MessageList = memo(function MessageList({ messages, tickets, loadin
           currentUserId={currentUserId}
         />
       ))}
+
+      {running.map(run => (
+        <Alert
+          key={run.id}
+          severity="info"
+          icon={<CircularProgress size={16} />}
+          sx={{ mb: 1.5, alignItems: 'center' }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>Agent running…</Typography>
+            <Chip label={run.wake_reason} size="small" sx={{ height: 20, fontSize: '0.625rem' }} />
+            <Typography variant="caption" color="text.secondary">Final reply will appear when LM Studio completes.</Typography>
+          </Box>
+        </Alert>
+      ))}
+
       <div ref={bottomRef} />
     </Box>
   );
