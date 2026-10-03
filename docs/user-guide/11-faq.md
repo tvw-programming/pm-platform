@@ -57,12 +57,24 @@ The burndown chart shows remaining story points over time. A line below the idea
 
 ## Chat & Events
 
+**Q: What is the Roster?**
+The per-run seating chart mapping roles to humans or AI agents. Playbooks and agent wakes use it to route work.
+
+**Q: Do I need a Roster before chatting?**
+Not for casual chat. You need seats before Event Mode tickets, Assign/Run, or handoffs that target roles.
+
+**Q: How do I seat AI teammates?**
+Hire an agent (or Install Product Eng Pod). That seats them on the current run; agents are durable for the project.
+
+**Q: What if Assign/Run fails with no seat?**
+Hire/seat that role on the Roster for this run, ensure the agent is Active (not paused), and Local AI has a loaded default model.
+
 **Q: What is Event Mode and when should I use it?**
 Event Mode sends a structured message that triggers a playbook — a workflow that routes tickets to specific roles and tracks responses. Use it for decisions that need sign-off from multiple roles (architecture decisions, deployment approvals, etc.). For casual questions, use regular chat.
 
 **Q: Why didn't someone receive a ticket from an event I fired?**
 Check two things:
-1. Is the role assigned in **Settings → Chat Roles**? If a role has no one assigned, it's skipped.
+1. Is the role **seated** on the Chat → **Roster** panel for this run? If a role has no seat, it's skipped.
 2. Is the primary assignee marked as out-of-office with no backup?
 
 **Q: What happens if a ticket's SLA expires?**
