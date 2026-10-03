@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -13,7 +13,9 @@ import { RosterPanel } from '@/components/chat/RosterPanel';
 import { RoleCardDrawer } from '@/components/chat/RoleCardDrawer';
 import { ChatFilters, type ChatFilter } from '@/components/chat/ChatFilters';
 import { PlaybookTracker } from '@/components/chat/PlaybookTracker';
-import type { AgentInstance } from '@/types/chat';
+import type { AgentInstance, ApprovedChildTask } from '@/types/chat';
+import type { Task } from '@/types/domain';
+import { useWorkspaceDispatch } from '@/state/WorkspaceProvider';
 
 const CURRENT_USER_ID = 'user-1';
 const CURRENT_USER_NAME = 'Tejas Waghulde';
@@ -32,6 +34,12 @@ function ChatInner() {
     hireAgent,
     patchAgent,
     assignAndRun,
+    installPod,
+    passHandoff,
+    approvePlan,
+    rejectPlan,
+    runRoutine,
+    createDemoPlan,
   } = useChat();
   const [rosterOpen, setRosterOpen] = useState(true);
   const [sideTab, setSideTab] = useState<'roster' | 'playbooks'>('roster');
@@ -43,7 +51,7 @@ function ChatInner() {
   });
 
   const mandatoryTickets = useMemo(() =>
-    state.tickets.filter(t => t.user_id === CURRENT_USER_ID && t.status === 'pending'),
+    state.tickets.filter(t => (t.user_id === CURRENT_USER_ID || t.role_id === 'human_requester') && t.status === 'pending'),
     [state.tickets]
   );
 
@@ -93,6 +101,9 @@ function ChatInner() {
           currentUserId={CURRENT_USER_ID}
           runningAgentRuns={state.runningAgentRuns}
           onResolveTicket={resolveTicket}
+          onPassHandoff={passHandoff}
+          onApprovePlan={async (planId) => { await approvePlan(planId); }}
+          onRejectPlan={rejectPlan}
         />
 
         <MessageComposer
@@ -124,6 +135,9 @@ function ChatInner() {
             onHireAgent={hireAgent}
             onPatchAgent={patchAgent}
             onAssignAndRun={assignAndRun}
+            onInstallPod={installPod}
+            onRunRoutine={runRoutine}
+            onCreateDemoPlan={createDemoPlan}
             onOpenAgent={(agent) => setRoleCard({ open: true, roleId: agent.role_id, roleName: agent.name, agent })}
           />
         ) : (
@@ -144,6 +158,46 @@ function ChatInner() {
 }
 
 export function ChatPage() {
+  const dispatch = useWorkspaceDispatch();
+
+  const onPlanChildren = useCallback((children: ApprovedChildTask[]) => {
+    const now = new Date().toISOString();
+    const tasks: Task[] = children.map((ch, index) => ({
+      id: ch.id,
+      key: ch.key,
+      title: ch.title,
+      description: (ch.acceptance_criteria || []).map((a) => `- ${a}`).join('\n'),
+      type: 'story' as const,
+      status: (ch.status === 'blocked' ? 'blocked' : 'todo') as Task['status'],
+      priority: 'high' as const,
+      projectId: ch.project_id === 'project-default' ? 'p-atlas' : ch.project_id,
+      sprintId: ch.sprint_id || 's-atl-15',
+      assigneeKind: 'agent' as const,
+      assigneeAgentId: ch.assignee_agent_id,
+      assigneeRoleId: ch.role_id,
+      assigneeAgentName: ch.role_id.replace(/_/g, ' '),
+      reporterId: 'u-1',
+      labelIds: [],
+      storyPoints: ch.story_points,
+      createdAt: now,
+      updatedAt: now,
+      blockedReason: ch.blocked_by_task_ids?.length ? `Blocked by ${ch.blocked_by_task_ids.join(', ')}` : undefined,
+      checklist: [],
+      dependencies: (ch.blocked_by_task_ids || []).map((tid, i) => ({
+        id: `dep-${ch.id}-${i}`,
+        kind: 'blocked_by' as const,
+        targetTaskId: tid,
+      })),
+      customFields: {},
+      rank: -Date.now() - index,
+      origin: 'plan' as const,
+      executionPolicy: ch.role_id === 'senior_fe' || ch.role_id === 'senior_be'
+        ? { mode: 'normal' as const, commentRequired: true, maxReviewRounds: 3, status: 'idle' as const }
+        : undefined,
+    }));
+    dispatch({ type: 'task/upsertMany', tasks });
+  }, [dispatch]);
+
   return (
     <ChatProvider
       runId={DEFAULT_RUN_ID}
@@ -151,6 +205,7 @@ export function ChatPage() {
       currentUserId={CURRENT_USER_ID}
       currentUserName={CURRENT_USER_NAME}
       currentUserRoles={CURRENT_USER_ROLES}
+      onPlanChildren={onPlanChildren}
     >
       <ChatInner />
     </ChatProvider>

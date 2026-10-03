@@ -34,15 +34,17 @@ func Setup(db *gorm.DB, cfg *config.Config, hub *websocket.Hub) *fiber.App {
 	}))
 
 	agentSvc := &services.AgentService{DB: db, Cfg: cfg, Hub: hub}
+	_ = agentSvc.SeedRoutines("project-default")
 
 	chatHandler := &handlers.ChatHandler{DB: db, Hub: hub}
-	ticketHandler := &handlers.TicketHandler{DB: db, Hub: hub}
+	ticketHandler := &handlers.TicketHandler{DB: db, Hub: hub, Agents: agentSvc}
 	rosterHandler := &handlers.RosterHandler{DB: db, Hub: hub}
 	roleHandler := &handlers.RoleHandler{DB: db}
 	templateHandler := &handlers.TemplateHandler{}
 	playbookHandler := &handlers.PlaybookHandler{DB: db}
 	agentHandler := &handlers.AgentHandler{DB: db, Hub: hub, Agents: agentSvc}
 	runtimeHandler := &handlers.RuntimeHandler{Agents: agentSvc}
+	phase2Handler := &handlers.Phase2Handler{DB: db, Agents: agentSvc}
 
 	app.Get("/api/health", handlers.HealthCheck)
 
@@ -85,6 +87,25 @@ func Setup(db *gorm.DB, cfg *config.Config, hub *websocket.Hub) *fiber.App {
 	runtime := app.Group("/api/runtime")
 	runtime.Get("/lmstudio", runtimeHandler.GetLMStudio)
 	runtime.Put("/lmstudio", runtimeHandler.PutLMStudio)
+
+	// Phase 2 — handoffs, plans, pods, routines, budgets, execution policy
+	app.Get("/api/agent-ops", phase2Handler.AgentOps)
+	app.Get("/api/team-templates", phase2Handler.ListTeamTemplates)
+	app.Post("/api/team-templates/:id/install", phase2Handler.InstallTeamTemplate)
+	app.Get("/api/handoffs", phase2Handler.ListHandoffs)
+	app.Post("/api/handoffs", phase2Handler.CreateHandoff)
+	app.Post("/api/handoffs/:id/pass", phase2Handler.PassHandoff)
+	app.Post("/api/plans", phase2Handler.CreatePlan)
+	app.Get("/api/plans/:id", phase2Handler.GetPlan)
+	app.Post("/api/plans/:id/approve", phase2Handler.ApprovePlan)
+	app.Post("/api/plans/:id/reject", phase2Handler.RejectPlan)
+	app.Get("/api/projects/:id/agent-config", phase2Handler.GetProjectAgentConfig)
+	app.Patch("/api/projects/:id/agent-config", phase2Handler.PutProjectAgentConfig)
+	app.Get("/api/routines", phase2Handler.ListRoutines)
+	app.Post("/api/routines/:key/run", phase2Handler.RunRoutine)
+	app.Get("/api/tasks/:taskId/execution-policy", phase2Handler.GetExecutionPolicy)
+	app.Put("/api/tasks/:taskId/execution-policy", phase2Handler.PutExecutionPolicy)
+	app.Post("/api/tasks/:taskId/transition", phase2Handler.TransitionTask)
 
 	// WebSocket
 	app.Use("/ws", hub.UpgradeMiddleware())

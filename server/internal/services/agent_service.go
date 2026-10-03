@@ -151,6 +151,10 @@ func (s *AgentService) AttachDefaultSkills(agent *models.AgentInstance) error {
 	switch agent.RoleID {
 	case "project_manager":
 		slugs = []string{"issue-triage", "task-planning"}
+	case "senior_fe", "senior_be":
+		slugs = []string{"github-pr-workflow"}
+	case "qa_lead":
+		slugs = []string{"qa-acceptance"}
 	default:
 		slugs = []string{"task-planning"}
 	}
@@ -211,8 +215,11 @@ func (s *AgentService) ValidateWake(agent *models.AgentInstance, runID string) e
 	if agent.Status != models.AgentStatusActive {
 		return fmt.Errorf("agent is %s; only active agents can be woken", agent.Status)
 	}
-	if agent.TokenBudget != nil && agent.TokensUsed >= *agent.TokenBudget {
-		return fmt.Errorf("agent token budget exhausted (%d/%d)", agent.TokensUsed, *agent.TokenBudget)
+	if _, hard, err := s.CheckBudgets(agent); hard {
+		if err != nil {
+			return err
+		}
+		return fmt.Errorf("agent or project hard token budget blocked")
 	}
 	var seat models.RosterEntry
 	err := s.DB.Where("run_id = ? AND role_id = ? AND agent_id = ? AND present = true", runID, agent.RoleID, agent.ID).First(&seat).Error
@@ -228,7 +235,9 @@ func (s *AgentService) BuildSystemPrompt(agent *models.AgentInstance, skills []m
 	b.WriteString(fmt.Sprintf("Identity: name=%s role=%s agent_id=%s\n", agent.Name, agent.RoleID, agent.ID))
 	b.WriteString(fmt.Sprintf("Wake reason: %s\n", wakeReason))
 	b.WriteString("Respond with a final complete message (no streaming). Do not invent repo tool calls.\n")
-	b.WriteString("Playbooks and human tickets remain approval gates — propose, do not bypass governance.\n\n")
+	b.WriteString("Playbooks and human tickets remain approval gates — propose, do not bypass governance.\n")
+	b.WriteString("When handing off, include a fenced ```cgen-handoff JSON block with from_role, to_roles, task_id, summary, acceptance_criteria, and optional pr_title/pr_body/verification_steps.\n")
+	b.WriteString("For task-planning, do not create child tasks until a human approve_reject ticket is approved.\n\n")
 	if agent.Instructions != "" {
 		b.WriteString("## Instructions\n")
 		b.WriteString(agent.Instructions)
@@ -360,10 +369,15 @@ func (s *AgentService) Invoke(agent *models.AgentInstance, req InvokeAgentReques
 	_ = s.DB.Save(&agentRun).Error
 
 	total := pyResp.PromptTokens + pyResp.CompletionTokens
-	_ = s.DB.Model(agent).Update("tokens_used", gorm.Expr("tokens_used + ?", total)).Error
+	s.ApplyTokenSpend(agent, total)
+	s.TryParseHandoffFromContent(agent, runID, content, outMsg.ID)
 
+	softHit, _, _ := s.CheckBudgets(agent)
 	finishedBody := fmt.Sprintf("Run finished · status=succeeded · tokens=%d (prompt=%d completion=%d)",
 		total, pyResp.PromptTokens, pyResp.CompletionTokens)
+	if softHit {
+		finishedBody += " · soft token budget reached"
+	}
 	finMsg := models.Message{
 		ID:          uuid.New().String(),
 		RunID:       runID,

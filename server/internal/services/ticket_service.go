@@ -165,6 +165,31 @@ func ResolveTicket(db *gorm.DB, ticketID string, status models.TicketStatus, com
 	return &ticket, nil
 }
 
+// ResolveTicketForce bypasses the assignee check (human board override / plan gates).
+func ResolveTicketForce(db *gorm.DB, ticketID string, status models.TicketStatus, comment string, resolverUserID string) (*models.Ticket, error) {
+	var ticket models.Ticket
+	if err := db.First(&ticket, "id = ?", ticketID).Error; err != nil {
+		return nil, fmt.Errorf("ticket not found: %w", err)
+	}
+	if ticket.Status != models.TicketStatusPending {
+		return nil, fmt.Errorf("ticket already resolved with status: %s", ticket.Status)
+	}
+	switch status {
+	case models.TicketStatusApproved, models.TicketStatusRejected, models.TicketStatusAcked, models.TicketStatusDone:
+	default:
+		return nil, fmt.Errorf("invalid resolution status: %s", status)
+	}
+	now := time.Now()
+	ticket.Status = status
+	ticket.Comment = comment
+	ticket.ResolvedAt = &now
+	if err := db.Save(&ticket).Error; err != nil {
+		return nil, fmt.Errorf("save ticket: %w", err)
+	}
+	go checkPlaybookCompletion(db, ticket.PlaybookInstanceID)
+	return &ticket, nil
+}
+
 // checkPlaybookCompletion checks if all pending tickets are resolved and closes the playbook instance.
 func checkPlaybookCompletion(db *gorm.DB, playbookInstanceID string) {
 	var pendingCount int64

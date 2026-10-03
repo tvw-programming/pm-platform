@@ -30,6 +30,7 @@ import { HealthChip, ReleaseStatusChip } from '@/components/common/TokenChip';
 import { ProjectProgressChart, StatusDistributionChart, TeamWorkloadChart } from '@/components/dashboard/DashboardCharts';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
 import { DeadlinesList } from '@/components/dashboard/DeadlinesList';
+import { AgentOpsStrip } from '@/components/dashboard/AgentOpsStrip';
 import { EmptyState } from '@/components/common/States';
 import { useWorkspace } from '@/state/WorkspaceProvider';
 import { useUi } from '@/state/UiProvider';
@@ -76,6 +77,7 @@ export function DashboardPage(): React.JSX.Element {
 
   return (
     <Box>
+      <AgentOpsStrip />
       <PageHeader
         title={`Good to see you, ${currentUser.name.split(' ')[0]}`}
         description="A delivery snapshot across every active project in this workspace."

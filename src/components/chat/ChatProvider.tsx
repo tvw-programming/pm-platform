@@ -8,6 +8,7 @@ import type {
   PlaybookResolution,
   AgentInstance,
   AgentRun,
+  ApprovedChildTask,
 } from '@/types/chat';
 import * as api from '@/api/chatApi';
 
@@ -101,6 +102,12 @@ interface ChatContextValue {
   hireAgent: (data: { name: string; role_id: string; instructions?: string; model?: string }) => Promise<AgentInstance>;
   patchAgent: (id: string, data: { status?: string; instructions?: string; model?: string; name?: string }) => Promise<AgentInstance>;
   assignAndRun: (agentId: string, input: string, wakeReason?: string) => Promise<void>;
+  installPod: () => Promise<AgentInstance[]>;
+  passHandoff: (handoffId: string, targetRoles: string[]) => Promise<void>;
+  approvePlan: (planId: string) => Promise<ApprovedChildTask[]>;
+  rejectPlan: (planId: string) => Promise<void>;
+  runRoutine: (key: string) => Promise<void>;
+  createDemoPlan: () => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextValue | null>(null);
@@ -112,6 +119,7 @@ interface ChatProviderProps {
   currentUserRoles: string[];
   projectId?: string;
   children: ReactNode;
+  onPlanChildren?: (children: ApprovedChildTask[]) => void;
 }
 
 export function ChatProvider({
@@ -121,6 +129,7 @@ export function ChatProvider({
   currentUserRoles,
   projectId = 'project-default',
   children,
+  onPlanChildren,
 }: ChatProviderProps) {
   const [state, dispatch] = useReducer(chatReducer, initialState);
   const wsRef = useRef<WebSocket | null>(null);
@@ -174,11 +183,16 @@ export function ChatProvider({
         if (data.agent_run) dispatch({ type: 'AGENT_RUN_FINISHED', payload: data.agent_run });
         if (data.agent) dispatch({ type: 'UPSERT_AGENT', payload: data.agent });
         api.listAgents(projectId).then(a => dispatch({ type: 'SET_AGENTS', payload: a || [] }));
+      } else if (event.type === 'plan_approved') {
+        const data = event.data as { children?: ApprovedChildTask[] };
+        if (data.children?.length) onPlanChildren?.(data.children);
+        api.listMessages(runId).then(m => dispatch({ type: 'SET_MESSAGES', payload: m || [] }));
+        api.listTickets(runId).then(t => dispatch({ type: 'SET_TICKETS', payload: t || [] }));
       }
     });
     wsRef.current = ws;
     return () => { ws.close(); };
-  }, [runId, projectId]);
+  }, [runId, projectId, onPlanChildren]);
 
   const sendMessage = useCallback(async (data: { mode: string; event_type?: string; template_id?: string; body: string }) => {
     const result = await api.createMessage({
@@ -256,6 +270,66 @@ export function ChatProvider({
     }
   }, [runId, projectId]);
 
+  const installPodFn = useCallback(async () => {
+    const result = await api.installTeamTemplate('product-eng-pod', {
+      project_id: projectId,
+      seat_run_id: runId,
+    });
+    const agents = await api.listAgents(projectId);
+    dispatch({ type: 'SET_AGENTS', payload: agents || [] });
+    const roster = await api.getRoster(runId);
+    dispatch({ type: 'SET_ROSTER', payload: roster || [] });
+    const messages = await api.listMessages(runId);
+    dispatch({ type: 'SET_MESSAGES', payload: messages || [] });
+    return result.agents;
+  }, [projectId, runId]);
+
+  const passHandoffFn = useCallback(async (handoffId: string, targetRoles: string[]) => {
+    await api.passHandoff(handoffId, { run_id: runId, target_roles: targetRoles });
+    const messages = await api.listMessages(runId);
+    dispatch({ type: 'SET_MESSAGES', payload: messages || [] });
+  }, [runId]);
+
+  const approvePlanFn = useCallback(async (planId: string) => {
+    const result = await api.approvePlan(planId, runId);
+    if (result.children?.length) onPlanChildren?.(result.children);
+    const messages = await api.listMessages(runId);
+    dispatch({ type: 'SET_MESSAGES', payload: messages || [] });
+    const tickets = await api.listTickets(runId);
+    dispatch({ type: 'SET_TICKETS', payload: tickets || [] });
+    return result.children || [];
+  }, [runId, onPlanChildren]);
+
+  const rejectPlanFn = useCallback(async (planId: string) => {
+    await api.rejectPlan(planId, runId, 'Rejected by human');
+    const messages = await api.listMessages(runId);
+    dispatch({ type: 'SET_MESSAGES', payload: messages || [] });
+    const tickets = await api.listTickets(runId);
+    dispatch({ type: 'SET_TICKETS', payload: tickets || [] });
+  }, [runId]);
+
+  const runRoutineFn = useCallback(async (key: string) => {
+    await api.runRoutine(key, runId);
+    const messages = await api.listMessages(runId);
+    dispatch({ type: 'SET_MESSAGES', payload: messages || [] });
+  }, [runId]);
+
+  const createDemoPlanFn = useCallback(async () => {
+    const result = await api.createPlan({
+      run_id: runId,
+      project_id: projectId,
+      goal: 'Ship checkout form validation end-to-end',
+      body_markdown: 'Goal: reliable checkout validation.\nApproach: FE validation UX + BE schema checks in parallel, then QA acceptance.',
+      children: [
+        { title: 'FE: checkout form validation UI', role_id: 'senior_fe', acceptance_criteria: ['Empty email shows inline error', 'Submit disabled until valid'], story_points: 3 },
+        { title: 'BE: checkout validation API', role_id: 'senior_be', acceptance_criteria: ['Reject invalid payloads with 400', 'OpenAPI updated'], story_points: 5 },
+        { title: 'QA: acceptance against AC', role_id: 'qa_lead', acceptance_criteria: ['Pass/fail matrix posted', 'Ship recommendation'], blocked_by_indexes: [0, 1], story_points: 2 },
+      ],
+    });
+    dispatch({ type: 'ADD_MESSAGE', payload: result.message });
+    if (result.ticket) dispatch({ type: 'ADD_TICKETS', payload: [result.ticket] });
+  }, [runId, projectId]);
+
   const value: ChatContextValue = {
     state,
     sendMessage,
@@ -267,6 +341,12 @@ export function ChatProvider({
     hireAgent: hireAgentFn,
     patchAgent: patchAgentFn,
     assignAndRun: assignAndRunFn,
+    installPod: installPodFn,
+    passHandoff: passHandoffFn,
+    approvePlan: approvePlanFn,
+    rejectPlan: rejectPlanFn,
+    runRoutine: runRoutineFn,
+    createDemoPlan: createDemoPlanFn,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

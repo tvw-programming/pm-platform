@@ -10,8 +10,9 @@ import (
 )
 
 type TicketHandler struct {
-	DB  *gorm.DB
-	Hub *websocket.Hub
+	DB     *gorm.DB
+	Hub    *websocket.Hub
+	Agents *services.AgentService
 }
 
 type ResolveTicketRequest struct {
@@ -39,13 +40,24 @@ func (h *TicketHandler) ResolveTicket(c *fiber.Ctx) error {
 
 	ticket, err := services.ResolveTicket(h.DB, ticketID, models.TicketStatus(req.Status), req.Comment, req.ResolverID)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+		// Allow human board override for agent-owned or plan tickets
+		if req.ResolverID == "user-1" || req.ResolverID == "u-1" {
+			ticket, err = services.ResolveTicketForce(h.DB, ticketID, models.TicketStatus(req.Status), req.Comment, req.ResolverID)
+		}
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+		}
 	}
 
 	h.Hub.Broadcast(ticket.RunID, websocket.Event{
 		Type: "ticket_resolved",
 		Data: ticket,
 	})
+
+	// Phase 2: wake next agent / approve plan on ticket resolution
+	if h.Agents != nil {
+		go h.Agents.WakeNextAfterTicketResolution(ticket)
+	}
 
 	return c.JSON(ticket)
 }

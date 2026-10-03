@@ -14,6 +14,9 @@ interface MessageListProps {
   currentUserId: string;
   runningAgentRuns: Record<string, AgentRun>;
   onResolveTicket: (ticketId: string, status: string, comment: string) => void;
+  onPassHandoff?: (handoffId: string, targetRoles: string[]) => Promise<void>;
+  onApprovePlan?: (planId: string) => Promise<void>;
+  onRejectPlan?: (planId: string) => Promise<void>;
 }
 
 export const MessageList = memo(function MessageList({
@@ -23,6 +26,9 @@ export const MessageList = memo(function MessageList({
   currentUserId,
   runningAgentRuns,
   onResolveTicket,
+  onPassHandoff,
+  onApprovePlan,
+  onRejectPlan,
 }: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const running = Object.values(runningAgentRuns);
@@ -58,6 +64,9 @@ export const MessageList = memo(function MessageList({
           isOwn={msg.author_id === currentUserId}
           onResolveTicket={onResolveTicket}
           currentUserId={currentUserId}
+          onPassHandoff={onPassHandoff}
+          onApprovePlan={onApprovePlan}
+          onRejectPlan={onRejectPlan}
         />
       ))}
 

@@ -1,10 +1,12 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import { Bot, Zap } from 'lucide-react';
 import type { ChatMessage, ChatTicket } from '@/types/chat';
 import { TicketBar } from './TicketBar';
+import { HandoffCard, parseHandoffFromBody } from './HandoffCard';
+import { PlanCard, parsePlanFromBody } from './PlanCard';
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -12,9 +14,22 @@ interface MessageBubbleProps {
   isOwn: boolean;
   onResolveTicket: (ticketId: string, status: string, comment: string) => void;
   currentUserId: string;
+  onPassHandoff?: (handoffId: string, targetRoles: string[]) => Promise<void>;
+  onApprovePlan?: (planId: string) => Promise<void>;
+  onRejectPlan?: (planId: string) => Promise<void>;
 }
 
-export const MessageBubble = memo(function MessageBubble({ message, tickets, isOwn, onResolveTicket, currentUserId }: MessageBubbleProps) {
+export const MessageBubble = memo(function MessageBubble({
+  message,
+  tickets,
+  isOwn,
+  onResolveTicket,
+  currentUserId,
+  onPassHandoff,
+  onApprovePlan,
+  onRejectPlan,
+}: MessageBubbleProps) {
+  const [busy, setBusy] = useState(false);
   const isWorkEvent = message.mode === 'work_event';
   const messageTickets = tickets.filter(t => t.parent_message_id === message.id);
   const roles: string[] = (() => {
@@ -22,6 +37,12 @@ export const MessageBubble = memo(function MessageBubble({ message, tickets, isO
   })();
   const isAgent = Boolean(message.agent_id) || message.author_id.startsWith('agent:');
   const isSystemRun = message.author_id === 'system' && Boolean(message.agent_run_id);
+
+  const handoff = parseHandoffFromBody(message.body);
+  const plan = parsePlanFromBody(message.body);
+  const displayBody = handoff || plan
+    ? message.body.replace(/```cgen-(handoff|plan)[\s\S]*?```/, '').trim()
+    : message.body;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: isOwn ? 'flex-end' : 'flex-start', mb: 1.5, maxWidth: '85%', alignSelf: isOwn ? 'flex-end' : 'flex-start' }}>
@@ -48,8 +69,8 @@ export const MessageBubble = memo(function MessageBubble({ message, tickets, isO
             ? 'rgba(90, 75, 224, 0.06)'
             : isWorkEvent ? 'rgba(90, 75, 224, 0.08)' : (isOwn ? 'primary.main' : 'action.hover'),
         color: isOwn && !isWorkEvent && !isAgent ? 'primary.contrastText' : 'text.primary',
-        border: (isWorkEvent || isAgent || isSystemRun) ? '1px solid' : 'none',
-        borderColor: isSystemRun ? 'info.light' : (isWorkEvent || isAgent) ? 'primary.light' : undefined,
+        border: (isWorkEvent || isAgent || isSystemRun || handoff || plan) ? '1px solid' : 'none',
+        borderColor: isSystemRun ? 'info.light' : (isWorkEvent || isAgent || handoff || plan) ? 'primary.light' : undefined,
         width: '100%',
       }}>
         {isWorkEvent && (
@@ -58,9 +79,50 @@ export const MessageBubble = memo(function MessageBubble({ message, tickets, isO
             <Chip label={message.event_type?.replace(/_/g, ' ')} size="small" sx={{ height: 18, fontSize: '0.625rem', fontWeight: 700, bgcolor: 'primary.main', color: 'primary.contrastText' }} />
           </Box>
         )}
-        <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-          {message.body}
-        </Typography>
+        {displayBody ? (
+          <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            {displayBody}
+          </Typography>
+        ) : null}
+
+        {handoff && onPassHandoff ? (
+          <HandoffCard
+            handoff={handoff}
+            busy={busy}
+            onPass={async (rolesToPass) => {
+              if (!handoff.handoff_id) return;
+              setBusy(true);
+              try {
+                await onPassHandoff(handoff.handoff_id, rolesToPass);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          />
+        ) : null}
+
+        {plan && onApprovePlan && onRejectPlan ? (
+          <PlanCard
+            plan={plan}
+            busy={busy}
+            onApprove={async () => {
+              setBusy(true);
+              try {
+                await onApprovePlan(plan.plan_id);
+              } finally {
+                setBusy(false);
+              }
+            }}
+            onReject={async () => {
+              setBusy(true);
+              try {
+                await onRejectPlan(plan.plan_id);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          />
+        ) : null}
       </Box>
 
       {messageTickets.length > 0 && (

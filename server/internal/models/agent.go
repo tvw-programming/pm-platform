@@ -32,7 +32,9 @@ type AgentInstance struct {
 	Instructions     string         `gorm:"type:text" json:"instructions"`
 	ModelName        string         `gorm:"column:model;type:varchar(200)" json:"model"`
 	ReportsToAgentID *string        `gorm:"type:uuid" json:"reports_to_agent_id,omitempty"`
-	TokenBudget      *int64         `json:"token_budget,omitempty"`
+	TokenBudget      *int64         `json:"token_budget,omitempty"` // hard ceiling — pause when reached
+	SoftTokenBudget  *int64         `json:"soft_token_budget,omitempty"`
+	BudgetPaused     bool           `gorm:"not null;default:false" json:"budget_paused"`
 	TokensUsed       int64          `gorm:"not null;default:0" json:"tokens_used"`
 	CreatedAt        time.Time      `json:"created_at"`
 	UpdatedAt        time.Time      `json:"updated_at"`

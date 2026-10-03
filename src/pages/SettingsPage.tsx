@@ -725,6 +725,11 @@ function LocalAISection(): React.JSX.Element {
   const [health, setHealth] = useState<LMStudioHealth | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [repoUrl, setRepoUrl] = useState('');
+  const [primaryCwd, setPrimaryCwd] = useState('');
+  const [softBudget, setSoftBudget] = useState(200_000);
+  const [hardBudget, setHardBudget] = useState(500_000);
+  const [configSaving, setConfigSaving] = useState(false);
 
   const refresh = async () => {
     setLoading(true);
@@ -744,7 +749,32 @@ function LocalAISection(): React.JSX.Element {
 
   useEffect(() => {
     void refresh();
+    chatApi.getProjectAgentConfig('project-default')
+      .then((cfg) => {
+        setRepoUrl(cfg.repo_url || '');
+        setPrimaryCwd(cfg.primary_cwd || '');
+        setSoftBudget(cfg.soft_token_budget ?? 200_000);
+        setHardBudget(cfg.hard_token_budget ?? 500_000);
+      })
+      .catch(() => {});
   }, []);
+
+  const saveAgentConfig = async () => {
+    setConfigSaving(true);
+    try {
+      await chatApi.putProjectAgentConfig('project-default', {
+        repo_url: repoUrl,
+        primary_cwd: primaryCwd,
+        soft_token_budget: softBudget,
+        hard_token_budget: hardBudget,
+      });
+      notify('Project agent config saved', { severity: 'success' });
+    } catch (err) {
+      notify(err instanceof Error ? err.message : 'Config save failed', { severity: 'error' });
+    } finally {
+      setConfigSaving(false);
+    }
+  };
 
   const save = async () => {
     setSaving(true);
@@ -816,6 +846,49 @@ function LocalAISection(): React.JSX.Element {
               Refresh health
             </Button>
           </Stack>
+        </Stack>
+      </CardContent>
+
+      <Divider />
+      <CardHeader
+        title="Project agent config"
+        subheader="Repo/cwd for coding agents plus optional project token ceiling (soft pause / hard stop)."
+      />
+      <CardContent sx={{ pt: 0 }}>
+        <Stack spacing={2} sx={{ maxWidth: 560 }}>
+          <TextField
+            label="Repo URL"
+            value={repoUrl}
+            onChange={(e) => setRepoUrl(e.target.value)}
+            fullWidth
+            placeholder="https://github.com/org/repo"
+          />
+          <TextField
+            label="Primary working directory"
+            value={primaryCwd}
+            onChange={(e) => setPrimaryCwd(e.target.value)}
+            fullWidth
+            placeholder="/Users/you/code/repo"
+          />
+          <TextField
+            label="Soft token budget"
+            type="number"
+            value={softBudget}
+            onChange={(e) => setSoftBudget(Number(e.target.value) || 0)}
+            fullWidth
+            helperText="Warn / soft-pause agents when project spend crosses this"
+          />
+          <TextField
+            label="Hard token budget"
+            type="number"
+            value={hardBudget}
+            onChange={(e) => setHardBudget(Number(e.target.value) || 0)}
+            fullWidth
+            helperText="Hard-stop new agent runs when exceeded"
+          />
+          <Button variant="outlined" onClick={() => void saveAgentConfig()} disabled={configSaving}>
+            Save agent config
+          </Button>
         </Stack>
       </CardContent>
     </Card>
