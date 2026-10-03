@@ -2,7 +2,7 @@ import { memo } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
-import { Zap } from 'lucide-react';
+import { Bot, Zap } from 'lucide-react';
 import type { ChatMessage, ChatTicket } from '@/types/chat';
 import { TicketBar } from './TicketBar';
 
@@ -20,6 +20,8 @@ export const MessageBubble = memo(function MessageBubble({ message, tickets, isO
   const roles: string[] = (() => {
     try { return JSON.parse(message.author_roles as unknown as string); } catch { return message.author_roles || []; }
   })();
+  const isAgent = Boolean(message.agent_id) || message.author_id.startsWith('agent:');
+  const isSystemRun = message.author_id === 'system' && Boolean(message.agent_run_id);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: isOwn ? 'flex-end' : 'flex-start', mb: 1.5, maxWidth: '85%', alignSelf: isOwn ? 'flex-end' : 'flex-start' }}>
@@ -27,6 +29,7 @@ export const MessageBubble = memo(function MessageBubble({ message, tickets, isO
         <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.primary' }}>
           {message.author_name}
         </Typography>
+        {isAgent && <Chip icon={<Bot size={10} />} label="AI" size="small" color="primary" sx={{ height: 16, fontSize: '0.5625rem', '& .MuiChip-icon': { ml: 0.5 } }} />}
         {Array.isArray(roles) && roles.length > 0 && (
           <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.625rem' }}>
             {roles.join(', ')}
@@ -39,10 +42,14 @@ export const MessageBubble = memo(function MessageBubble({ message, tickets, isO
 
       <Box sx={{
         px: 1.5, py: 1, borderRadius: 2,
-        bgcolor: isWorkEvent ? 'rgba(90, 75, 224, 0.08)' : (isOwn ? 'primary.main' : 'action.hover'),
-        color: isOwn && !isWorkEvent ? 'primary.contrastText' : 'text.primary',
-        border: isWorkEvent ? '1px solid' : 'none',
-        borderColor: isWorkEvent ? 'primary.light' : undefined,
+        bgcolor: isSystemRun
+          ? 'rgba(14, 165, 233, 0.08)'
+          : isAgent
+            ? 'rgba(90, 75, 224, 0.06)'
+            : isWorkEvent ? 'rgba(90, 75, 224, 0.08)' : (isOwn ? 'primary.main' : 'action.hover'),
+        color: isOwn && !isWorkEvent && !isAgent ? 'primary.contrastText' : 'text.primary',
+        border: (isWorkEvent || isAgent || isSystemRun) ? '1px solid' : 'none',
+        borderColor: isSystemRun ? 'info.light' : (isWorkEvent || isAgent) ? 'primary.light' : undefined,
         width: '100%',
       }}>
         {isWorkEvent && (

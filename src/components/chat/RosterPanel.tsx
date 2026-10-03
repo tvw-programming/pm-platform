@@ -10,14 +10,25 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
-import { UserPlus, Trash2, Users } from 'lucide-react';
-import type { RosterEntry, RoleDef } from '@/types/chat';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import CircularProgress from '@mui/material/CircularProgress';
+import { UserPlus, Trash2, Users, Bot, Pause, Play, Sparkles } from 'lucide-react';
+import type { RosterEntry, RoleDef, AgentInstance } from '@/types/chat';
 import * as api from '@/api/chatApi';
 
 interface RosterPanelProps {
   roster: RosterEntry[];
-  onUpdateRoster: (entries: { role_id: string; user_id: string; user_name: string; present: boolean }[]) => Promise<void>;
+  agents: AgentInstance[];
+  runningCount: number;
+  onUpdateRoster: (entries: { role_id: string; user_id?: string; user_name?: string; agent_id?: string | null; present: boolean }[]) => Promise<void>;
   onRemoveRole: (roleId: string) => Promise<void>;
+  onHireAgent: (data: { name: string; role_id: string; instructions?: string; model?: string }) => Promise<AgentInstance>;
+  onPatchAgent: (id: string, data: { status?: string }) => Promise<AgentInstance>;
+  onAssignAndRun: (agentId: string, input: string) => Promise<void>;
+  onOpenAgent?: (agent: AgentInstance) => void;
 }
 
 const trackColors: Record<string, string> = {
@@ -33,10 +44,31 @@ const trackColors: Record<string, string> = {
   leadership: '#6366F1',
 };
 
-export const RosterPanel = memo(function RosterPanel({ roster, onUpdateRoster, onRemoveRole }: RosterPanelProps) {
+export const RosterPanel = memo(function RosterPanel({
+  roster,
+  agents,
+  runningCount,
+  onUpdateRoster,
+  onRemoveRole,
+  onHireAgent,
+  onPatchAgent,
+  onAssignAndRun,
+  onOpenAgent,
+}: RosterPanelProps) {
   const [catalog, setCatalog] = useState<RoleDef[]>([]);
   const [addRoleId, setAddRoleId] = useState('');
   const [addUserName, setAddUserName] = useState('');
+  const [hireOpen, setHireOpen] = useState(false);
+  const [hireName, setHireName] = useState('');
+  const [hireRoleId, setHireRoleId] = useState('project_manager');
+  const [hireInstructions, setHireInstructions] = useState('');
+  const [hireBusy, setHireBusy] = useState(false);
+  const [hireError, setHireError] = useState<string | null>(null);
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [assignAgentId, setAssignAgentId] = useState<string | null>(null);
+  const [assignInput, setAssignInput] = useState('');
+  const [assignBusy, setAssignBusy] = useState(false);
+  const [assignError, setAssignError] = useState<string | null>(null);
 
   useEffect(() => {
     api.getRoleCatalog().then(data => setCatalog(data.roles)).catch(() => {});
@@ -44,12 +76,58 @@ export const RosterPanel = memo(function RosterPanel({ roster, onUpdateRoster, o
 
   const usedRoles = new Set(roster.map(r => r.role_id));
   const availableRoles = catalog.filter(r => !usedRoles.has(r.id));
+  const hiredRoleIds = new Set(agents.filter(a => a.status !== 'terminated').map(a => a.role_id));
+  const hireableRoles = catalog.filter(r => !hiredRoleIds.has(r.id));
+
+  const agentById = new Map(agents.map(a => [a.id, a]));
+  const agentByRole = new Map(agents.filter(a => a.status !== 'terminated').map(a => [a.role_id, a]));
 
   const handleAddRole = async () => {
     if (!addRoleId || !addUserName.trim()) return;
     await onUpdateRoster([{ role_id: addRoleId, user_id: addUserName.toLowerCase().replace(/\s+/g, '_'), user_name: addUserName.trim(), present: true }]);
     setAddRoleId('');
     setAddUserName('');
+  };
+
+  const handleHire = async () => {
+    if (!hireName.trim() || !hireRoleId) return;
+    setHireBusy(true);
+    setHireError(null);
+    try {
+      await onHireAgent({
+        name: hireName.trim(),
+        role_id: hireRoleId,
+        instructions: hireInstructions.trim() || undefined,
+      });
+      setHireOpen(false);
+      setHireName('');
+      setHireInstructions('');
+    } catch (err) {
+      setHireError(err instanceof Error ? err.message : 'Hire failed');
+    } finally {
+      setHireBusy(false);
+    }
+  };
+
+  const openAssign = (agentId: string) => {
+    setAssignAgentId(agentId);
+    setAssignInput('');
+    setAssignError(null);
+    setAssignOpen(true);
+  };
+
+  const handleAssign = async () => {
+    if (!assignAgentId || !assignInput.trim()) return;
+    setAssignBusy(true);
+    setAssignError(null);
+    try {
+      await onAssignAndRun(assignAgentId, assignInput.trim());
+      setAssignOpen(false);
+    } catch (err) {
+      setAssignError(err instanceof Error ? err.message : 'Run failed');
+    } finally {
+      setAssignBusy(false);
+    }
   };
 
   const byTrack = roster.reduce<Record<string, RosterEntry[]>>((acc, entry) => {
@@ -64,7 +142,21 @@ export const RosterPanel = memo(function RosterPanel({ roster, onUpdateRoster, o
         <Users size={18} />
         <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Run Roster</Typography>
         <Chip label={`${roster.length} roles`} size="small" sx={{ height: 20, fontSize: '0.625rem' }} />
+        {runningCount > 0 && (
+          <Chip icon={<CircularProgress size={10} />} label={`${runningCount} running`} size="small" color="warning" sx={{ height: 20, fontSize: '0.625rem' }} />
+        )}
       </Box>
+
+      <Button
+        fullWidth
+        size="small"
+        variant="contained"
+        startIcon={<Bot size={14} />}
+        onClick={() => setHireOpen(true)}
+        sx={{ mb: 2 }}
+      >
+        Hire AI teammate
+      </Button>
 
       {Object.entries(byTrack).sort(([a], [b]) => a.localeCompare(b)).map(([track, entries]) => (
         <Box key={track} sx={{ mb: 2 }}>
@@ -74,30 +166,60 @@ export const RosterPanel = memo(function RosterPanel({ roster, onUpdateRoster, o
               {track}
             </Typography>
           </Box>
-          {entries.map(entry => (
-            <Box key={entry.id} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5, px: 1, borderRadius: 1, '&:hover': { bgcolor: 'action.hover' } }}>
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8125rem' }}>{entry.role_label || entry.role_id.replace(/_/g, ' ')}</Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>{entry.user_name}</Typography>
+          {entries.map(entry => {
+            const agent = entry.agent_id ? agentById.get(entry.agent_id) : agentByRole.get(entry.role_id);
+            const isAI = Boolean(entry.agent_id || agent);
+            return (
+              <Box key={entry.id} sx={{ display: 'flex', alignItems: 'center', gap: 0.75, py: 0.5, px: 1, borderRadius: 1, '&:hover': { bgcolor: 'action.hover' } }}>
+                <Box sx={{ flex: 1, minWidth: 0, cursor: agent ? 'pointer' : 'default' }} onClick={() => agent && onOpenAgent?.(agent)}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8125rem' }}>{entry.role_label || entry.role_id.replace(/_/g, ' ')}</Typography>
+                    {isAI && <Chip label="AI" size="small" color="primary" sx={{ height: 16, fontSize: '0.5625rem', fontWeight: 700 }} />}
+                    {agent && (
+                      <Chip
+                        label={agent.status}
+                        size="small"
+                        color={agent.status === 'active' ? 'success' : agent.status === 'paused' ? 'warning' : 'default'}
+                        sx={{ height: 16, fontSize: '0.5625rem' }}
+                      />
+                    )}
+                  </Box>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>{entry.user_name || agent?.name}</Typography>
+                </Box>
+                {agent && agent.status === 'active' && (
+                  <IconButton size="small" title="Assign / Run" onClick={() => openAssign(agent.id)} sx={{ color: 'primary.main' }}>
+                    <Sparkles size={12} />
+                  </IconButton>
+                )}
+                {agent && agent.status === 'active' && (
+                  <IconButton size="small" title="Pause" onClick={() => onPatchAgent(agent.id, { status: 'paused' })}>
+                    <Pause size={12} />
+                  </IconButton>
+                )}
+                {agent && agent.status === 'paused' && (
+                  <IconButton size="small" title="Resume" onClick={() => onPatchAgent(agent.id, { status: 'active' })}>
+                    <Play size={12} />
+                  </IconButton>
+                )}
+                <Chip label={entry.seniority || '—'} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.5625rem' }} />
+                <IconButton size="small" onClick={() => onRemoveRole(entry.role_id)} sx={{ opacity: 0.5, '&:hover': { opacity: 1, color: 'error.main' } }}>
+                  <Trash2 size={12} />
+                </IconButton>
               </Box>
-              <Chip label={entry.seniority || '—'} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.5625rem' }} />
-              <IconButton size="small" onClick={() => onRemoveRole(entry.role_id)} sx={{ opacity: 0.5, '&:hover': { opacity: 1, color: 'error.main' } }}>
-                <Trash2 size={12} />
-              </IconButton>
-            </Box>
-          ))}
+            );
+          })}
         </Box>
       ))}
 
       {roster.length === 0 && (
         <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
-          No roles assigned yet. Add roles to enable routed work events.
+          No roles assigned yet. Hire an AI teammate or add a human role.
         </Typography>
       )}
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="caption" sx={{ fontWeight: 700, mb: 1, display: 'block', color: 'text.secondary' }}>ADD ROLE</Typography>
+      <Typography variant="caption" sx={{ fontWeight: 700, mb: 1, display: 'block', color: 'text.secondary' }}>ADD HUMAN ROLE</Typography>
       <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
         <FormControl size="small" sx={{ minWidth: 160 }}>
           <InputLabel sx={{ fontSize: '0.75rem' }}>Role</InputLabel>
@@ -112,6 +234,65 @@ export const RosterPanel = memo(function RosterPanel({ roster, onUpdateRoster, o
           Add
         </Button>
       </Box>
+
+      <Dialog open={hireOpen} onClose={() => !hireBusy && setHireOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>Hire CGen AI teammate</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+            <TextField label="Name" size="small" value={hireName} onChange={e => setHireName(e.target.value)} placeholder="e.g. Ada PM" fullWidth />
+            <FormControl size="small" fullWidth>
+              <InputLabel>Role</InputLabel>
+              <Select value={hireRoleId} label="Role" onChange={e => setHireRoleId(e.target.value)}>
+                {(hireableRoles.length ? hireableRoles : catalog).map(r => (
+                  <MenuItem key={r.id} value={r.id}>{r.label}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField
+              label="Instructions"
+              size="small"
+              value={hireInstructions}
+              onChange={e => setHireInstructions(e.target.value)}
+              multiline
+              minRows={3}
+              placeholder="Persona, duties, response style…"
+              fullWidth
+            />
+            {hireError && <Typography variant="caption" color="error">{hireError}</Typography>}
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setHireOpen(false)} disabled={hireBusy}>Cancel</Button>
+          <Button variant="contained" onClick={handleHire} disabled={hireBusy || !hireName.trim()} startIcon={hireBusy ? <CircularProgress size={14} /> : <Bot size={14} />}>
+            Hire & seat
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={assignOpen} onClose={() => !assignBusy && setAssignOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Assign work & run</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+            Human-directed wake. The agent replies with a final message (no streaming).
+          </Typography>
+          <TextField
+            label="Assignment"
+            value={assignInput}
+            onChange={e => setAssignInput(e.target.value)}
+            multiline
+            minRows={4}
+            fullWidth
+            placeholder="e.g. Triage open sprint work and propose a plan for the login redesign."
+          />
+          {assignError && <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>{assignError}</Typography>}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAssignOpen(false)} disabled={assignBusy}>Cancel</Button>
+          <Button variant="contained" onClick={handleAssign} disabled={assignBusy || !assignInput.trim()} startIcon={assignBusy ? <CircularProgress size={14} /> : <Sparkles size={14} />}>
+            Run agent
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 });

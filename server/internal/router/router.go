@@ -9,6 +9,7 @@ import (
 
 	"pm-platform/server/internal/config"
 	"pm-platform/server/internal/handlers"
+	"pm-platform/server/internal/services"
 	"pm-platform/server/internal/websocket"
 )
 
@@ -27,10 +28,12 @@ func Setup(db *gorm.DB, cfg *config.Config, hub *websocket.Hub) *fiber.App {
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     cfg.Server.CORSOrigins,
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowMethods:     "GET,POST,PUT,PATCH,DELETE,OPTIONS",
 		AllowHeaders:     "Content-Type,Authorization",
 		AllowCredentials: true,
 	}))
+
+	agentSvc := &services.AgentService{DB: db, Cfg: cfg, Hub: hub}
 
 	chatHandler := &handlers.ChatHandler{DB: db, Hub: hub}
 	ticketHandler := &handlers.TicketHandler{DB: db, Hub: hub}
@@ -38,6 +41,8 @@ func Setup(db *gorm.DB, cfg *config.Config, hub *websocket.Hub) *fiber.App {
 	roleHandler := &handlers.RoleHandler{DB: db}
 	templateHandler := &handlers.TemplateHandler{}
 	playbookHandler := &handlers.PlaybookHandler{DB: db}
+	agentHandler := &handlers.AgentHandler{DB: db, Hub: hub, Agents: agentSvc}
+	runtimeHandler := &handlers.RuntimeHandler{Agents: agentSvc}
 
 	app.Get("/api/health", handlers.HealthCheck)
 
@@ -66,6 +71,20 @@ func Setup(db *gorm.DB, cfg *config.Config, hub *websocket.Hub) *fiber.App {
 	playbooks.Get("/", playbookHandler.ListPlaybooks)
 	playbooks.Get("/:playbookId", playbookHandler.GetPlaybook)
 	playbooks.Post("/preview", playbookHandler.Preview)
+
+	agents := app.Group("/api/agents")
+	agents.Get("/", agentHandler.ListAgents)
+	agents.Post("/", agentHandler.HireAgent)
+	agents.Get("/:id", agentHandler.GetAgent)
+	agents.Patch("/:id", agentHandler.PatchAgent)
+	agents.Post("/:id/runs", agentHandler.CreateRun)
+	agents.Get("/:id/runs", agentHandler.ListRuns)
+
+	app.Get("/api/skills", agentHandler.ListSkills)
+
+	runtime := app.Group("/api/runtime")
+	runtime.Get("/lmstudio", runtimeHandler.GetLMStudio)
+	runtime.Put("/lmstudio", runtimeHandler.PutLMStudio)
 
 	// WebSocket
 	app.Use("/ws", hub.UpgradeMiddleware())
