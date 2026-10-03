@@ -24,8 +24,9 @@ app = FastAPI(title="CGen Agent Runtime", version="0.2.0")
 DEFAULT_LM_BASE = os.getenv("LM_STUDIO_BASE_URL", "http://127.0.0.1:1234/v1")
 DEFAULT_TIMEOUT = int(os.getenv("LM_STUDIO_TIMEOUT_SEC", "300"))
 
+# Capture between markers (not \{.*?\}) so write_file content may contain braces.
 TOOL_RE = re.compile(
-    r"<<<TOOL>>>\s*(\{.*?\})\s*<<<END_TOOL>>>",
+    r"<<<TOOL>>>\s*(.*?)\s*<<<END_TOOL>>>",
     re.DOTALL | re.IGNORECASE,
 )
 

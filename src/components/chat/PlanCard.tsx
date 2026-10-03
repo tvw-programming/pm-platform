@@ -29,10 +29,10 @@ export function PlanCard({ plan, onApprove, onReject, busy }: PlanCardProps): Re
     >
       <Stack direction="row" alignItems="center" spacing={0.75} sx={{ mb: 0.75 }}>
         <Chip label="Plan" size="small" color={pending ? 'warning' : 'success'} sx={{ height: 18, fontSize: '0.625rem', fontWeight: 700 }} />
-        <Chip label={plan.status.replace(/_/g, ' ')} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.625rem' }} />
+        <Chip label={(plan.status || 'unknown').replace(/_/g, ' ')} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.625rem' }} />
       </Stack>
       <Typography variant="body2" sx={{ fontWeight: 700, mb: 0.5 }}>
-        {plan.goal}
+        {plan.goal || 'Untitled plan'}
       </Typography>
       {plan.body ? (
         <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'pre-wrap', display: 'block', mb: 1 }}>
@@ -44,9 +44,9 @@ export function PlanCard({ plan, onApprove, onReject, busy }: PlanCardProps): Re
         Work breakdown
       </Typography>
       <Box component="ul" sx={{ m: 0, pl: 2, mb: 1 }}>
-        {plan.children?.map((ch, i) => (
+        {(plan.children ?? []).map((ch, i) => (
           <Typography component="li" key={`${ch.title}-${i}`} variant="caption" color="text.secondary">
-            {ch.title} · <strong>{ch.role_id.replace(/_/g, ' ')}</strong>
+            {ch.title} · <strong>{(ch.role_id || 'unassigned').replace(/_/g, ' ')}</strong>
             {ch.blocked_by_indexes?.length ? ` (blocked by #${ch.blocked_by_indexes.map((n) => n + 1).join(',')})` : ''}
           </Typography>
         ))}

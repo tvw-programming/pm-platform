@@ -63,7 +63,8 @@ type Ticket struct {
 	gorm.Model
 	ID                 string       `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
 	RunID              string       `gorm:"index;not null" json:"run_id"`
-	PlaybookInstanceID string       `gorm:"type:uuid;not null" json:"playbook_instance_id"`
+	// varchar: real playbook UUIDs plus Phase 2/3 synthetic ids ("plan:<uuid>", "autoflow:<uuid>")
+	PlaybookInstanceID string       `gorm:"type:varchar(80);not null;index" json:"playbook_instance_id"`
 	RoleID             string       `gorm:"type:varchar(50);not null" json:"role_id"`
 	UserID             string       `gorm:"type:varchar(100)" json:"user_id,omitempty"`
 	Kind               TicketKind   `gorm:"type:varchar(30);not null" json:"kind"`

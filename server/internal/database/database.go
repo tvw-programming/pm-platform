@@ -50,6 +50,12 @@ func Connect(cfg *config.DatabaseConfig) *gorm.DB {
 			log.Fatalf("failed to auto-migrate: %v", err)
 		}
 
+		// Phase 2/3 tickets use synthetic playbook ids ("plan:<uuid>", "autoflow:<uuid>").
+		// Postgres uuid columns reject those; widen if an older migrate left uuid.
+		if err := db.Exec(`ALTER TABLE tickets ALTER COLUMN playbook_instance_id TYPE varchar(80) USING playbook_instance_id::text`).Error; err != nil {
+			log.Printf("warn: tickets.playbook_instance_id widen skipped: %v", err)
+		}
+
 		seedSkills(db)
 		seedRuntimeConfig(db)
 		seedProjectAgentConfig(db)
