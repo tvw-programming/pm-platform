@@ -51,6 +51,7 @@ func Setup(db *gorm.DB, cfg *config.Config, hub *websocket.Hub) *fiber.App {
 	chat := app.Group("/api/chat")
 	chat.Get("/messages/:runId", chatHandler.ListMessages)
 	chat.Post("/messages", chatHandler.CreateMessage)
+	chat.Delete("/messages/:runId", chatHandler.DeleteMessages)
 	chat.Get("/tickets/:runId", ticketHandler.ListTickets)
 	chat.Put("/tickets/:ticketId", ticketHandler.ResolveTicket)
 	chat.Get("/playbook-instances/:runId", ticketHandler.ListPlaybookInstances)

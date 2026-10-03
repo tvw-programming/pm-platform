@@ -39,6 +39,20 @@ func (h *ChatHandler) ListMessages(c *fiber.Ctx) error {
 	return c.JSON(messages)
 }
 
+func (h *ChatHandler) DeleteMessages(c *fiber.Ctx) error {
+	runID := c.Params("runId")
+	if err := h.DB.Where("run_id = ?", runID).Delete(&models.Message{}).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	if err := h.DB.Where("run_id = ?", runID).Delete(&models.Ticket{}).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	if err := h.DB.Where("run_id = ?", runID).Delete(&models.PlaybookInstance{}).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(fiber.Map{"deleted": true})
+}
+
 func (h *ChatHandler) CreateMessage(c *fiber.Ctx) error {
 	var req CreateMessageRequest
 	if err := c.BodyParser(&req); err != nil {

@@ -2,10 +2,11 @@ import { useState, useMemo, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import Drawer from '@mui/material/Drawer';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { Users, BookOpen } from 'lucide-react';
+import { Users, BookOpen, Trash2 } from 'lucide-react';
 import { ChatProvider, useChat } from '@/components/chat/ChatProvider';
 import { MessageList } from '@/components/chat/MessageList';
 import { MessageComposer } from '@/components/chat/MessageComposer';
@@ -40,6 +41,7 @@ function ChatInner() {
     rejectPlan,
     runRoutine,
     createDemoPlan,
+    clearMessages,
   } = useChat();
   const [rosterOpen, setRosterOpen] = useState(true);
   const [sideTab, setSideTab] = useState<'roster' | 'playbooks'>('roster');
@@ -78,6 +80,11 @@ function ChatInner() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>CGen Run Chat</Typography>
           <Box sx={{ display: 'flex', gap: 0.5 }}>
+            <Tooltip title="Clear all messages">
+              <IconButton size="small" onClick={clearMessages} sx={{ color: 'text.secondary' }}>
+                <Trash2 size={18} />
+              </IconButton>
+            </Tooltip>
             <IconButton size="small" onClick={() => { setRosterOpen(!rosterOpen || sideTab !== 'playbooks'); setSideTab('playbooks'); }} sx={{ color: rosterOpen && sideTab === 'playbooks' ? 'primary.main' : 'text.secondary' }}>
               <BookOpen size={18} />
             </IconButton>

@@ -108,6 +108,7 @@ interface ChatContextValue {
   rejectPlan: (planId: string) => Promise<void>;
   runRoutine: (key: string) => Promise<void>;
   createDemoPlan: () => Promise<void>;
+  clearMessages: () => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextValue | null>(null);
@@ -314,6 +315,17 @@ export function ChatProvider({
     dispatch({ type: 'SET_MESSAGES', payload: messages || [] });
   }, [runId]);
 
+  const clearMessagesFn = useCallback(async () => {
+    try {
+      await api.deleteMessages(runId);
+    } catch {
+      // best-effort: clear UI even if server call fails
+    }
+    dispatch({ type: 'SET_MESSAGES', payload: [] });
+    dispatch({ type: 'SET_TICKETS', payload: [] });
+    dispatch({ type: 'SET_PLAYBOOK_INSTANCES', payload: [] });
+  }, [runId]);
+
   const createDemoPlanFn = useCallback(async () => {
     const result = await api.createPlan({
       run_id: runId,
@@ -347,6 +359,7 @@ export function ChatProvider({
     rejectPlan: rejectPlanFn,
     runRoutine: runRoutineFn,
     createDemoPlan: createDemoPlanFn,
+    clearMessages: clearMessagesFn,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

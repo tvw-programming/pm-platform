@@ -41,6 +41,10 @@ export function listMessages(runId: string): Promise<ChatMessage[]> {
   return request(`/api/chat/messages/${runId}`);
 }
 
+export function deleteMessages(runId: string): Promise<{ deleted: boolean }> {
+  return request(`/api/chat/messages/${runId}`, { method: 'DELETE' });
+}
+
 export function createMessage(data: {
   run_id: string;
   author_id: string;
