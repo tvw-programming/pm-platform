@@ -69,8 +69,17 @@ Hire an agent (or Install Product Eng Pod). That seats them on the current run; 
 **Q: What if Assign/Run fails with no seat?**
 Hire/seat that role on the Roster for this run, ensure the agent is Active (not paused), and Local AI has a loaded default model.
 
+**Q: What is the auto virtual-team flow?**
+Post a new requirement (Event Mode **P23 / new_requirement**, or a message starting with `/require`). **pm** auto-wakes to Approve/Reject, then **sfd**/**sbd** and later **qa** wake without you clicking Assign/Run. sfd plans → pm approves the plan → sfd edits files under Settings `primary_cwd` → qa pass/fail.
+
+**Q: Where do agent code edits land?**
+Only inside the project **primary_cwd** from Settings → Agent Config (default/example: your Alumni-web folder). Nothing is written outside that folder.
+
+**Q: Auto flow failed with “LM Studio” or “coding folder not found”?**
+Start LM Studio and load a model, and set `primary_cwd` to a real folder on disk. The chat system message names the problem.
+
 **Q: What is Event Mode and when should I use it?**
-Event Mode sends a structured message that triggers a playbook — a workflow that routes tickets to specific roles and tracks responses. Use it for decisions that need sign-off from multiple roles (architecture decisions, deployment approvals, etc.). For casual questions, use regular chat.
+Event Mode sends a structured message that triggers a playbook — a workflow that routes tickets to specific roles and tracks responses. Use it for decisions that need sign-off from multiple roles (architecture decisions, deployment approvals, etc.). For casual questions, use regular chat. For the auto virtual-team feature path, prefer **P23 · New requirement**.
 
 **Q: Why didn't someone receive a ticket from an event I fired?**
 Check two things:

@@ -220,6 +220,18 @@ Templates are static (in-memory, no DB). To add templates, edit `services/templa
 
 ---
 
+## Phase 3 — Auto virtual-team flow
+
+Go owns the state machine (`services/phase3_auto_flow.go` + `models.AutoFlowRun`). Python agent (`agent/main.py`) optionally runs cwd-scoped file tools.
+
+**Trigger:** `ShouldStartAutoFlow` on `POST /api/chat/messages` when Event Mode is `new_requirement` / `brd_ready` / `requirement_posted`, or body starts with `/require` / contains `[requirement]`.
+
+**Pipeline:** PM triage → route sfd/sbd → sfd planning + plan card → PM plan review → sfd coding (`allowed_cwd` = `project_agent_configs.primary_cwd`) → qa pass/fail. Status lines are posted in chat; human plan/PM tickets remain as override.
+
+**Safety:** Python resolves paths under `allowed_cwd` only; missing cwd or LM Studio returns a clear chat/system error. Hire/Roster/Phase 1–2 APIs unchanged.
+
+---
+
 ## Adding a New Playbook
 
 In `server/internal/services/playbook_engine.go`, append to `PlaybookCatalog`:

@@ -36,7 +36,7 @@ func Setup(db *gorm.DB, cfg *config.Config, hub *websocket.Hub) *fiber.App {
 	agentSvc := &services.AgentService{DB: db, Cfg: cfg, Hub: hub}
 	_ = agentSvc.SeedRoutines("project-default")
 
-	chatHandler := &handlers.ChatHandler{DB: db, Hub: hub}
+	chatHandler := &handlers.ChatHandler{DB: db, Hub: hub, Agents: agentSvc}
 	ticketHandler := &handlers.TicketHandler{DB: db, Hub: hub, Agents: agentSvc}
 	rosterHandler := &handlers.RosterHandler{DB: db, Hub: hub}
 	roleHandler := &handlers.RoleHandler{DB: db}

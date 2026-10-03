@@ -258,6 +258,17 @@ var PlaybookCatalog = []PlaybookDef{
 			{Order: 2, Action: "decide_scope", Primitive: "all_present", Roles: []string{"project_manager", "full_stack_em"}, ResponseKind: "approve_reject", Description: "Decide scope (if both exist)"},
 		},
 	},
+	{
+		ID: "P23", Name: "New requirement (auto virtual team)", Trigger: "new_requirement",
+		Description: "Phase 3 auto flow: wake PM to Approve/Reject, then auto-route sfd/sbd and later qa — no manual Assign/Run",
+		Steps: []PlaybookStep{
+			{Order: 1, Action: "pm_triage", Primitive: "first_present", Roles: []string{"project_manager"}, ResponseKind: "approve_reject", Description: "PM Approve/Reject requirement"},
+			{Order: 2, Action: "fe_plan", Primitive: "only_if_present", Roles: []string{"senior_fe"}, ResponseKind: "action_done", Description: "sfd plans and implements (auto-woken)"},
+			{Order: 3, Action: "be_plan", Primitive: "only_if_present", Roles: []string{"senior_be"}, ResponseKind: "ack", Description: "sbd plans when routed (auto-woken)"},
+			{Order: 4, Action: "qa_verify", Primitive: "only_if_present", Roles: []string{"qa_lead"}, ResponseKind: "review", Description: "qa pass/fail after code update"},
+		},
+		EscalateDefault: []string{"project_manager", "cto"},
+	},
 }
 
 func PlaybookCatalogMap() map[string]PlaybookDef {

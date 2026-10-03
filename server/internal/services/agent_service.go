@@ -24,23 +24,30 @@ type AgentService struct {
 }
 
 type InvokeAgentRequest struct {
-	RunID      string `json:"run_id"`
-	WakeReason string `json:"wake_reason"`
-	Input      string `json:"input"`
-	SeatRunID  string `json:"seat_run_id,omitempty"` // if empty, use RunID for seat check
+	RunID           string `json:"run_id"`
+	WakeReason      string `json:"wake_reason"`
+	Input           string `json:"input"`
+	SeatRunID       string `json:"seat_run_id,omitempty"` // if empty, use RunID for seat check
+	AllowedCwd      string `json:"allowed_cwd,omitempty"`
+	EnableFileTools bool   `json:"enable_file_tools,omitempty"`
+	ReadOnlyTools   bool   `json:"read_only_tools,omitempty"`
 }
 
 type pythonInvokeRequest struct {
-	Model        string              `json:"model"`
-	SystemPrompt string              `json:"system_prompt"`
-	Messages     []map[string]string `json:"messages"`
-	BaseURL      string              `json:"base_url"`
-	APIKey       string              `json:"api_key,omitempty"`
-	TimeoutSec   int                 `json:"timeout_sec"`
-	AgentID      string              `json:"agent_id"`
-	RunID        string              `json:"run_id"`
-	AgentRunID   string              `json:"agent_run_id"`
-	WakeReason   string              `json:"wake_reason"`
+	Model           string              `json:"model"`
+	SystemPrompt    string              `json:"system_prompt"`
+	Messages        []map[string]string `json:"messages"`
+	BaseURL         string              `json:"base_url"`
+	APIKey          string              `json:"api_key,omitempty"`
+	TimeoutSec      int                 `json:"timeout_sec"`
+	AgentID         string              `json:"agent_id"`
+	RunID           string              `json:"run_id"`
+	AgentRunID      string              `json:"agent_run_id"`
+	WakeReason      string              `json:"wake_reason"`
+	AllowedCwd      string              `json:"allowed_cwd,omitempty"`
+	EnableFileTools bool                `json:"enable_file_tools,omitempty"`
+	ReadOnlyTools   bool                `json:"read_only_tools,omitempty"`
+	MaxToolRounds   int                 `json:"max_tool_rounds,omitempty"`
 }
 
 type pythonInvokeResponse struct {
@@ -229,15 +236,32 @@ func (s *AgentService) ValidateWake(agent *models.AgentInstance, runID string) e
 	return err
 }
 
-func (s *AgentService) BuildSystemPrompt(agent *models.AgentInstance, skills []models.Skill, wakeReason string) string {
+func (s *AgentService) BuildSystemPrompt(agent *models.AgentInstance, skills []models.Skill, wakeReason string, fileTools bool, readOnly bool, allowedCwd string) string {
 	var b strings.Builder
 	b.WriteString("You are a CGen AI teammate.\n")
 	b.WriteString(fmt.Sprintf("Identity: name=%s role=%s agent_id=%s\n", agent.Name, agent.RoleID, agent.ID))
 	b.WriteString(fmt.Sprintf("Wake reason: %s\n", wakeReason))
-	b.WriteString("Respond with a final complete message (no streaming). Do not invent repo tool calls.\n")
+	b.WriteString("Respond with a final complete message (no streaming).\n")
 	b.WriteString("Playbooks and human tickets remain approval gates — propose, do not bypass governance.\n")
 	b.WriteString("When handing off, include a fenced ```cgen-handoff JSON block with from_role, to_roles, task_id, summary, acceptance_criteria, and optional pr_title/pr_body/verification_steps.\n")
-	b.WriteString("For task-planning, do not create child tasks until a human approve_reject ticket is approved.\n\n")
+	b.WriteString("For task-planning, do not create child tasks until a human approve_reject ticket is approved.\n")
+	if fileTools {
+		b.WriteString("\n## File tools (cwd-scoped)\n")
+		b.WriteString(fmt.Sprintf("ALLOWED_CWD=%s\n", allowedCwd))
+		b.WriteString("You may call tools by emitting a line exactly like:\n")
+		b.WriteString("<<<TOOL>>>{\"name\":\"list_dir\",\"path\":\".\"}<<<END_TOOL>>>\n")
+		b.WriteString("<<<TOOL>>>{\"name\":\"read_file\",\"path\":\"relative/path\"}<<<END_TOOL>>>\n")
+		if readOnly {
+			b.WriteString("WRITE IS DISABLED for this wake (read/list only).\n")
+		} else {
+			b.WriteString("<<<TOOL>>>{\"name\":\"write_file\",\"path\":\"relative/path\",\"content\":\"...\"}<<<END_TOOL>>>\n")
+			b.WriteString("Never write outside ALLOWED_CWD. Prefer small, focused edits.\n")
+		}
+		b.WriteString("After tools finish, give your final user-visible message without tool markers.\n")
+	} else {
+		b.WriteString("Do not invent repo tool calls on this wake.\n")
+	}
+	b.WriteString("\n")
 	if agent.Instructions != "" {
 		b.WriteString("## Instructions\n")
 		b.WriteString(agent.Instructions)
@@ -314,23 +338,33 @@ func (s *AgentService) Invoke(agent *models.AgentInstance, req InvokeAgentReques
 		model = lmCfg.DefaultModel
 	}
 
-	sysPrompt := s.BuildSystemPrompt(agent, skills, wakeReason)
+	enableTools := req.EnableFileTools
+	allowedCwd := strings.TrimSpace(req.AllowedCwd)
+	if enableTools && allowedCwd == "" {
+		return s.failRun(&agentRun, runID, agent, "file tools requested but allowed_cwd is empty — set Settings → Agent Config → primary_cwd")
+	}
+
+	sysPrompt := s.BuildSystemPrompt(agent, skills, wakeReason, enableTools, req.ReadOnlyTools, allowedCwd)
 	userContent := req.Input
 	if userContent == "" {
 		userContent = "Please check your assigned work for this run and respond with your next actions."
 	}
 
 	pyReq := pythonInvokeRequest{
-		Model:        model,
-		SystemPrompt: sysPrompt,
-		Messages:     []map[string]string{{"role": "user", "content": userContent}},
-		BaseURL:      lmCfg.BaseURL,
-		APIKey:       lmCfg.APIKey,
-		TimeoutSec:   lmCfg.TimeoutSec,
-		AgentID:      agent.ID,
-		RunID:        runID,
-		AgentRunID:   agentRun.ID,
-		WakeReason:   wakeReason,
+		Model:           model,
+		SystemPrompt:    sysPrompt,
+		Messages:        []map[string]string{{"role": "user", "content": userContent}},
+		BaseURL:         lmCfg.BaseURL,
+		APIKey:          lmCfg.APIKey,
+		TimeoutSec:      lmCfg.TimeoutSec,
+		AgentID:         agent.ID,
+		RunID:           runID,
+		AgentRunID:      agentRun.ID,
+		WakeReason:      wakeReason,
+		AllowedCwd:      allowedCwd,
+		EnableFileTools: enableTools,
+		ReadOnlyTools:   req.ReadOnlyTools,
+		MaxToolRounds:   10,
 	}
 
 	pyResp, err := s.callPythonAgent(pyReq)

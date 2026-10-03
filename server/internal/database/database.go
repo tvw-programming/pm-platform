@@ -45,6 +45,7 @@ func Connect(cfg *config.DatabaseConfig) *gorm.DB {
 			&models.RoutineRun{},
 			&models.ProjectAgentConfig{},
 			&models.ExecutionPolicyRecord{},
+			&models.AutoFlowRun{},
 		); err != nil {
 			log.Fatalf("failed to auto-migrate: %v", err)
 		}
@@ -159,13 +160,18 @@ func seedProjectAgentConfig(db *gorm.DB) {
 		cfg := models.ProjectAgentConfig{
 			ID:              uuid.New().String(),
 			ProjectID:       "project-default",
-			RepoURL:         "https://github.com/tvw-programming/pm-platform",
-			PrimaryCwd:      ".",
+			RepoURL:         "https://github.com/tvw-programming/Alumni-web",
+			PrimaryCwd:      models.DefaultAlumniCwd,
 			SoftTokenBudget: &soft,
 			HardTokenBudget: &hard,
 		}
 		if err := db.Create(&cfg).Error; err != nil {
 			log.Printf("seed project_agent_config: %v", err)
 		}
+	} else if existing.PrimaryCwd == "" || existing.PrimaryCwd == "." {
+		_ = db.Model(&existing).Updates(map[string]interface{}{
+			"primary_cwd": models.DefaultAlumniCwd,
+			"repo_url":    "https://github.com/tvw-programming/Alumni-web",
+		}).Error
 	}
 }

@@ -43,10 +43,25 @@ Or use the monorepo `./run-local.sh`, which picks `python3.12`/`3.11`/`3.10` whe
   "agent_id": "...",
   "run_id": "run-default",
   "agent_run_id": "...",
-  "wake_reason": "manual_assign"
+  "wake_reason": "manual_assign",
+  "allowed_cwd": "/Users/tejasvikaswaghulde/Documents/code/1 react/Alumni-web",
+  "enable_file_tools": true,
+  "read_only_tools": false
 }
 ```
 
-Response: `{ "content", "prompt_tokens", "completion_tokens", "error" }`.
+Response: `{ "content", "prompt_tokens", "completion_tokens", "error", "tool_trace" }`.
+
+### File tools (Phase 3)
+
+When `enable_file_tools` is true, the model may emit:
+
+```
+<<<TOOL>>>{"name":"list_dir","path":"."}<<<END_TOOL>>>
+<<<TOOL>>>{"name":"read_file","path":"src/App.tsx"}<<<END_TOOL>>>
+<<<TOOL>>>{"name":"write_file","path":"src/x.tsx","content":"..."}<<<END_TOOL>>>
+```
+
+All paths must stay under `allowed_cwd`. `read_only_tools: true` blocks `write_file` (used for qa). Missing cwd returns a clear error string for Go to post in chat.
 
 **Note:** LM Studio must be running locally with at least one model loaded. CI environments typically do not have LM Studio; health checks will report `ok: false` until a local server is available.
