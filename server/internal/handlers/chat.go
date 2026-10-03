@@ -13,8 +13,9 @@ import (
 )
 
 type ChatHandler struct {
-	DB  *gorm.DB
-	Hub *websocket.Hub
+	DB     *gorm.DB
+	Hub    *websocket.Hub
+	Agents *services.AgentService
 }
 
 type CreateMessageRequest struct {
@@ -106,6 +107,17 @@ func (h *ChatHandler) CreateMessage(c *fiber.Ctx) error {
 		Type: "new_message",
 		Data: response,
 	})
+
+	// Phase 3: auto virtual-team flow (PM → sfd/sbd → qa) — no manual Assign/Run
+	if h.Agents != nil && services.ShouldStartAutoFlow(&msg) {
+		runID := req.RunID
+		msgID := msg.ID
+		body := msg.Body
+		go func() {
+			_, _ = h.Agents.StartAutoFlow(runID, "", msgID, body)
+		}()
+		response["auto_flow"] = "started"
+	}
 
 	return c.Status(201).JSON(response)
 }

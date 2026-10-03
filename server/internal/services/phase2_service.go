@@ -364,6 +364,10 @@ type ApprovedChildTask struct {
 }
 
 func (s *AgentService) ApprovePlan(planID, runID string) (*models.TaskPlan, []ApprovedChildTask, error) {
+	return s.approvePlan(planID, runID, false)
+}
+
+func (s *AgentService) approvePlan(planID, runID string, skipChildWakes bool) (*models.TaskPlan, []ApprovedChildTask, error) {
 	var plan models.TaskPlan
 	if err := s.DB.First(&plan, "id = ?", planID).Error; err != nil {
 		return nil, nil, fmt.Errorf("plan not found")
@@ -466,11 +470,13 @@ func (s *AgentService) ApprovePlan(planID, runID string) (*models.TaskPlan, []Ap
 		Data: map[string]interface{}{"plan": plan, "children": created},
 	})
 
-	// Wake agents whose blockers are clear
-	for _, t := range created {
-		if t.Status == "todo" && t.AssigneeAgentID != "" {
-			_, _, _ = s.WakeAgentByRole(runID, plan.ProjectID, t.RoleID, "plan_child_assigned",
-				fmt.Sprintf("You were assigned %s: %s\nAcceptance: %v\nProduce implementation notes and a PR-shaped handoff when done.", t.Key, t.Title, t.Acceptance))
+	// Wake agents whose blockers are clear (skipped for Phase 3 auto-flow coding path)
+	if !skipChildWakes {
+		for _, t := range created {
+			if t.Status == "todo" && t.AssigneeAgentID != "" {
+				_, _, _ = s.WakeAgentByRole(runID, plan.ProjectID, t.RoleID, "plan_child_assigned",
+					fmt.Sprintf("You were assigned %s: %s\nAcceptance: %v\nProduce implementation notes and a PR-shaped handoff when done.", t.Key, t.Title, t.Acceptance))
+			}
 		}
 	}
 	return &plan, created, nil
@@ -502,17 +508,30 @@ func (s *AgentService) WakeNextAfterTicketResolution(ticket *models.Ticket) {
 	if ticket == nil {
 		return
 	}
-	if ticket.Status != models.TicketStatusApproved && ticket.Status != models.TicketStatusDone && ticket.Status != models.TicketStatusAcked {
+	// Phase 3 auto-flow human overrides (approve/reject while running)
+	if s.HandleAutoFlowTicketResolution(ticket) {
 		return
 	}
-	// Plan tickets: handled by ApprovePlan explicitly
+	if ticket.Status != models.TicketStatusApproved && ticket.Status != models.TicketStatusDone && ticket.Status != models.TicketStatusAcked && ticket.Status != models.TicketStatusRejected {
+		return
+	}
+	// Plan tickets: handled by ApprovePlan explicitly (or Phase 3 auto-flow coding path)
 	if strings.HasPrefix(ticket.PlaybookInstanceID, "plan:") {
 		planID := strings.TrimPrefix(ticket.PlaybookInstanceID, "plan:")
 		if ticket.Status == models.TicketStatusApproved {
+			if s.HandleAutoFlowPlanTicket(planID, ticket.RunID, true, ticket.Comment) {
+				return
+			}
 			_, _, _ = s.ApprovePlan(planID, ticket.RunID)
 		} else if ticket.Status == models.TicketStatusRejected {
+			if s.HandleAutoFlowPlanTicket(planID, ticket.RunID, false, ticket.Comment) {
+				return
+			}
 			_, _ = s.RejectPlan(planID, ticket.RunID, ticket.Comment)
 		}
+		return
+	}
+	if ticket.Status == models.TicketStatusRejected {
 		return
 	}
 
@@ -659,13 +678,13 @@ func (s *AgentService) InstallProductEngPod(projectID, seatRunID string) ([]mode
 func defaultInstructionsForRole(roleID string) string {
 	switch roleID {
 	case "project_manager":
-		return "You are the AI Project Manager. Plan work, triage the board, and never create FE/BE/QA children until a human approves the plan."
+		return "You are the AI Project Manager (pm). On new requirements reply in minimal words: Approve or Reject (+ one short reason). When approving, choose next workers with CGEN_ROUTE among sfd/sbd. Review FE plans the same way. Prefer short answers."
 	case "senior_fe":
-		return "You are the Senior Frontend engineer. Implement UI from AC, draft PR title/body into handoffs, pass to QA when done."
+		return "You are sfd (Senior Frontend). First say you are starting planning, post a visible plan, then after approval edit files only under the project primary_cwd. End coding with: Code update completed."
 	case "senior_be":
-		return "You are the Senior Backend engineer. Design APIs/schemas, draft PR-shaped handoffs, coordinate contracts with FE."
+		return "You are sbd (Senior Backend). When woken for a requirement, say you are starting planning and post a short backend plan. Coordinate APIs with FE."
 	case "qa_lead":
-		return "You are the QA Lead. Review handoffs against AC, file bugs, and gate ship with a clear pass/fail."
+		return "You are qa. When woken after code updates, say you are starting testing, then give a clear pass/fail (CGEN_QA: PASS or FAIL)."
 	default:
 		return "You are a CGen AI teammate. Follow playbooks and emit structured handoffs."
 	}
