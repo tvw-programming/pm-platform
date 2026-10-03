@@ -32,7 +32,15 @@ if ! command -v go &>/dev/null; then
   exit 1
 fi
 
-if ! command -v python3 &>/dev/null; then
+# Prefer 3.11/3.10 — bare `python3` may be 3.14+ where pinned pydantic wheels fail.
+PYTHON_BIN=""
+for cand in python3.12 python3.11 python3.10 python3; do
+  if command -v "$cand" &>/dev/null; then
+    PYTHON_BIN="$(command -v "$cand")"
+    break
+  fi
+done
+if [ -z "$PYTHON_BIN" ]; then
   echo "Error: Python 3 is not installed (needed for the agent runtime)." >&2
   exit 1
 fi
@@ -66,8 +74,8 @@ fi
 
 # Python agent venv
 if [ ! -d "agent/.venv" ]; then
-  echo "Creating Python agent virtualenv..."
-  python3 -m venv "$PROJECT_DIR/agent/.venv"
+  echo "Creating Python agent virtualenv with $PYTHON_BIN..."
+  "$PYTHON_BIN" -m venv "$PROJECT_DIR/agent/.venv"
   "$PROJECT_DIR/agent/.venv/bin/pip" install -r "$PROJECT_DIR/agent/requirements.txt"
 fi
 

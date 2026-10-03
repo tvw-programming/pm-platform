@@ -13,13 +13,14 @@ FastAPI bridge between GoFiber and local **LM Studio** (OpenAI-compatible API).
 
 ```bash
 cd agent
-python3 -m venv .venv
+# Prefer 3.11/3.10 — system python3 may be 3.14+ without pydantic wheels for these pins.
+python3.11 -m venv .venv   # or: python3.10 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 5591
 ```
 
-Or use the monorepo `./run-local.sh`, which starts this service on **:5591**.
+Or use the monorepo `./run-local.sh`, which picks `python3.12`/`3.11`/`3.10` when available and starts this service on **:5591**.
 
 ## Environment
 
