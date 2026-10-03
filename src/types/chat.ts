@@ -16,8 +16,68 @@ export interface ChatMessage {
   template_id?: string;
   body: string;
   artifact_refs: string[];
+  agent_id?: string;
+  agent_run_id?: string;
   created_at: string;
   updated_at: string;
+}
+
+export type AgentStatus = 'active' | 'paused' | 'terminated';
+export type AgentRunStatus = 'running' | 'succeeded' | 'failed';
+
+export interface AgentInstance {
+  id: string;
+  project_id: string;
+  name: string;
+  role_id: string;
+  status: AgentStatus;
+  instructions: string;
+  model?: string;
+  reports_to_agent_id?: string;
+  token_budget?: number;
+  tokens_used: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AgentRun {
+  id: string;
+  agent_id: string;
+  run_id: string;
+  wake_reason: string;
+  status: AgentRunStatus;
+  input_ref?: string;
+  output_message_id?: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  error_message?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Skill {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  body: string;
+}
+
+export interface LMStudioConfig {
+  id: string;
+  key: string;
+  base_url: string;
+  api_key?: string;
+  default_model: string;
+  timeout_sec: number;
+}
+
+export interface LMStudioHealth {
+  ok: boolean;
+  base_url?: string;
+  models?: unknown[];
+  count?: number;
+  error?: string;
 }
 
 export interface ChatTicket {
@@ -85,6 +145,7 @@ export interface RosterEntry {
   role_id: string;
   user_id: string;
   user_name: string;
+  agent_id?: string | null;
   present: boolean;
   role_label?: string;
   track?: string;

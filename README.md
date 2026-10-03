@@ -123,21 +123,46 @@ navigation, live announcements for drag-and-drop with a keyboard sensor as an al
 summaries beside every chart, and labelled form controls throughout. Loading, empty, error and
 permission-denied states ship as reusable components in `components/common/States.tsx`.
 
-## Running it
+## Running it (full stack)
+
+Requires **Node 20+**, **Go**, **Python 3**, and **PostgreSQL** (`pm_platform`). Optional: **LM Studio** on `http://127.0.0.1:1234/v1` for agent completions.
+
+```bash
+./run-local.sh
+```
+
+| Service | URL |
+| --- | --- |
+| Platform UI | http://localhost:5588 |
+| GoFiber API | http://localhost:5589 |
+| Docs | http://localhost:5590 |
+| Python agent | http://localhost:5591 |
+| LM Studio | http://127.0.0.1:1234/v1 (external) |
+
+### Phase 1 — Hireable Agentic Virtual Team (Chat)
+
+Chat hires long-lived project agents, seats them on `run-default`, and wakes them via GoFiber → Python → LM Studio. Final replies land as chat messages with run audit (no streaming). Playbooks stay the approval gates. Sprint/Board agent assignees are out of scope for Phase 1.
+
+Smoke path:
+
+1. Start LM Studio and load a model; set URL under **Settings → Local AI**.
+2. Open **Chat**, hire PM + Senior FE (auto-seated on roster).
+3. **Assign / Run** with an assignment; watch system + AI messages and run tokens.
+4. **Pause** an agent — further wakes are rejected until resumed.
+
+Frontend-only (mock PM UI without chat backend):
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
-npm run build      # tsc -b && vite build
-npm run preview    # serve the production build
+npm run dev
+npm run build
 npm run lint
 ```
 
-Node 20+ recommended.
-
 ## Known scope boundaries
 
-- No backend, auth or persistence — refreshing resets to the fixture set.
-- Settings toggles outside status configuration and appearance are presentational.
+- Chat/agent APIs require PostgreSQL + GoFiber; mock PM surfaces still use local fixtures.
+- LM Studio is not available in CI — health checks report unreachable until a local server is up.
+- No Sprint/Board agent assignees, streaming tokens, or repo tools in Phase 1.
 - Roadmap dependencies are shown in the detail drawer and the table rather than drawn as arrows,
   which vis-timeline does not render natively.

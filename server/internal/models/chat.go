@@ -53,6 +53,8 @@ type Message struct {
 	TemplateID   string    `gorm:"type:varchar(100)" json:"template_id,omitempty"`
 	Body         string    `gorm:"type:text;not null" json:"body"`
 	ArtifactRefs string    `gorm:"type:jsonb;default:'[]'" json:"artifact_refs"`
+	AgentID      *string   `gorm:"type:uuid;index" json:"agent_id,omitempty"`
+	AgentRunID   *string   `gorm:"type:uuid;index" json:"agent_run_id,omitempty"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
@@ -91,12 +93,13 @@ type PlaybookInstance struct {
 
 type RosterEntry struct {
 	gorm.Model
-	ID       string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
-	RunID    string `gorm:"index;not null" json:"run_id"`
-	RoleID   string `gorm:"type:varchar(50);not null" json:"role_id"`
-	UserID   string `gorm:"type:varchar(100);not null" json:"user_id"`
-	UserName string `gorm:"type:varchar(200);not null" json:"user_name"`
-	Present  bool   `gorm:"not null;default:true" json:"present"`
+	ID       string  `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
+	RunID    string  `gorm:"index;not null;uniqueIndex:idx_roster_run_role" json:"run_id"`
+	RoleID   string  `gorm:"type:varchar(50);not null;uniqueIndex:idx_roster_run_role" json:"role_id"`
+	UserID   string  `gorm:"type:varchar(100)" json:"user_id,omitempty"`
+	UserName string  `gorm:"type:varchar(200)" json:"user_name,omitempty"`
+	AgentID  *string `gorm:"type:uuid;index" json:"agent_id,omitempty"`
+	Present  bool    `gorm:"not null;default:true" json:"present"`
 }
 
 type ProjectRoleConfig struct {

@@ -144,6 +144,7 @@ export const SETTINGS_SECTIONS = [
   { id: 'statuses', label: 'Status configuration' },
   { id: 'notifications', label: 'Notifications' },
   { id: 'chat-roles', label: 'Chat roles' },
+  { id: 'local-ai', label: 'Local AI' },
   { id: 'integrations', label: 'Integrations' },
   { id: 'appearance', label: 'Appearance' },
   { id: 'audit', label: 'Audit activity' },
