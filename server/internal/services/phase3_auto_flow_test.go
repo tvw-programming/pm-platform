@@ -38,6 +38,15 @@ func TestParseRoutesAndDecision(t *testing.T) {
 	if len(routes) != 2 || routes[0] != "senior_fe" || routes[1] != "senior_be" {
 		t.Fatalf("routes=%v", routes)
 	}
+	// qa at triage is ignored (woken later after coding)
+	routesQA := parseRoutes("CGEN_ROUTE: sfd, qa")
+	if len(routesQA) != 1 || routesQA[0] != "senior_fe" {
+		t.Fatalf("routes with qa=%v", routesQA)
+	}
+	// missing CGEN_ROUTE → nil so hierarchy default can apply
+	if parseRoutes("Approve\nCGEN_DECISION: APPROVE") != nil {
+		t.Fatalf("expected nil routes without CGEN_ROUTE")
+	}
 	if NormalizeRoleID("qa") != "qa_lead" {
 		t.Fatalf("qa alias")
 	}

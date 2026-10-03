@@ -175,22 +175,30 @@ func (s *AgentService) StartAutoFlow(runID, projectID, requirementMsgID, require
 		return &flow, err
 	}
 
+	s.ensurePodReportsToPM(projectID)
+	below := s.implementersBelowPM(projectID)
+	routeHint := strings.Join(displayRoles(below), ",")
+	if routeHint == "" {
+		routeHint = "sfd,sbd"
+	}
+
 	input := fmt.Sprintf(`New requirement to triage.
 
 REQUIREMENT:
 %s
 
+Your direct reports (implementers) available now: %s
 Respond in MINIMAL words.
 If you approve, reply exactly:
 Approve
 CGEN_DECISION: APPROVE
-CGEN_ROUTE: sfd
-(or CGEN_ROUTE: sfd,sbd — choose who should work next among sfd/sbd)
+CGEN_ROUTE: %s
+(Use CGEN_ROUTE to pick among sfd/sbd who report to you. Prefer everyone who should start now. qa is auto-woken later after coding — do not put qa here.)
 
 If you reject, reply exactly:
 Reject — <one short reason>
 CGEN_DECISION: REJECT
-`, requirementText)
+`, requirementText, routeHint, routeHint)
 
 	ar, msg, err := s.WakeAgentByRole(runID, projectID, "project_manager", "auto_pm_triage", input)
 	if err != nil {
@@ -233,30 +241,98 @@ func parseDecision(body string) (approved bool, rejected bool) {
 
 func parseRoutes(body string) []string {
 	m := reRoute.FindStringSubmatch(body)
-	raw := ""
-	if len(m) >= 2 {
-		raw = m[1]
-	} else {
-		// default FE when approve with no route
-		return []string{"senior_fe"}
+	if len(m) < 2 {
+		return nil // caller fills hierarchy default
 	}
-	parts := strings.FieldsFunc(raw, func(r rune) bool {
+	parts := strings.FieldsFunc(m[1], func(r rune) bool {
 		return r == ',' || r == ';' || r == '/' || r == '|' || r == ' '
 	})
 	seen := map[string]bool{}
 	out := []string{}
 	for _, p := range parts {
 		role := NormalizeRoleID(p)
+		// qa is woken later after coding — ignore if PM lists it at triage
 		switch role {
-		case "senior_fe", "senior_be", "qa_lead":
+		case "senior_fe", "senior_be":
 			if !seen[role] {
 				seen[role] = true
 				out = append(out, role)
 			}
 		}
 	}
+	return out
+}
+
+// ensurePodReportsToPM backfills reports_to for Product Eng Pod workers → PM.
+// Individual Hire often leaves this null; Phase 3 routing uses it as hierarchy.
+func (s *AgentService) ensurePodReportsToPM(projectID string) {
+	var pm models.AgentInstance
+	if err := s.DB.Where("project_id = ? AND role_id = ? AND status = ?", projectID, "project_manager", models.AgentStatusActive).
+		First(&pm).Error; err != nil {
+		return
+	}
+	_ = s.DB.Model(&models.AgentInstance{}).
+		Where("project_id = ? AND role_id IN ? AND status = ? AND (reports_to_agent_id IS NULL OR reports_to_agent_id = '')",
+			projectID, []string{"senior_fe", "senior_be", "qa_lead"}, models.AgentStatusActive).
+		Update("reports_to_agent_id", pm.ID).Error
+}
+
+// implementersBelowPM returns active senior_fe/senior_be under the PM (reports_to),
+// falling back to any active implementers on the project when hierarchy is empty.
+func (s *AgentService) implementersBelowPM(projectID string) []string {
+	s.ensurePodReportsToPM(projectID)
+	order := []string{"senior_fe", "senior_be"}
+	var pm models.AgentInstance
+	hasPM := s.DB.Where("project_id = ? AND role_id = ? AND status = ?", projectID, "project_manager", models.AgentStatusActive).
+		First(&pm).Error == nil
+
+	out := []string{}
+	for _, role := range order {
+		var n int64
+		q := s.DB.Model(&models.AgentInstance{}).
+			Where("project_id = ? AND role_id = ? AND status = ?", projectID, role, models.AgentStatusActive)
+		if hasPM {
+			q = q.Where("reports_to_agent_id = ?", pm.ID)
+		}
+		_ = q.Count(&n).Error
+		if n > 0 {
+			out = append(out, role)
+			continue
+		}
+		// Hierarchy miss: still route if an active agent of that role exists (seated pod).
+		_ = s.DB.Model(&models.AgentInstance{}).
+			Where("project_id = ? AND role_id = ? AND status = ?", projectID, role, models.AgentStatusActive).
+			Count(&n).Error
+		if n > 0 {
+			out = append(out, role)
+		}
+	}
 	if len(out) == 0 {
-		out = []string{"senior_fe"}
+		return []string{"senior_fe"}
+	}
+	return out
+}
+
+// resolveRoutesAfterPMApprove prefers explicit CGEN_ROUTE, else the PM's reports (sfd/sbd).
+func (s *AgentService) resolveRoutesAfterPMApprove(projectID, body string) []string {
+	parsed := parseRoutes(body)
+	hierarchy := s.implementersBelowPM(projectID)
+	if len(parsed) == 0 {
+		return hierarchy
+	}
+	// Keep LM choice, but only roles that actually have an active agent.
+	active := map[string]bool{}
+	for _, r := range hierarchy {
+		active[r] = true
+	}
+	out := []string{}
+	for _, r := range parsed {
+		if active[r] {
+			out = append(out, r)
+		}
+	}
+	if len(out) == 0 {
+		return hierarchy
 	}
 	return out
 }
@@ -301,21 +377,27 @@ func (s *AgentService) advanceAfterPMTriage(flow *models.AutoFlowRun, body strin
 		return
 	}
 
-	routes := parseRoutes(body)
+	routes := s.resolveRoutesAfterPMApprove(flow.ProjectID, body)
 	routesJSON, _ := json.Marshal(routes)
 	flow.RoutesJSON = string(routesJSON)
 	flow.Stage = models.AutoFlowStageRouting
 	_ = s.DB.Save(flow).Error
-	s.postSystemChat(flow.RunID, "PM approved · routing to "+strings.Join(displayRoles(routes), ", "))
+	s.postSystemChat(flow.RunID, "PM approved · routing to "+strings.Join(displayRoles(routes), ", ")+" (below PM hierarchy)")
 	s.Hub.Broadcast(flow.RunID, websocket.Event{Type: "auto_flow_updated", Data: flow})
 
+	started := 0
 	for _, role := range routes {
 		switch role {
 		case "senior_fe":
 			s.startFEPlanning(flow)
+			started++
 		case "senior_be":
 			s.startBEAck(flow)
+			started++
 		}
+	}
+	if started == 0 {
+		s.failAutoFlow(flow, "PM approved but no active sfd/sbd under PM. Hire Product Eng Pod or seat senior_fe/senior_be reporting to the PM.")
 	}
 }
 
@@ -666,7 +748,8 @@ func (s *AgentService) HandleAutoFlowTicketResolution(ticket *models.Ticket) boo
 	switch ticket.Status {
 	case models.TicketStatusApproved:
 		if flow.Stage == models.AutoFlowStagePMTriage {
-			s.advanceAfterPMTriage(&flow, "Approve\nCGEN_DECISION: APPROVE\nCGEN_ROUTE: sfd")
+			// No CGEN_ROUTE → resolveRoutesAfterPMApprove uses reports_to hierarchy (sfd/sbd).
+			s.advanceAfterPMTriage(&flow, "Approve\nCGEN_DECISION: APPROVE")
 		}
 	case models.TicketStatusRejected:
 		flow.Stage = models.AutoFlowStageRejected
