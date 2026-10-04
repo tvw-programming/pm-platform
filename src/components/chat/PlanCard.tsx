@@ -15,6 +15,7 @@ interface PlanCardProps {
 
 export function PlanCard({ plan, onApprove, onReject, busy }: PlanCardProps): React.JSX.Element {
   const pending = plan.status === 'pending_approval';
+  const bodyText = typeof plan.body === 'string' ? plan.body : plan.body != null ? JSON.stringify(plan.body, null, 2) : '';
 
   return (
     <Box
@@ -34,10 +35,10 @@ export function PlanCard({ plan, onApprove, onReject, busy }: PlanCardProps): Re
       <Typography variant="body2" sx={{ fontWeight: 700, mb: 0.5 }}>
         {plan.goal || 'Untitled plan'}
       </Typography>
-      {plan.body ? (
+      {bodyText ? (
         <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'pre-wrap', display: 'block', mb: 1 }}>
-          {plan.body.slice(0, 400)}
-          {plan.body.length > 400 ? '…' : ''}
+          {bodyText.slice(0, 400)}
+          {bodyText.length > 400 ? '…' : ''}
         </Typography>
       ) : null}
       <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>
