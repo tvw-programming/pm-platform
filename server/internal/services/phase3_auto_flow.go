@@ -49,12 +49,31 @@ func ShouldStartAutoFlow(msg *models.Message) bool {
 	if strings.Contains(lower, "[requirement]") {
 		return true
 	}
+	// Direct dev mention (@sbd / @sfd) routes straight to that implementer — treat as a work ask.
+	if len(parseDirectDevMentions(body)) > 0 {
+		return true
+	}
 	// Event Mode: any work chat with a body (not only new_requirement / brd_ready).
 	if msg.Mode == models.ChatModeWork {
 		return true
 	}
 	// Normal mode: human requirement-like messages (CTO/PM/etc. work asks).
 	return looksLikeHumanWorkRequirement(msg)
+}
+
+// parseDirectDevMentions returns implementer role ids explicitly @-mentioned in a
+// message (e.g. "@sbd" → senior_be). When present, the auto flow routes directly
+// to those implementers and skips PM triage.
+func parseDirectDevMentions(body string) []string {
+	lower := strings.ToLower(body)
+	out := []string{}
+	if strings.Contains(lower, "@sbd") || strings.Contains(lower, "@senior_be") || strings.Contains(lower, "@senior backend") {
+		out = append(out, "senior_be")
+	}
+	if strings.Contains(lower, "@sfd") || strings.Contains(lower, "@senior_fe") || strings.Contains(lower, "@senior frontend") {
+		out = append(out, "senior_fe")
+	}
+	return out
 }
 
 func isAgentOrSystemAuthor(msg *models.Message) bool {
@@ -244,6 +263,34 @@ func (s *AgentService) checkLMOrError(runID string) error {
 	return nil
 }
 
+// humanizeWakeError rewrites raw LM-connectivity failures (e.g. the Python
+// bridge's "LM Studio unreachable at ...") into an actionable message so an
+// agent wake that fails mid-flow tells the user how to recover instead of
+// surfacing a bare transport error.
+func humanizeWakeError(err error) string {
+	if err == nil {
+		return ""
+	}
+	msg := err.Error()
+	low := strings.ToLower(msg)
+	switch {
+	case strings.Contains(low, "context length") ||
+		strings.Contains(low, "tokens to keep") ||
+		strings.Contains(low, "larger context") ||
+		strings.Contains(low, "maximum context"):
+		return "The prompt is longer than the model's loaded context window. In LM Studio, reload the model with a larger context length (e.g. 8192+), or shorten the requirement text, then retry. (" + msg + ")"
+	case strings.Contains(low, "lm studio unreachable") ||
+		strings.Contains(low, "python agent unreachable") ||
+		strings.Contains(low, "connection refused") ||
+		strings.Contains(low, "connectex") ||
+		strings.Contains(low, "no such host") ||
+		strings.Contains(low, "dial tcp") ||
+		strings.Contains(low, "context deadline exceeded"):
+		return "Local AI (LM Studio) is unreachable. Start LM Studio, load a model, and confirm Settings → Agent Config points at the right base URL, then retry. (" + msg + ")"
+	}
+	return msg
+}
+
 // StartAutoFlow begins PM triage for a new requirement message (async-safe).
 func (s *AgentService) StartAutoFlow(runID, projectID, requirementMsgID, requirementText string) (*models.AutoFlowRun, error) {
 	if runID == "" {
@@ -277,6 +324,13 @@ func (s *AgentService) StartAutoFlow(runID, projectID, requirementMsgID, require
 		return &flow, err
 	}
 
+	// Direct dev mention (@sbd / @sfd): route straight to the named implementer(s),
+	// skipping PM triage entirely.
+	if direct := parseDirectDevMentions(requirementText); len(direct) > 0 {
+		s.runDirectImplementers(&flow, direct)
+		return &flow, nil
+	}
+
 	s.ensurePodReportsToPM(projectID)
 
 	var pm models.AgentInstance
@@ -298,10 +352,15 @@ REQUIREMENT:
 %s
 
 Respond in MINIMAL words.
+First decide WHO should do the work:
+- sfd = Senior Frontend Developer (UI, screens, components, styling, client code)
+- sbd = Senior Backend Developer (APIs, endpoints, schema, database, server code)
+Choose sfd, sbd, or both.
+
 If you approve, reply exactly:
 Approve
 CGEN_DECISION: APPROVE
-(Optional) CGEN_ROUTE: sbd — only if backend work is also needed. sfd is ALWAYS woken for FE after Approve. qa is auto-woken later after coding.
+CGEN_ROUTE: <sfd and/or sbd>   (REQUIRED — e.g. "sfd", "sbd", or "sfd, sbd")
 
 If you reject, reply exactly:
 Reject — <one short reason>
@@ -314,7 +373,7 @@ CGEN_DECISION: REJECT
 		Input:      input,
 	})
 	if err != nil {
-		s.failAutoFlow(&flow, "PM wake failed: "+err.Error()+". Hire/seat a Project Manager agent on the Roster first.")
+		s.failAutoFlow(&flow, "PM wake failed: "+humanizeWakeError(err))
 		return &flow, err
 	}
 	_ = ar
@@ -435,7 +494,7 @@ func (s *AgentService) hasActiveRole(projectID, roleID string) bool {
 
 func looksLikeBackendRequirement(text string) bool {
 	lower := strings.ToLower(text)
-	for _, s := range []string{"api", "backend", "endpoint", "schema", "database", "migration", "server", "sbd", "senior_be"} {
+	for _, s := range []string{"api", "backend", "endpoint", "schema", "database", "migration", "server", "sbd", "senior_be", "sql", "handler", "route", "model"} {
 		if strings.Contains(lower, s) {
 			return true
 		}
@@ -443,31 +502,65 @@ func looksLikeBackendRequirement(text string) bool {
 	return false
 }
 
-// resolveRoutesAfterPMApprove hard-guarantees sfd for FE work after Approve.
-// CGEN_ROUTE / reports_to may add sbd; they must NOT be required for sfd to wake.
+func looksLikeFrontendRequirement(text string) bool {
+	lower := strings.ToLower(text)
+	for _, s := range []string{"ui", "button", "theme", "color", "page", "screen", "css", "style", "layout", "nav", "header", "footer", "component", "frontend", "sfd", "senior_fe", "background", "font", "modal", "form"} {
+		if strings.Contains(lower, s) {
+			return true
+		}
+	}
+	return false
+}
+
+// wantsPlanOnly is true when the human/PM explicitly asked for a plan with no code.
+func wantsPlanOnly(text string) bool {
+	lower := strings.ToLower(text)
+	for _, s := range []string{"plan only", "just plan", "only plan", "no code", "don't implement", "do not implement", "planning only"} {
+		if strings.Contains(lower, s) {
+			return true
+		}
+	}
+	return false
+}
+
+// resolveRoutesAfterPMApprove honors the PM's CGEN_ROUTE decision (sfd / sbd / both).
+// If PM gave no explicit route, it infers from the requirement text. There is no
+// hard sfd guarantee — PM decides who implements.
 func (s *AgentService) resolveRoutesAfterPMApprove(projectID, body, requirementText string) []string {
 	s.ensurePodReportsToPM(projectID)
-	out := []string{}
 
-	// HARD GUARANTEE: seated+active senior_fe always wakes on PM Approve (FE path).
-	if s.hasActiveRole(projectID, "senior_fe") {
-		out = append(out, "senior_fe")
-	}
-
-	parsed := parseRoutes(body)
-	wantBE := looksLikeBackendRequirement(requirementText)
-	for _, r := range parsed {
-		if r == "senior_be" {
+	wantFE, wantBE := false, false
+	for _, r := range parseRoutes(body) {
+		switch r {
+		case "senior_fe":
+			wantFE = true
+		case "senior_be":
 			wantBE = true
 		}
 	}
-	// reports_to: if sbd is under PM and LM/req asked for BE, include them.
+	// No explicit PM route → infer from the requirement text.
+	if !wantFE && !wantBE {
+		wantBE = looksLikeBackendRequirement(requirementText)
+		wantFE = looksLikeFrontendRequirement(requirementText)
+		// Nothing matched either side → default to FE (UI work is the common case).
+		if !wantFE && !wantBE {
+			wantFE = true
+		}
+	}
+
+	out := []string{}
+	if wantFE && s.hasActiveRole(projectID, "senior_fe") {
+		out = append(out, "senior_fe")
+	}
 	if wantBE && s.hasActiveRole(projectID, "senior_be") {
 		out = append(out, "senior_be")
 	}
-
 	if len(out) == 0 {
-		// Still return sfd so startFEPlanning can emit a clear "not seated" error.
+		// Requested role(s) not seated — return the wanted role so the caller can
+		// emit a clear "not seated" error for the right role.
+		if wantBE && !wantFE {
+			return []string{"senior_be"}
+		}
 		return []string{"senior_fe"}
 	}
 	return out
@@ -531,25 +624,63 @@ func (s *AgentService) advanceAfterPMTriage(flow *models.AutoFlowRun, body strin
 	if pm.ID != "" {
 		s.postAgentStatus(flow.RunID, &pm, statusDone([]string{
 			"Approved the requirement",
-			"Auto-routing to " + strings.Join(displayRoles(routes), ", ") + " (sfd hard-guaranteed when seated)",
+			"Routing to " + strings.Join(displayRoles(routes), ", "),
 		}))
 	}
-	s.postSystemChat(flow.RunID, "PM approved · auto-waking "+strings.Join(displayRoles(routes), ", ")+" (sfd guaranteed)")
+	s.postSystemChat(flow.RunID, "PM approved · auto-waking "+strings.Join(displayRoles(routes), ", "))
 	s.Hub.Broadcast(flow.RunID, websocket.Event{Type: "auto_flow_updated", Data: flow})
 
+	hasFE := containsRole(routes, "senior_fe")
+	hasBE := containsRole(routes, "senior_be")
 	started := 0
-	for _, role := range routes {
-		switch role {
-		case "senior_fe":
-			s.startFEPlanning(flow)
-			started++
-		case "senior_be":
-			s.startBEAck(flow)
-			started++
-		}
+	// Run BE first (plan + implement). When FE also runs, the FE pipeline owns the
+	// final QA pass (it verifies the combined cwd); BE-only owns its own QA.
+	if hasBE {
+		s.startBEImplementation(flow, !hasFE)
+		started++
+	}
+	if hasFE {
+		s.startFEPlanning(flow)
+		started++
 	}
 	if started == 0 {
-		s.failAutoFlow(flow, "PM approved but no active sfd. Hire Product Eng Pod or seat senior_fe on the Roster.")
+		s.failAutoFlow(flow, "PM approved but no active implementer ("+strings.Join(displayRoles(routes), "/")+"). Hire Product Eng Pod or seat senior_fe / senior_be on the Roster.")
+	}
+}
+
+func containsRole(roles []string, want string) bool {
+	for _, r := range roles {
+		if r == want {
+			return true
+		}
+	}
+	return false
+}
+
+// runDirectImplementers handles the @sbd / @sfd direct path: no PM triage, wake the
+// named implementer(s) to plan + implement, then QA.
+func (s *AgentService) runDirectImplementers(flow *models.AutoFlowRun, roles []string) {
+	s.ensurePodReportsToPM(flow.ProjectID)
+	routesJSON, _ := json.Marshal(roles)
+	flow.RoutesJSON = string(routesJSON)
+	flow.Stage = models.AutoFlowStageRouting
+	_ = s.DB.Save(flow).Error
+	s.postSystemChat(flow.RunID, "Direct route · skipping PM · waking "+strings.Join(displayRoles(roles), ", "))
+	s.Hub.Broadcast(flow.RunID, websocket.Event{Type: "auto_flow_updated", Data: flow})
+
+	hasFE := containsRole(roles, "senior_fe")
+	hasBE := containsRole(roles, "senior_be")
+	started := 0
+	if hasBE {
+		s.startBEImplementation(flow, !hasFE)
+		started++
+	}
+	if hasFE {
+		s.startFECoding(flow)
+		started++
+	}
+	if started == 0 {
+		s.failAutoFlow(flow, "No active implementer for the direct @-mention. Hire Product Eng Pod or seat senior_fe / senior_be.")
 	}
 }
 
@@ -570,38 +701,105 @@ func displayRoles(roles []string) []string {
 	return out
 }
 
-func (s *AgentService) startBEAck(flow *models.AutoFlowRun) {
+// startBEImplementation wakes sbd to plan AND implement the backend scope under the
+// project cwd (file tools). When the requirement explicitly asks for planning only,
+// it falls back to a plan-only wake. triggerQA controls whether this handler owns the
+// final QA pass (true when BE is the sole implementer; false when FE will run QA).
+func (s *AgentService) startBEImplementation(flow *models.AutoFlowRun, triggerQA bool) {
 	var agent models.AgentInstance
 	err := s.DB.Where("project_id = ? AND role_id = ? AND status = ?", flow.ProjectID, "senior_be", models.AgentStatusActive).First(&agent).Error
 	if err != nil {
-		s.postSystemChat(flow.RunID, "No active sbd (Senior BE) agent seated — skipping BE for now. Hire Product Eng Pod or seat senior_be.")
+		if triggerQA {
+			s.failAutoFlow(flow, "No active sbd (Senior BE) agent. Hire Product Eng Pod or seat senior_be on the Roster.")
+		} else {
+			s.postSystemChat(flow.RunID, "No active sbd (Senior BE) agent seated — skipping BE. Hire Product Eng Pod or seat senior_be.")
+		}
+		return
+	}
+	if lmErr := s.checkLMOrError(flow.RunID); lmErr != nil {
+		if triggerQA {
+			s.failAutoFlow(flow, "sbd wake skipped: "+lmErr.Error())
+		} else {
+			s.postSystemChat(flow.RunID, "sbd wake skipped: "+lmErr.Error())
+		}
 		return
 	}
 	_, _ = s.SeatAgentOnRun(flow.RunID, &agent)
-	s.postAgentStatus(flow.RunID, &agent, statusStart("backend planning", []string{
-		"Review backend scope of the approved requirement",
-		"Post a short API/schema plan (no file writes yet)",
-	}))
-	input := fmt.Sprintf(`Requirement (backend scope):
+
+	// Plan-only mode: explicit human/PM request for a plan with no code.
+	if wantsPlanOnly(flow.RequirementText) {
+		s.postAgentStatus(flow.RunID, &agent, statusStart("backend planning", []string{
+			"Review backend scope of the requirement",
+			"Post a short API/schema plan (no file writes)",
+		}))
+		input := fmt.Sprintf(`Requirement (backend scope):
 %s
 
-Post a short backend plan (APIs/schemas). Use a cgen-plan fence if useful.
-Do not write files yet.
-When finished, summarize what you completed in bullet points.`, flow.RequirementText)
-	_, msg, err := s.Invoke(&agent, InvokeAgentRequest{
-		RunID:      flow.RunID,
-		WakeReason: "auto_be_planning",
-		Input:      input,
-	})
-	if err != nil {
-		s.postSystemChat(flow.RunID, "sbd wake failed: "+err.Error())
+Post a short backend plan (APIs/schemas). Do not write files.
+When finished, summarize the plan in bullet points.`, flow.RequirementText)
+		_, _, err := s.Invoke(&agent, InvokeAgentRequest{RunID: flow.RunID, WakeReason: "auto_be_planning", Input: input})
+		if err != nil {
+			s.postSystemChat(flow.RunID, "sbd wake failed: "+humanizeWakeError(err))
+			return
+		}
+		s.postAgentStatus(flow.RunID, &agent, statusDone([]string{"Posted backend plan (planning only)"}))
 		return
 	}
-	_ = msg
-	s.postAgentStatus(flow.RunID, &agent, statusDone([]string{
-		"Posted backend planning notes for the requirement",
-		"No file writes (planning only)",
+
+	cwd, err := s.ensurePrimaryCwd(flow.ProjectID)
+	if err != nil {
+		if triggerQA {
+			s.failAutoFlow(flow, err.Error())
+		} else {
+			s.postSystemChat(flow.RunID, "sbd implementation skipped: "+err.Error())
+		}
+		return
+	}
+
+	s.postAgentStatus(flow.RunID, &agent, statusStart("backend implementation", []string{
+		"Plan the backend scope (APIs/schema) briefly",
+		"Implement it by editing files under Settings primary_cwd",
+		"Use list_dir / read_file / write_file only inside the allowed cwd",
 	}))
+	input := fmt.Sprintf(`You are sbd (Senior BE). Implement the backend scope of this requirement by editing files under the allowed cwd ONLY.
+
+REQUIREMENT:
+%s
+
+ALLOWED_CWD: %s
+
+First note a 1-2 line plan (APIs/schema/files to touch), then use file tools (list_dir / read_file / write_file) to implement it on disk so it appears in VS Code.
+When finished, end with exactly: Code update completed.
+`, flow.RequirementText, cwd)
+	_, msg, err := s.Invoke(&agent, InvokeAgentRequest{
+		RunID:           flow.RunID,
+		WakeReason:      "auto_be_coding",
+		Input:           input,
+		AllowedCwd:      cwd,
+		EnableFileTools: true,
+	})
+	if err != nil {
+		if triggerQA {
+			s.failAutoFlow(flow, "sbd coding wake failed: "+humanizeWakeError(err))
+		} else {
+			s.postSystemChat(flow.RunID, "sbd coding wake failed: "+humanizeWakeError(err))
+		}
+		return
+	}
+	content := ""
+	if msg != nil {
+		content = msg.Body
+	}
+	if !reCodeDone.MatchString(content) {
+		s.postAgentStatus(flow.RunID, &agent, "Code update completed.")
+	}
+	s.postAgentStatus(flow.RunID, &agent, statusDone([]string{
+		"Applied backend changes under " + cwd,
+		"Backend implementation pass finished",
+	}))
+	if triggerQA {
+		s.startQA(flow)
+	}
 }
 
 func (s *AgentService) startFEPlanning(flow *models.AutoFlowRun) {
@@ -637,7 +835,7 @@ Rules:
 		Input:      input,
 	})
 	if err != nil {
-		s.failAutoFlow(flow, "sfd planning wake failed: "+err.Error())
+		s.failAutoFlow(flow, "sfd planning wake failed: "+humanizeWakeError(err))
 		return
 	}
 	if msg != nil {
@@ -727,7 +925,7 @@ CGEN_DECISION: REJECT
 		Input:      pmInput,
 	})
 	if err != nil {
-		s.postSystemChat(flow.RunID, "PM plan-review wake failed: "+err.Error()+". Use the plan ticket Approve/Reject to continue.")
+		s.postSystemChat(flow.RunID, "PM plan-review wake failed: "+humanizeWakeError(err)+". Use the plan ticket Approve/Reject to continue.")
 		return
 	}
 	if pmMsg != nil {
@@ -866,7 +1064,7 @@ When finished, end with exactly: Code update completed.
 		EnableFileTools: true,
 	})
 	if err != nil {
-		s.failAutoFlow(flow, "sfd coding wake failed: "+err.Error())
+		s.failAutoFlow(flow, "sfd coding wake failed: "+humanizeWakeError(err))
 		return
 	}
 	content := ""
@@ -924,7 +1122,7 @@ Changes do not work as expected — <short reason>
 		ReadOnlyTools:   true,
 	})
 	if err != nil {
-		s.failAutoFlow(flow, "qa wake failed: "+err.Error())
+		s.failAutoFlow(flow, "qa wake failed: "+humanizeWakeError(err))
 		return
 	}
 	verdict := "unknown"
